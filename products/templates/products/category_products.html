@@ -1,0 +1,33 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Red+Hat+Text:wght@400;600;700&display=swap">
+    <link rel="icon" type="image/png" sizes="32x32" href="./assets/images/favicon-32x32.png">
+    <link rel="stylesheet" href="{% static 'products/CSS/style.css' %}">
+    <title>Product list</title>
+</head>
+
+<body>
+    <div class="container">
+        <section class="main-section">
+            <h1>Our Products</h1>
+            <main>
+                {% for product in products %}
+                <div class="products-card">
+                    <a href="{% url 'product_detail' product.id %}" class="product-link">
+                      <img class="image-product" src="{{ product.photo.url }}" alt="{{product.name}}">
+                    </a>
+                    <h2 class="product-name">{{product.name}}</h2>
+                    <h3 class="price">Rs.{{product.price}}</h3>
+                </div>
+                  {% endfor %}
+            </main>
+        </section>
+    </div>
+</body>
+
+</html>

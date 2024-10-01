@@ -1,0 +1,70 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Red+Hat+Text:wght@400;600;700&display=swap">
+    <link rel="icon" type="image/png" sizes="32x32" href="./assets/images/favicon-32x32.png">
+    {% comment %} <link rel="stylesheet" href="{% static 'products/CSS/style.css' %}"> {% endcomment %}
+    <title>{{ product.name }}</title>
+    <style>
+        .icon-hover:hover {
+            border-color: #3b71ca !important;
+            background-color: white !important;
+            color: #3b71ca !important;
+          }
+          
+          .icon-hover:hover i {
+            color: #3b71ca !important;
+          }
+    </style>
+</head>
+
+<body>
+    <!-- content -->
+    <section class="py-5">
+        <div class="container">
+          <div class="row gx-5 align-items-center">
+            <aside class="col-lg-6">
+              <div class="border rounded-4 mb-3 d-flex justify-content-center">
+                <img style="max-width: 100%; max-height: 100vh; margin: auto;" class="rounded-4 fit" src="{{product.photo.url}}" />
+              </div>
+            </aside>
+            <main class="col-lg-6">
+              <div class="ps-lg-3">
+                <h4 class="title text-dark">
+                  Quality Men's Hoodie for Winter, Men's Fashion <br />
+                  Casual Hoodie
+                </h4>
+                <div class="d-flex flex-row my-3">
+                  <div class="text-warning mb-1 me-2">
+                    <i class="fa fa-star"></i>
+                    <i class="fa fa-star"></i>
+                    <i class="fa fa-star"></i>
+                    <i class="fa fa-star"></i>
+                    <i class="fas fa-star-half-alt"></i>
+                    <span class="ms-1">4.5</span>
+                  </div>
+                  <span class="text-muted"><i class="fas fa-shopping-basket fa-sm mx-1"></i>154 orders</span>
+                  <span class="text-success ms-2">In stock</span>
+                </div>
+      
+                <div class="mb-3">
+                  <span class="h5">$75.00</span>
+                  <span class="text-muted">/per box</span>
+                </div>
+      
+                <p>
+                  {{product.details}}
+                </p>
+              </div>
+            </main>
+          </div>
+        </div>
+      </section>
+      
+</body>
+
+</html>
