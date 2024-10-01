@@ -7,19 +7,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Red+Hat+Text:wght@400;600;700&display=swap">
     <link rel="icon" type="image/png" sizes="32x32" href="./assets/images/favicon-32x32.png">
-    {% comment %} <link rel="stylesheet" href="{% static 'products/CSS/style.css' %}"> {% endcomment %}
+    <link rel="stylesheet" href="{% static 'products/CSS/style.css' %}">
     <title>{{ product.name }}</title>
-    <style>
-        .icon-hover:hover {
-            border-color: #3b71ca !important;
-            background-color: white !important;
-            color: #3b71ca !important;
-          }
-          
-          .icon-hover:hover i {
-            color: #3b71ca !important;
-          }
-    </style>
 </head>
 
 <body>
@@ -35,8 +24,7 @@
             <main class="col-lg-6">
               <div class="ps-lg-3">
                 <h4 class="title text-dark">
-                  Quality Men's Hoodie for Winter, Men's Fashion <br />
-                  Casual Hoodie
+                  {{product.name}}
                 </h4>
                 <div class="d-flex flex-row my-3">
                   <div class="text-warning mb-1 me-2">
