@@ -33,11 +33,11 @@ body {
 }
 
 .container {
-    padding: 3rem 2rem 2rem 5rem;
+    padding: 2rem 2rem 5rem;
 }
 
 .main-section {
-    margin: 0 auto; /* Center align */
+    margin: 0 auto; 
 }
 
 main {
