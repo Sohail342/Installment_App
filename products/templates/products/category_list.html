@@ -1,16 +1,8 @@
+
+{% extends 'products/base.html' %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Red+Hat+Text:wght@400;600;700&display=swap">
-    <link rel="stylesheet" href="{% static 'products/CSS/style.css' %}">
-    <title>Product list</title>
-</head>
-
-<body>
+{% block content %}
     <div class="container">
         <section class="main-section">
             <h1>Our Products</h1>
@@ -27,6 +19,4 @@
             </main>
         </section>
     </div>
-</body>
-
-</html>
+    {% endblock content %}

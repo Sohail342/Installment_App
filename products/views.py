@@ -1,16 +1,17 @@
 from django.shortcuts import render
 from django.views import View
+from django.contrib.auth.decorators import login_required
 from django.views.generic import ListView
 from .models import Category, Product
 from django.shortcuts import render, get_object_or_404
 
-class CategoryListView(ListView):
-    model = Category
-    template_name = 'products/category_list.html'
-    context_object_name = 'categories'
-
-    def get_queryset(self):
-        return Category.objects.all()
+@login_required(login_url='account:signin')
+def category_list_view(request):
+    categories = Category.objects.all()
+    context = {
+        'categories': categories
+    }
+    return render(request, 'products/category_list.html', context)
 
 
 

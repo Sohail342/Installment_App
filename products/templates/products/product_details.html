@@ -1,19 +1,12 @@
+{% extends 'products/base.html' %}
 {% load static %}
 {% load custom_filters %}
-<!DOCTYPE html>
-<html lang="en">
+{% load humanize %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Red+Hat+Text:wght@400;600;700&display=swap">
-    <link rel="stylesheet" href="{% static 'products/CSS/style.css' %}">
-    <title>{{ product.name }}</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-</head>
 
-<body>
+{% block title %}{{product.name}}{% endblock title %}
+
+{% block content %}
     <!-- content -->
     <section class="py-5">
         <div class="container">
@@ -42,7 +35,7 @@
                             <span class="text-success ms-2">In stock</span>
                         </div>
                         <div class="mb-3">
-                            <span class="h5">Rs.{{product.price}}</span>
+                            <span class="h5">Rs.{{product.price |intcomma:False }}</span>
                         </div>
                         <p>
                             {{product.details}}
@@ -53,9 +46,10 @@
         </div>
     </section>
 
-    <!-- Installment plan table -->
-    <div class="container">
-        <table class="table table-striped table-bordered table-hover">
+    <!-- Installment Plan Header -->
+    <div class="container my-5">
+        <h2 class="text-center">Installment Plan</h2>
+        <table class="table table-striped table-bordered table-hover mt-4"> <!-- Added mt-4 for margin-top -->
             <thead>
                 <tr>
                     <th>Month</th>
@@ -71,19 +65,19 @@
                 <tr>
                     <td>Month {{ month }}</td>
                     {% if  month < 13 %}
-                    <td>Rs. {{ installments.12_months }}</td>
+                    <td>Rs. {{ installments.12_months |intcomma:False }}</td>
                     {% endif %}
 
                     {% if  month < 10 %}
-                    <td>Rs. {{ installments.9_months }}</td>
+                    <td>Rs. {{ installments.9_months |intcomma:False }}</td>
                     {% endif %}
 
                     {% if  month < 7 %}
-                    <td>Rs. {{ installments.6_months }}</td>
+                    <td>Rs. {{ installments.6_months |intcomma:False }}</td>
                     {% endif %}
 
                     {% if month < 4 %}
-                        <td>Rs. {{ installments.3_months }}</td>
+                        <td>Rs. {{ installments.3_months |intcomma:False }}</td>
                     {% endif %}
                 </tr>
                 {% endfor %}
@@ -91,16 +85,12 @@
             <thead>
                 <tr>
                     <th>Total in PKR</th>
-                    <th>Rs.{{ installments.12_months|multiply:12 }}</th>
-                    <th>Rs.{{ installments.9_months|multiply:9 }}</th>
-                    <th>Rs.{{ installments.6_months|multiply:6 }}</th>
-                    <th>Rs.{{ installments.3_months|multiply:3 }}</th>
+                    <th>Rs.{{ installments.12_months|multiply:12 |intcomma:False }}</th>
+                    <th>Rs.{{ installments.9_months|multiply:9 |intcomma:False}}</th>
+                    <th>Rs.{{ installments.6_months|multiply:6 |intcomma:False}}</th>
+                    <th>Rs.{{ installments.3_months|multiply:3 |intcomma:False}}</th>
                 </tr>
             </thead>
         </table>
     </div>
-
-</body>
-
-</html>
-
+{% endblock content %}
