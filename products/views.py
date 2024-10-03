@@ -32,16 +32,12 @@ class ProductDetailView(View):
         product = get_object_or_404(Product, id=product_id)
         
         months = [months for months in range(1, 13)]
-        price = product.price  
-        installments = {
-            '3_months': int(price / 3)+150,
-            '6_months': int(price / 6)+200,
-            '9_months': int(price / 9)+350,
-            '12_months': int(price / 12)+450,
-        }
+        installments = product.get_installment_plan()
         
         return render(request, 'products/product_details.html', {
             'product': product, 
-            'installments': installments,
+            'installments': installments['installments'],
+            'down_payments': installments['down_payments'],
+            'total_amounts': installments['total_amounts'],
             'months':months,
             })

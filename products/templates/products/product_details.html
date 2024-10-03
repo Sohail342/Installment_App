@@ -59,6 +59,15 @@
                     <th>3 Months</th>
                 </tr>
             </thead>
+            <thead>
+                <tr>
+                    <td>Down Payment</td>
+                    <td>Rs.{{ down_payments.12_months |intcomma:False }}</td>
+                    <td>Rs.{{ down_payments.9_months |intcomma:False}}</td>
+                    <td>Rs.{{ down_payments.6_months |intcomma:False}}</td>
+                    <td>Rs.{{ down_payments.3_months |intcomma:False}}</td>
+                </tr>
+            </thead>
             <tbody>
                 <!-- Loop through each month -->
                 {% for month in months %}
@@ -85,10 +94,10 @@
             <thead>
                 <tr>
                     <th>Total in PKR</th>
-                    <th>Rs.{{ installments.12_months|multiply:12 |intcomma:False }}</th>
-                    <th>Rs.{{ installments.9_months|multiply:9 |intcomma:False}}</th>
-                    <th>Rs.{{ installments.6_months|multiply:6 |intcomma:False}}</th>
-                    <th>Rs.{{ installments.3_months|multiply:3 |intcomma:False}}</th>
+                    <th>Rs.{{ total_amounts.12_months|intcomma:False }}</th>
+                    <th>Rs.{{ total_amounts.9_months |intcomma:False}}</th>
+                    <th>Rs.{{ total_amounts.6_months|intcomma:False}}</th>
+                    <th>Rs.{{ total_amounts.3_months |intcomma:False}}</th>
                 </tr>
             </thead>
         </table>
