@@ -40,4 +40,5 @@ class ProductDetailView(View):
             'down_payments': installments['down_payments'],
             'total_amounts': installments['total_amounts'],
             'months':months,
+            'quantity':product.inventory,
             })

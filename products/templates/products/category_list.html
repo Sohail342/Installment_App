@@ -9,7 +9,7 @@
             <main>
                 {% for category in categories %}
                 <div class="products-card">
-                    <a href="{% url 'products_list' category.name %}" class="product-link">
+                    <a href="{% url 'products:products_list' category.name %}" class="product-link">
                       <img class="image-product" src="{{ category.photo.url }}" alt="{{category.name}}">
                     </a>
                     <p>{{category.category_moto}}</p>

@@ -9,7 +9,7 @@
             <main>
                 {% for product in products %}
                 <div class="products-card">
-                    <a href="{% url 'product_detail' product.id %}" class="product-link">
+                    <a href="{% url 'products:product_detail' product.id %}" class="product-link">
                       <img class="image-product" src="{{ product.photo.url }}" alt="{{product.name}}">
                     </a>
                     <h2 class="product-name">{{product.name}}</h2>
