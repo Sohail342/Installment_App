@@ -13,12 +13,12 @@ def signup(request):
                 user.set_password(form.cleaned_data['password1'])  # Set the password
                 user.save()  
                 login(request, user)
-                return redirect(reverse("category_list"))
+                return redirect(reverse("products:category_list"))
         else:
             form = UserRegForm()
         return render(request, 'account/signup.html', {'form': form})
     else:
-        return redirect(reverse('category_list'))
+        return redirect(reverse('products:category_list'))
 
 
 def signin(request):
@@ -28,7 +28,7 @@ def signin(request):
             if form.is_valid():
                 email = form.cleaned_data.get('email')
                 password = form.cleaned_data.get('password')
-                user = authenticate(username=email, password=password)
+                user = authenticate(request, username=email, password=password)
 
                 if user is not None:
                     login(request, user)
@@ -37,7 +37,7 @@ def signin(request):
             form = EmailLoginForm()
         return render(request, 'account/signin.html', {'form': form})
     else:
-        return redirect(reverse('category_list'))
+        return redirect(reverse('products:category_list'))
 
 
 def signout(request):

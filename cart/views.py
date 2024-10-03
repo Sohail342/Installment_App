@@ -52,13 +52,13 @@ def clear_cart(request, product_id):
     return redirect('cart:cart') 
 
 
-def total_cart_items(request):
-    if request.user.is_authenticated:
-        cart, created = Cart.objects.get_or_create(user=request.user)
-        cart_item_count = cart.items.count()
-    else:
-        cart_item_count = 0  
+# def total_cart_items(request):
+#     if request.user.is_authenticated:
+#         cart, created = Cart.objects.get_or_create(user=request.user)
+#         cart_item_count = cart.items.count()
+#     else:
+#         cart_item_count = 0  
 
-    return render(request, 'base/navbar.html', {'cart_item_count': cart_item_count})
+#     return render(request, 'base/navbar.html', {'cart_item_count': cart_item_count})
     
     
