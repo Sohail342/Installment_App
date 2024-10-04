@@ -12,7 +12,7 @@ from products.models import Product
 @login_required(login_url='account:signin')
 def checkout(request, user_id):
     user = get_object_or_404(User, id=user_id)
-    product_delivery_fee = Product.objects.get(pk=user_id)
+    product = Product.objects.get(pk=user_id)
     cart, created = Cart.objects.get_or_create(user=user)
     cart_items = cart.items.all()
 
@@ -20,11 +20,10 @@ def checkout(request, user_id):
     cart_is_empty = cart_items.count() == 0
 
     subtotal = sum(item.total_price() for item in cart_items)
-    total = product_delivery_fee.delivery_fee + subtotal  # Add delivery charges
+    total = product.delivery_fee + subtotal  # Add delivery charges
 
     if request.method == 'POST':
         form = CheckoutForm(request.POST)
-        print(form.errors)
         if form.is_valid():
             # Collect data from the form
             firstname = form.cleaned_data['firstname']
@@ -33,15 +32,6 @@ def checkout(request, user_id):
             payment_method = form.cleaned_data['payment_method']
             # installment_plan = [item.installment_plan for item in cart_items if item.installment_plan]
             installment_plan = form.cleaned_data['payment_method']
-            
-            
-            # Apply installment plan logic
-            # if installment_plan:
-            #     down_payment = (installment_plan.down_payment_percentage / 100) * subtotal
-            #     fee = (installment_plan.fee_percentage / 100) * subtotal
-            #     total += fee
-            # else:
-            #     down_payment = total  # Full payment for non-installment
 
             # Create order
             order = Order.objects.create(
@@ -50,7 +40,7 @@ def checkout(request, user_id):
                 total_price=total,
                 shipping_address=shipping_address,
                 payment_method=payment_method,
-                # installment_plan="installment_plan",
+                installment_plan="installment_plan",
                 created_at=timezone.now(),
                 updated_at=timezone.now(),
                 is_paid=False,
@@ -87,7 +77,7 @@ def checkout(request, user_id):
         'cart_items': cart_items,
         'subtotal': subtotal,
         'total': total,
-        'product_delivery_fee':product_delivery_fee.delivery_fee,
+        'product_delivery_fee':product.delivery_fee,
     })
 
     

@@ -12,8 +12,6 @@ def add_to_cart(request, product_id):
     
     quantity = int(request.POST.get('quantity', 1))
     installment_plan = request.POST.get('installment_plan')
-    print(quantity)
-    print(installment_plan)
 
     # Validate that an installment plan was selected
     if not installment_plan:

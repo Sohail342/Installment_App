@@ -11,7 +11,7 @@
                 {% else %}
                 <form action="{% url 'order:checkout' user.id %}" class="billing-form" method="POST">
                     {% csrf_token %}
-                    <h3 class="mb-4 billing-heading">Billing Details</h3>
+                    <h3 class="mb-4 billing-heading">Customer Details</h3>
                     <div class="row align-items-end">
                         <div class="col-md-6">
                             <div class="form-group">
