@@ -1,0 +1,35 @@
+{% load static %}
+
+{% block content %}
+<section class="ftco-section">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-xl-8 ftco-animate">
+                <h2 class="mb-4">Thank You {{ request.user.name | title }} For Your Order🎉</h2>
+                
+                <div class="order-details">
+                    <h3>Order #{{ order.id }}</h3>
+                    <p><strong>Order Date:</strong> {{ order.created_at }}</p>
+                    <p><strong>Shipping Address:</strong> {{ order.shipping_address }}</p>
+                    <p><strong>Payment Method:</strong> {{ order.payment_method }}</p>
+                    
+                    {% if order.installment_plan %}
+                        <p><strong>Installment Plan:</strong> {{ order.installment_plan.name }}</p>
+                        <p><strong>Down Payment:</strong> Rs. {{ down_payment }}</p>
+                        <p><strong>Installment Fee:</strong> Rs. {{ fee }}</p>
+                    {% endif %}
+                    
+                    <h4 class="mt-4">Order Items</h4>
+                
+                    <p><strong>Subtotal:</strong> Rs. {{ subtotal }}</p>
+                    <p><strong>Total Quantity:</strong> {{ total_quantity }}</p>
+                    <p><strong>Total:</strong> Rs.{{ order.total_price }}</p>
+                    
+                    <a href="{% url 'products:category_list' %}" class="btn btn-primary">Continue Shopping</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

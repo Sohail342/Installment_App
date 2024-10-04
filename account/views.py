@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, logout
 from django.urls import reverse
+from django.contrib import messages
 from .forms import UserRegForm, EmailLoginForm
 from django.contrib.auth import authenticate
 
@@ -32,13 +33,14 @@ def signin(request):
 
                 if user is not None:
                     login(request, user)
-                    
+                    return redirect(reverse('products:category_list')) 
+                else:
+                    messages.error(request, "Invalid email or password.")
         else:
             form = EmailLoginForm()
         return render(request, 'account/signin.html', {'form': form})
     else:
         return redirect(reverse('products:category_list'))
-
 
 def signout(request):
     logout(request)

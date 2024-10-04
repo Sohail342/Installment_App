@@ -41,7 +41,7 @@
                 <div class="row justify-content-center">
                     {% if cart_items %}
                     <p>
-                        <a href="#" class="btn btn-primary py-3 px-4">Proceed to
+                        <a href="{% url 'order:checkout' request.user.id %}" class="btn btn-primary py-3 px-4">Proceed to
                             Checkout</a>
                     </p>
                     {% else %}

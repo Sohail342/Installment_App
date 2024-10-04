@@ -9,7 +9,14 @@
             <div class="form-container" style="flex: 1; display: flex; align-items: center;">
               <form class="bg-white p-5 contact-form" action="{% url 'account:signin' %}" method="post" style="width: 100%;">
                 {% csrf_token %}
-                
+
+                {# Display non-field errors #}
+                {% if form.non_field_errors %}
+                  <div class="alert alert-danger">
+                    {{ form.non_field_errors }}
+                  </div>
+                {% endif %}
+
                 <div class="form-group">
                     <label for="email">Email</label>
                     {{ form.email|attr:"class:form-control" }}
@@ -31,8 +38,7 @@
                     {% endif %}
                     <input type="submit" value="Sign In" class="btn btn-primary py-3 px-5">
                 </div>
-            </form>
-            
+              </form>
             </div>
           </div>
         </div>

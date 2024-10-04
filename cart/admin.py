@@ -8,6 +8,6 @@ class CartAdminModel(admin.ModelAdmin):
     
 
 @admin.register(CartItem)
-class CartAdminModel(admin.ModelAdmin):
+class CartItemAdminModel(admin.ModelAdmin):
     list_display = ('id','cart', 'product', 'quantity', 'added_at')
     

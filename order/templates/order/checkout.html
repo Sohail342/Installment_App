@@ -17,12 +17,20 @@
                             <div class="form-group">
                                 <label for="firstname">First Name*</label>
                                 <input type="text" class="form-control" placeholder="" name="firstname" required>
+                                <!-- Field error -->
+                                {% if form.firstname.errors %}
+                                    <p class="text-danger">{{ form.firstname.errors.0 }}</p>
+                                {% endif %}
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="lastname">Last Name (Optional)</label>
                                 <input type="text" class="form-control" placeholder="" name="lastname">
+                                <!-- Field error -->
+                                {% if form.lastname.errors %}
+                                    <p class="text-danger">{{ form.lastname.errors.0 }}</p>
+                                {% endif %}
                             </div>
                         </div>
                         <div class="w-100"></div>
@@ -34,6 +42,10 @@
                                     <select name="country" id="country" class="form-control">
                                         <option value="Pakistan">Pakistan</option>
                                     </select>
+                                    <!-- Field error -->
+                                    {% if form.country.errors %}
+                                        <p class="text-danger">{{ form.country.errors.0 }}</p>
+                                    {% endif %}
                                 </div>
                             </div>
                         </div>
@@ -43,12 +55,20 @@
                                 <label for="streetaddress">Street Address*</label>
                                 <input type="text" class="form-control" name="streetaddress"
                                     placeholder="House number and street name" required>
+                                <!-- Field error -->
+                                {% if form.streetaddress.errors %}
+                                    <p class="text-danger">{{ form.streetaddress.errors.0 }}</p>
+                                {% endif %}
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
                                 <input type="text" class="form-control" name="apartment"
                                     placeholder="Apartment, suite, unit etc: (optional)">
+                                <!-- Field error -->
+                                {% if form.apartment.errors %}
+                                    <p class="text-danger">{{ form.apartment.errors.0 }}</p>
+                                {% endif %}
                             </div>
                         </div>
                         <div class="w-100"></div>
@@ -56,12 +76,20 @@
                             <div class="form-group">
                                 <label for="towncity">Town / City*</label>
                                 <input type="text" name="towncity" class="form-control" placeholder="" required>
+                                <!-- Field error -->
+                                {% if form.towncity.errors %}
+                                    <p class="text-danger">{{ form.towncity.errors.0 }}</p>
+                                {% endif %}
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="postcodezip">Postcode / ZIP (Optional)</label>
                                 <input type="text" name="postcodezip" class="form-control" placeholder="">
+                                <!-- Field error -->
+                                {% if form.postcodezip.errors %}
+                                    <p class="text-danger">{{ form.postcodezip.errors.0 }}</p>
+                                {% endif %}
                             </div>
                         </div>
                         <div class="w-100"></div>
@@ -69,12 +97,20 @@
                             <div class="form-group">
                                 <label for="phone">Phone*</label>
                                 <input type="text" name="phone" class="form-control" placeholder="" required>
+                                <!-- Field error -->
+                                {% if form.phone.errors %}
+                                    <p class="text-danger">{{ form.phone.errors.0 }}</p>
+                                {% endif %}
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="emailaddress">Email Address*</label>
                                 <input type="email" name="emailaddress" class="form-control" placeholder="" required>
+                                <!-- Field error -->
+                                {% if form.emailaddress.errors %}
+                                    <p class="text-danger">{{ form.emailaddress.errors.0 }}</p>
+                                {% endif %}
                             </div>
                         </div>
                         <div class="w-100"></div>
@@ -86,17 +122,19 @@
                     <div class="col-md-12 d-flex mb-5">
                         <div class="cart-detail cart-total p-3 p-md-4">
                             <h3 class="billing-heading mb-4">Cart Total</h3>
+                            <span>Total Items: </span>
+                            <span>
+                                {% for item in cart_items %}
+                                    {{ item.quantity }} x {{ item.product.name }}{% if not forloop.last %}, {% endif %}
+                                {% endfor %}
+                            </span>
                             <p class="d-flex">
-                                <span>Items Total {{cart_items}}</span>
-                                <span>Rs.{{subtotal}}</span>
+                                <span>Total: </span>
+                                <span>Rs. {{ subtotal }}</span>
                             </p>
                             <p class="d-flex">
                                 <span>Delivery</span>
-                                <span>Rs.250</span>
-                            </p>
-                            <p class="d-flex">
-                                <span>Discount</span>
-                                <span>Rs.00</span>
+                                <span>Rs.{{product_delivery_fee}}</span>
                             </p>
                             <hr>
                             <p class="d-flex total-price">
@@ -108,13 +146,6 @@
                     <div class="col-md-12">
                         <div class="cart-detail p-3 p-md-4">
                             <h3 class="billing-heading mb-4">Payment Method</h3>
-                            {% comment %} <div class="form-group">
-                                <div class="col-md-12">
-                                    <div class="radio">
-                                        <label><input type="radio" name="payment_method" value="JazzCash" class="mr-2" required> JazzCash</label>
-                                    </div>
-                                </div>
-                            </div> {% endcomment %}
                             <div class="form-group">
                                 <div class="col-md-12">
                                     <div class="radio">
@@ -125,12 +156,16 @@
                             <div class="form-group">
                                 <div class="col-md-12">
                                     <div class="checkbox">
-                                        <label><input type="checkbox" value="" class="mr-2" required>I have read and accept the <a href="{% url 'about:other-details' %}">terms and conditions<a/></label>
+                                        <label><input type="checkbox" value="" class="mr-2" required>I have read and accept the <a href="#">terms and conditions<a/></label>
                                     </div>
                                 </div>
                             </div>
                             <input type="hidden" name="payment_method" id="hidden-payment-method" value="" required>
                             <button type="submit" class="btn btn-primary py-3 px-4">Place an order</button>
+                            <!-- Non-field errors -->
+                            {% if form.non_field_errors %}
+                                <p class="text-danger">{{ form.non_field_errors }}</p>
+                            {% endif %}
                         </div>
                     </div>
                 </div>

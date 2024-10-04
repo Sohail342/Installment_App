@@ -32,6 +32,7 @@ INSTALLED_APPS = [
     'products',
     'account', 
     'cart',
+    'order',
     'widget_tweaks',
 ]
 
@@ -76,7 +77,6 @@ DATABASES = {
     }
 }
 
-ADMIN_ENABLED = True
 
 
 # Password validation

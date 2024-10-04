@@ -2,7 +2,6 @@
 {% load widget_tweaks %}
 
 {% block content %}
-
     <section class="ftco-section contact-section bg-light">
       <div class="container">
         <div class="row block-9">
@@ -10,6 +9,14 @@
             <div class="form-container" style="flex: 1; display: flex; align-items: center;">
               <form method="POST" action="{% url 'account:signup' %}">
                 {% csrf_token %}
+
+                {# Display non-field errors #}
+                {% if form.non_field_errors %}
+                  <div class="alert alert-danger">
+                    {{ form.non_field_errors }}
+                  </div>
+                {% endif %}
+
                 <div class="form-group">
                     <label for="email">Email</label>
                     {{ form.email }}
@@ -46,11 +53,11 @@
                   {% endif %}
               </div>
                 <button type="submit" class="btn btn-primary">Sign Up</button>
-            </form>
-            <div class="mt-3">
-              <p>Already have an account?</p>
-              <a href="{% url 'account:signin' %}" class="btn btn-secondary">Login</a>
-          </div>
+              </form>
+              <div class="mt-3">
+                <p>Already have an account?</p>
+                <a href="{% url 'account:signin' %}" class="btn btn-secondary">Login</a>
+              </div>
             </div>
           </div>
         </div>

@@ -18,6 +18,7 @@ class Product(models.Model):
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     date = models.DateTimeField(auto_now_add=True)
     inventory = models.IntegerField(default=1)
+    delivery_fee = models.IntegerField(default=290)
     
     # Dynamic down payment percentages
     down_payment_3_months = models.FloatField(default=30.0) 
