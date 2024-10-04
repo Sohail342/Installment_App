@@ -27,12 +27,12 @@ def add_to_cart(request, product_id):
     cart_item, item_created = CartItem.objects.get_or_create(cart=cart, product=product, installment_plan=installment_plan)
 
     if not item_created:
-        cart_item.quantity += quantity
+        # cart_item.quantity += quantity
+        cart_item.delete()
     else:
         cart_item.quantity = quantity
     
     # Save the selected installment plan in the cart item
-    # cart_item.installment_plan = installment_plan
     cart_item.save()
 
     return redirect('cart:cart') 

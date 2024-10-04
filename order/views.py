@@ -50,7 +50,7 @@ def checkout(request, user_id):
                 total_price=total,
                 shipping_address=shipping_address,
                 payment_method=payment_method,
-                installment_plan=installment_plan,
+                # installment_plan="installment_plan",
                 created_at=timezone.now(),
                 updated_at=timezone.now(),
                 is_paid=False,
