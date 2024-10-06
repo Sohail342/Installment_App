@@ -10,30 +10,26 @@ from django.contrib.auth.decorators import login_required
 def add_to_cart(request, product_id):
     product = get_object_or_404(Product, id=product_id)
     
-    quantity = int(request.POST.get('quantity', 1))
-    installment_plan = request.POST.get('installment_plan')
-
-    # Validate that an installment plan was selected
-    if not installment_plan:
-        messages.error(request, "Please select an installment plan.")
-        return redirect('cart:cart')  
+    quantity = int(request.POST.get('quantity', 1))  # Default quantity is 1
 
     # Get or create a cart for the current user
     cart, created = Cart.objects.get_or_create(user=request.user)
 
-    # Get or create a cart item for the specified product
-    cart_item, item_created = CartItem.objects.get_or_create(cart=cart, product=product, installment_plan=installment_plan)
+    # Check if a cart item with the same product already exists
+    existing_cart_item = CartItem.objects.filter(cart=cart, product=product).first()
 
-    if not item_created:
-        # cart_item.quantity += quantity
-        cart_item.delete()
-    else:
-        cart_item.quantity = quantity
+    if existing_cart_item:
+        # If the cart item already exists, delete it
+        existing_cart_item.delete()
+
+    # Create a new cart item with the updated details
+    new_cart_item = CartItem(cart=cart, product=product, quantity=quantity)
+    new_cart_item.save()
+
+    messages.success(request, "Product updated in the cart.")
     
-    # Save the selected installment plan in the cart item
-    cart_item.save()
-
-    return redirect('cart:cart') 
+    return redirect('cart:cart')
+ 
 
 
 @login_required(login_url='account:signin')
@@ -60,13 +56,14 @@ def clear_cart(request, product_id):
     return redirect('cart:cart') 
 
 
-# def total_cart_items(request):
-#     if request.user.is_authenticated:
-#         cart, created = Cart.objects.get_or_create(user=request.user)
-#         cart_item_count = cart.items.count()
-#     else:
-#         cart_item_count = 0  
-
-#     return render(request, 'base/navbar.html', {'cart_item_count': cart_item_count})
+def clear_all_cart(request):
+    cart = get_object_or_404(Cart, user=request.user)
+    
+    # Get the CartItem to remove
+    cart_items = CartItem.objects.filter(cart=cart)
+    
+    # Remove the items from the cart
+    cart_items.delete()
+    return redirect('cart:cart') 
     
     

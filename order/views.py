@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
-from cart.models import Cart, CartItem
+from cart.models import Cart
 from . models import Order, OrderItem
 from .forms import CheckoutForm
 from django.contrib.auth.decorators import login_required
@@ -23,15 +23,17 @@ def checkout(request, user_id):
     total = product.delivery_fee + subtotal  # Add delivery charges
 
     if request.method == 'POST':
+        print("Post Method")
         form = CheckoutForm(request.POST)
         if form.is_valid():
+            print("Form Valid")
             # Collect data from the form
             firstname = form.cleaned_data['firstname']
             lastname = form.cleaned_data['lastname']
             shipping_address = f"{form.cleaned_data['streetaddress']} {form.cleaned_data['apartment']}, {form.cleaned_data['towncity']}, {form.cleaned_data['postcodezip']}"
             payment_method = form.cleaned_data['payment_method']
-            # installment_plan = [item.installment_plan for item in cart_items if item.installment_plan]
-            installment_plan = form.cleaned_data['payment_method']
+            installment_plan = form.cleaned_data['installment_plan']
+            print(payment_method)
 
             # Create order
             order = Order.objects.create(
@@ -40,7 +42,7 @@ def checkout(request, user_id):
                 total_price=total,
                 shipping_address=shipping_address,
                 payment_method=payment_method,
-                installment_plan="installment_plan",
+                installment_plan=installment_plan,
                 created_at=timezone.now(),
                 updated_at=timezone.now(),
                 is_paid=False,

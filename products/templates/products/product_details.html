@@ -5,119 +5,113 @@
 {% block title %}{{ product.name }}{% endblock title %}
 
 {% block content %}
-    <!-- content -->
-    <section class="py-5">
-        <div class="container">
-            <div class="row gx-5 align-items-center">
-                <aside class="col-lg-6">
-                    <div class="border rounded-4 mb-3 d-flex justify-content-center">
-                        <img style="max-width: 100%; max-height: 100vh; margin: auto;" class="rounded-4 fit"
-                            src="{{ product.photo.url }}" />
-                    </div>
-                </aside>
-                <main class="col-lg-6">
-                    <div class="ps-lg-3">
-                        <h4 class="title text-dark">
-                            {{ product.name }}
-                        </h4>
-                        <div class="d-flex flex-row my-3">
-                            <div class="text-warning mb-1 me-2">
-                                <i class="fa fa-star"></i>
-                                <i class="fa fa-star"></i>
-                                <i class="fa fa-star"></i>
-                                <i class="fa fa-star"></i>
-                                <i class="fas fa-star-half-alt"></i>
-                                <span class="ms-1">4.5</span>
-                            </div>
-                            <span class="text-muted"><i class="fas fa-shopping-basket fa-sm mx-1"></i>{{ product.inventory }}</span>
-                            <span class="text-success ms-2">In stock</span>
+<!-- content -->
+<section class="py-5">
+    <div class="container">
+        <div class="row gx-5 align-items-center">
+            <aside class="col-lg-6">
+                <div class="border rounded-4 mb-3 d-flex justify-content-center">
+                    <img style="max-width: 100%; max-height: 100vh; margin: auto;" class="rounded-4 fit"
+                        src="{{ product.photo.url }}" />
+                </div>
+            </aside>
+            <main class="col-lg-6">
+                <div class="ps-lg-3">
+                    <h4 class="title text-dark">
+                        {{ product.name }}
+                    </h4>
+                    <div class="d-flex flex-row my-3">
+                        <div class="text-warning mb-1 me-2">
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i>
+                            <span class="ms-1">4.5</span>
                         </div>
-                        <div class="mb-3">
-                            <span class="h5">Rs.{{ product.price | intcomma:False }}</span>
-                        </div>
-                        <p>
-                            {{ product.details }}
-                        </p>
-
-                        <!-- Add to Cart Form -->
-                        <!-- Add to Cart Form -->
-                        <form action="{% url 'cart:add_to_cart' product.id %}" method="post">
-                            {% csrf_token %}
-                            <div class="input-group mb-3" style="max-width: 300px;">
-                                <input type="number" value="1" name="quantity" min="1" max="{{ product.inventory }}" class="form-control text-center" />
-                                <select name="installment_plan" class="form-select ms-2" required>
-                                    <option value="" disabled selected>Select Installment Plan</option>
-                                    <option value="12_months">12 Months</option>
-                                    <option value="9_months">9 Months</option>
-                                    <option value="6_months">6 Months</option>
-                                    <option value="3_months">3 Months</option>
-                                </select>
-                                <button type="submit" class="btn btn-primary ms-2">
-                                    <i class="fa fa-shopping-cart"></i> Add to Cart
-                                </button>
-                            </div>
-                        </form>
-
+                        <span class="text-muted"><i class="fas fa-shopping-basket fa-sm mx-1"></i>{{ product.inventory}}</span>
+                        <span class="text-success ms-2">In stock</span>
                     </div>
-                </main>
-            </div>
+                    <div class="mb-3">
+                        <span class="h5">Rs.{{ product.price | intcomma:False }}</span>
+                    </div>
+                    <p>
+                        {{ product.details }}
+                    </p>
+
+                    <!-- Add to Cart Form -->
+                    <form action="{% url 'cart:add_to_cart' product.id %}" method="post">
+                        {% csrf_token %}
+                        <div class="input-group mb-3" style="max-width: 300px;">
+                            <input type="number" value="1" name="quantity" min="1" max="{{ product.inventory }}"
+                                class="form-control text-center" />
+                            
+                            {% if product.inventory > 0 %}
+                            <button type="submit" class="btn btn-primary ms-2">
+                                <i class="fa fa-shopping-cart"></i> Add to Cart
+                            </button>
+                            {% else %}
+                            <i class="fa fa-shopping-cart"></i> Out of stock
+                            {% endif %}
+                        </div>
+                    </form>
+
+                </div>
+            </main>
         </div>
-    </section>
-
-    <!-- Installment Plan Header -->
-    <div class="container my-5">
-        <h2 class="text-center">Installment Plan</h2>
-        <table class="table table-striped table-bordered table-hover mt-4">
-            <thead>
-                <tr>
-                    <th>Month</th>
-                    <th>12 Months</th>
-                    <th>9 Months</th>
-                    <th>6 Months</th>
-                    <th>3 Months</th>
-                </tr>
-            </thead>
-            <thead>
-                <tr>
-                    <td>Down Payment</td>
-                    <td>Rs.{{ down_payments.12_months | intcomma:False }}</td>
-                    <td>Rs.{{ down_payments.9_months | intcomma:False }}</td>
-                    <td>Rs.{{ down_payments.6_months | intcomma:False }}</td>
-                    <td>Rs.{{ down_payments.3_months | intcomma:False }}</td>
-                </tr>
-            </thead>
-            <tbody>
-                <!-- Loop through each month -->
-                {% for month in months %}
-                <tr>
-                    <td>Month {{ month }}</td>
-                    {% if month < 13 %}
-                    <td>Rs. {{ installments.12_months | intcomma:False }}</td>
-                    {% endif %}
-
-                    {% if month < 10 %}
-                    <td>Rs. {{ installments.9_months | intcomma:False }}</td>
-                    {% endif %}
-
-                    {% if month < 7 %}
-                    <td>Rs. {{ installments.6_months | intcomma:False }}</td>
-                    {% endif %}
-
-                    {% if month < 4 %}
-                    <td>Rs. {{ installments.3_months | intcomma:False }}</td>
-                    {% endif %}
-                </tr>
-                {% endfor %}
-            </tbody>
-            <thead>
-                <tr>
-                    <th>Total in PKR</th>
-                    <th>Rs.{{ total_amounts.12_months | intcomma:False }}</th>
-                    <th>Rs.{{ total_amounts.9_months | intcomma:False }}</th>
-                    <th>Rs.{{ total_amounts.6_months | intcomma:False }}</th>
-                    <th>Rs.{{ total_amounts.3_months | intcomma:False }}</th>
-                </tr>
-            </thead>
-        </table>
     </div>
+</section>
+
+<!-- Installment Plan Header -->
+<div class="container my-5">
+    <h2 class="text-center">Installment Plan</h2>
+    <table class="table table-striped table-bordered table-hover mt-4">
+        <thead>
+            <tr>
+                <th>Month</th>
+                <th>12 Months</th>
+                <th>9 Months</th>
+                <th>6 Months</th>
+                <th>3 Months</th>
+            </tr>
+        </thead>
+        <thead>
+            <tr>
+                <td>Down Payment</td>
+                <td>Rs.{{ down_payments.12_months | intcomma:False }}</td>
+                <td>Rs.{{ down_payments.9_months | intcomma:False }}</td>
+                <td>Rs.{{ down_payments.6_months | intcomma:False }}</td>
+                <td>Rs.{{ down_payments.3_months | intcomma:False }}</td>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Loop through each month -->
+            {% for month in months %}
+            <tr>
+                <td>Month {{ month }}</td>
+                {% if month < 13 %} <td>Rs. {{ installments.12_months | intcomma:False }}</td>
+                    {% endif %}
+
+                    {% if month < 10 %} <td>Rs. {{ installments.9_months | intcomma:False }}</td>
+                        {% endif %}
+
+                        {% if month < 7 %} <td>Rs. {{ installments.6_months | intcomma:False }}</td>
+                            {% endif %}
+
+                            {% if month < 4 %} <td>Rs. {{ installments.3_months | intcomma:False }}</td>
+                                {% endif %}
+            </tr>
+            {% endfor %}
+        </tbody>
+        <thead>
+            <tr>
+                <th>Total in PKR</th>
+                <th>Rs.{{ total_amounts.12_months | intcomma:False }}</th>
+                <th>Rs.{{ total_amounts.9_months | intcomma:False }}</th>
+                <th>Rs.{{ total_amounts.6_months | intcomma:False }}</th>
+                <th>Rs.{{ total_amounts.3_months | intcomma:False }}</th>
+            </tr>
+        </thead>
+    </table>
+</div>
 {% endblock content %}

@@ -1,3 +1,4 @@
+from django.core.validators import MinValueValidator
 from django.db import models
 
 class Category(models.Model):
@@ -17,7 +18,7 @@ class Product(models.Model):
     details = models.TextField()
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     date = models.DateTimeField(auto_now_add=True)
-    inventory = models.IntegerField(default=1)
+    inventory = models.IntegerField(default=1, validators=[MinValueValidator(0)])
     delivery_fee = models.IntegerField(default=290)
     
     # Dynamic down payment percentages

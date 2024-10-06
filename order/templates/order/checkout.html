@@ -19,7 +19,7 @@
                                 <input type="text" class="form-control" placeholder="" name="firstname" required>
                                 <!-- Field error -->
                                 {% if form.firstname.errors %}
-                                    <p class="text-danger">{{ form.firstname.errors.0 }}</p>
+                                <p class="text-danger">{{ form.firstname.errors.0 }}</p>
                                 {% endif %}
                             </div>
                         </div>
@@ -29,7 +29,7 @@
                                 <input type="text" class="form-control" placeholder="" name="lastname">
                                 <!-- Field error -->
                                 {% if form.lastname.errors %}
-                                    <p class="text-danger">{{ form.lastname.errors.0 }}</p>
+                                <p class="text-danger">{{ form.lastname.errors.0 }}</p>
                                 {% endif %}
                             </div>
                         </div>
@@ -44,7 +44,7 @@
                                     </select>
                                     <!-- Field error -->
                                     {% if form.country.errors %}
-                                        <p class="text-danger">{{ form.country.errors.0 }}</p>
+                                    <p class="text-danger">{{ form.country.errors.0 }}</p>
                                     {% endif %}
                                 </div>
                             </div>
@@ -57,7 +57,7 @@
                                     placeholder="House number and street name" required>
                                 <!-- Field error -->
                                 {% if form.streetaddress.errors %}
-                                    <p class="text-danger">{{ form.streetaddress.errors.0 }}</p>
+                                <p class="text-danger">{{ form.streetaddress.errors.0 }}</p>
                                 {% endif %}
                             </div>
                         </div>
@@ -67,7 +67,7 @@
                                     placeholder="Apartment, suite, unit etc: (optional)">
                                 <!-- Field error -->
                                 {% if form.apartment.errors %}
-                                    <p class="text-danger">{{ form.apartment.errors.0 }}</p>
+                                <p class="text-danger">{{ form.apartment.errors.0 }}</p>
                                 {% endif %}
                             </div>
                         </div>
@@ -78,7 +78,7 @@
                                 <input type="text" name="towncity" class="form-control" placeholder="" required>
                                 <!-- Field error -->
                                 {% if form.towncity.errors %}
-                                    <p class="text-danger">{{ form.towncity.errors.0 }}</p>
+                                <p class="text-danger">{{ form.towncity.errors.0 }}</p>
                                 {% endif %}
                             </div>
                         </div>
@@ -88,7 +88,7 @@
                                 <input type="text" name="postcodezip" class="form-control" placeholder="">
                                 <!-- Field error -->
                                 {% if form.postcodezip.errors %}
-                                    <p class="text-danger">{{ form.postcodezip.errors.0 }}</p>
+                                <p class="text-danger">{{ form.postcodezip.errors.0 }}</p>
                                 {% endif %}
                             </div>
                         </div>
@@ -99,7 +99,7 @@
                                 <input type="text" name="phone" class="form-control" placeholder="" required>
                                 <!-- Field error -->
                                 {% if form.phone.errors %}
-                                    <p class="text-danger">{{ form.phone.errors.0 }}</p>
+                                <p class="text-danger">{{ form.phone.errors.0 }}</p>
                                 {% endif %}
                             </div>
                         </div>
@@ -109,7 +109,7 @@
                                 <input type="email" name="emailaddress" class="form-control" placeholder="" required>
                                 <!-- Field error -->
                                 {% if form.emailaddress.errors %}
-                                    <p class="text-danger">{{ form.emailaddress.errors.0 }}</p>
+                                <p class="text-danger">{{ form.emailaddress.errors.0 }}</p>
                                 {% endif %}
                             </div>
                         </div>
@@ -125,7 +125,7 @@
                             <span>Total Items: </span>
                             <span>
                                 {% for item in cart_items %}
-                                    {{ item.quantity }} x {{ item.product.name }}{% if not forloop.last %}, {% endif %}
+                                {{ item.quantity }} x {{ item.product.name }}{% if not forloop.last %}, {% endif %}
                                 {% endfor %}
                             </span>
                             <p class="d-flex">
@@ -149,22 +149,31 @@
                             <div class="form-group">
                                 <div class="col-md-12">
                                     <div class="radio">
-                                        <label><input type="radio" name="payment_method" value="COD" class="mr-2" required>COD</label>
+                                        <label><input type="radio" name="payment_method" value="COD" class="mr-2"
+                                                required>COD</label>
                                     </div>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="col-md-12">
                                     <div class="checkbox">
-                                        <label><input type="checkbox" value="" class="mr-2" required>I have read and accept the <a href="#">terms and conditions<a/></label>
+                                        <label><input type="checkbox" value="" class="mr-2" required>I have read and
+                                            accept the <a href="#">terms and conditions<a /></label>
                                     </div>
                                 </div>
                             </div>
+                            <select name="installment_plan" class="form-select ms-2" required>
+                                <option value="" disabled selected>Select Installment Plan</option>
+                                <option value="12_months">12 Months</option>
+                                <option value="9_months">9 Months</option>
+                                <option value="6_months">6 Months</option>
+                                <option value="3_months">3 Months</option>
+                            </select>
                             <input type="hidden" name="payment_method" id="hidden-payment-method" value="" required>
                             <button type="submit" class="btn btn-primary py-3 px-4">Place an order</button>
                             <!-- Non-field errors -->
                             {% if form.non_field_errors %}
-                                <p class="text-danger">{{ form.non_field_errors }}</p>
+                            <p class="text-danger">{{ form.non_field_errors }}</p>
                             {% endif %}
                         </div>
                     </div>
@@ -176,14 +185,14 @@
     </div>
 </section> <!-- .section -->
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         // Get all radio buttons and the hidden input
         const radios = document.querySelectorAll('input[name="payment_method"]');
         const hiddenInput = document.getElementById('hidden-payment-method');
 
         // Add change event listener to all radio buttons
         radios.forEach(radio => {
-            radio.addEventListener('change', function() {
+            radio.addEventListener('change', function () {
                 if (this.checked) {
                     hiddenInput.value = this.value;
                 }

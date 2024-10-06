@@ -12,6 +12,16 @@ class InstallmentPlan(models.Model):
     def __str__(self):
         return f"{self.name} - {self.duration_months} months"
 
+class InstallmentPayment(models.Model):
+    order_item = models.ForeignKey('OrderItem', related_name='installments', on_delete=models.CASCADE)
+    month_number = models.PositiveIntegerField()  
+    amount_due = models.DecimalField(max_digits=10, decimal_places=2) 
+    amount_paid = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)  
+    is_paid = models.BooleanField(default=False)  
+
+    def __str__(self):
+        return f"Installment {self.month_number} for {self.order_item.product.name}"
+
 class Order(models.Model):
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
     cart = models.ForeignKey(Cart, on_delete=models.CASCADE)
@@ -23,7 +33,12 @@ class Order(models.Model):
     payment_method = models.CharField(max_length=30, choices=[
         ('COD', 'Cash on Delivery'),
     ])
-    installment_plan = models.ForeignKey(InstallmentPlan, null=True, blank=True, on_delete=models.SET_NULL)
+    installment_plan = models.CharField(max_length=30, choices=[
+        ('3_months', '3 Months Plan'),
+        ('6_months', '6 Months Plan'),
+        ('9_months', '9 Months Plan'),
+        ('12_months', '12 Months Plan'),
+    ], default=None)
     status = models.CharField(max_length=20, choices=[
         ('Pending', 'Pending'),
         ('Processing', 'Processing'),

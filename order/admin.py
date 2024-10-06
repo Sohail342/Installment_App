@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Order, OrderItem
+from .models import Order, OrderItem, InstallmentPayment
 
 # Register your models here.
 
@@ -11,3 +11,7 @@ class OrderADminModel(admin.ModelAdmin):
 @admin.register(OrderItem)
 class OrderADminModel(admin.ModelAdmin):
     list_display = ('id','order', 'product','quantity', 'price', 'total_price')
+    
+@admin.register(InstallmentPayment)
+class InstallmentPlanAdmin(admin.ModelAdmin):
+    list_display = ('order_item', 'month_number', 'amount_due', 'amount_paid', 'is_paid')  

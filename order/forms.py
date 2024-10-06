@@ -12,15 +12,12 @@ class CheckoutForm(forms.Form):
     emailaddress = forms.EmailField()
     payment_method = forms.ChoiceField(choices=[
         ('COD', 'Cash on Delivery'),
-        ('JazzCash', 'JazzCash'),
     ])
-    installment_plan = forms.ModelChoiceField(queryset=InstallmentPlan.objects.all(), required=False)
+    installment_plan = forms.ChoiceField(choices=[
+        ('3_months', '3 Months'),
+        ('6_months', '6 Months'),
+        ('9_months', '9 Months'),
+        ('12_months', '12 Months'),
+    ])
 
-    def clean_installment_plan(self):
-        payment_method = self.cleaned_data.get('payment_method')
-        installment_plan = self.cleaned_data.get('installment_plan')
-
-        if payment_method == 'COD' and installment_plan is not None:
-            raise forms.ValidationError("Installments are not available for Cash on Delivery.")
-        return installment_plan
     
