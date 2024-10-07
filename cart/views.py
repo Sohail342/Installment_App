@@ -11,19 +11,28 @@ def add_to_cart(request, product_id):
     product = get_object_or_404(Product, id=product_id)
     
     quantity = int(request.POST.get('quantity', 1))  # Default quantity is 1
+    installment_plan = request.POST.get('installment_plan')
+
+    # Validate that an installment plan was selected
+    if not installment_plan:
+        messages.error(request, "Please select an installment plan.")
+        return redirect('cart:cart')  
 
     # Get or create a cart for the current user
     cart, created = Cart.objects.get_or_create(user=request.user)
 
     # Check if a cart item with the same product already exists
-    existing_cart_item = CartItem.objects.filter(cart=cart, product=product).first()
+    # existing_cart_item = CartItem.objects.filter(cart=cart, product=product).first()
+    
+    # Check if a cart item  already exists
+    existing_cart_item = CartItem.objects.filter(cart=cart).first()
 
     if existing_cart_item:
         # If the cart item already exists, delete it
         existing_cart_item.delete()
 
     # Create a new cart item with the updated details
-    new_cart_item = CartItem(cart=cart, product=product, quantity=quantity)
+    new_cart_item = CartItem(cart=cart, product=product, quantity=quantity, installment_plan=installment_plan)
     new_cart_item.save()
 
     messages.success(request, "Product updated in the cart.")

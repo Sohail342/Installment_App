@@ -145,31 +145,15 @@
                     </div>
                     <div class="col-md-12">
                         <div class="cart-detail p-3 p-md-4">
-                            <h3 class="billing-heading mb-4">Payment Method</h3>
+                            <h3 class="billing-heading mb-4">Installment Method</h3>
                             <div class="form-group">
                                 <div class="col-md-12">
                                     <div class="radio">
-                                        <label><input type="radio" name="payment_method" value="COD" class="mr-2"
-                                                required>COD</label>
+                                        <label><input type="radio" name="payment_method" value="Installment" class="mr-2"
+                                                required>Installment Payment</label>
                                     </div>
                                 </div>
                             </div>
-                            <div class="form-group">
-                                <div class="col-md-12">
-                                    <div class="checkbox">
-                                        <label><input type="checkbox" value="" class="mr-2" required>I have read and
-                                            accept the <a href="#">terms and conditions<a /></label>
-                                    </div>
-                                </div>
-                            </div>
-                            <select name="installment_plan" class="form-select ms-2" required>
-                                <option value="" disabled selected>Select Installment Plan</option>
-                                <option value="12_months">12 Months</option>
-                                <option value="9_months">9 Months</option>
-                                <option value="6_months">6 Months</option>
-                                <option value="3_months">3 Months</option>
-                            </select>
-                            <input type="hidden" name="payment_method" id="hidden-payment-method" value="" required>
                             <button type="submit" class="btn btn-primary py-3 px-4">Place an order</button>
                             <!-- Non-field errors -->
                             {% if form.non_field_errors %}
@@ -184,20 +168,4 @@
         </div>
     </div>
 </section> <!-- .section -->
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        // Get all radio buttons and the hidden input
-        const radios = document.querySelectorAll('input[name="payment_method"]');
-        const hiddenInput = document.getElementById('hidden-payment-method');
-
-        // Add change event listener to all radio buttons
-        radios.forEach(radio => {
-            radio.addEventListener('change', function () {
-                if (this.checked) {
-                    hiddenInput.value = this.value;
-                }
-            });
-        });
-    });
-</script>
 {% endblock %}

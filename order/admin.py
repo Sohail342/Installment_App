@@ -5,13 +5,13 @@ from .models import Order, OrderItem, InstallmentPayment
 
 @admin.register(Order)
 class OrderADminModel(admin.ModelAdmin):
-    list_display = ('id','user', 'cart','shipping_address', 'payment_method', 'is_paid', 'installment_plan')
+    list_display = ('id','user', 'customer', 'cart','shipping_address', 'payment_method', 'is_paid', 'installment_plan')
     
 
 @admin.register(OrderItem)
 class OrderADminModel(admin.ModelAdmin):
-    list_display = ('id','order', 'product','quantity', 'price', 'total_price')
+    list_display = ('id','order', 'customer', 'product','quantity', 'price', 'total_price')
     
 @admin.register(InstallmentPayment)
 class InstallmentPlanAdmin(admin.ModelAdmin):
-    list_display = ('order_item', 'month_number', 'amount_due', 'amount_paid', 'is_paid')  
+    list_display = ('id', 'customer','order_item', 'month_number', 'amount_due', 'amount_paid', 'is_paid')  

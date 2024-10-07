@@ -1,5 +1,4 @@
 from django import forms
-from .models import InstallmentPlan
 
 class CheckoutForm(forms.Form):
     firstname = forms.CharField(max_length=100)
@@ -11,13 +10,7 @@ class CheckoutForm(forms.Form):
     phone = forms.CharField(max_length=20)
     emailaddress = forms.EmailField()
     payment_method = forms.ChoiceField(choices=[
-        ('COD', 'Cash on Delivery'),
-    ])
-    installment_plan = forms.ChoiceField(choices=[
-        ('3_months', '3 Months'),
-        ('6_months', '6 Months'),
-        ('9_months', '9 Months'),
-        ('12_months', '12 Months'),
+        ('Installment', 'Installment Payment'),
     ])
 
     

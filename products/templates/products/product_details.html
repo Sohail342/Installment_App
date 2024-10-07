@@ -43,9 +43,16 @@
                     <form action="{% url 'cart:add_to_cart' product.id %}" method="post">
                         {% csrf_token %}
                         <div class="input-group mb-3" style="max-width: 300px;">
-                            <input type="number" value="1" name="quantity" min="1" max="{{ product.inventory }}"
-                                class="form-control text-center" />
-                            
+                            {% comment %} <input type="number" value="1" name="quantity" min="1" max="{{ product.inventory }}"
+                                class="form-control text-center" /> {% endcomment %}
+                                <select name="installment_plan" class="form-select ms-2" required>
+                                    <option value="" disabled selected>Select Installment Plan</option>
+                                    <option value="12_months">12 Months</option>
+                                    <option value="9_months">9 Months</option>
+                                    <option value="6_months">6 Months</option>
+                                    <option value="3_months">3 Months</option>
+                                </select>
+                                
                             {% if product.inventory > 0 %}
                             <button type="submit" class="btn btn-primary ms-2">
                                 <i class="fa fa-shopping-cart"></i> Add to Cart
