@@ -7,12 +7,11 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404
 from account.models import User, Customer
 from django.utils import timezone
-from products.models import Product
+
 
 @login_required(login_url='account:signin')
 def checkout(request, user_id):
     user = get_object_or_404(User, id=user_id)
-    product = Product.objects.get(pk=user_id)
     cart, created = Cart.objects.get_or_create(user=user)
     cart_items = cart.items.all()
     cart_product = CartItem.objects.get(cart=cart)
@@ -109,6 +108,12 @@ def checkout(request, user_id):
                     quantity=item.quantity,
                     price=item.product.price
                 )
+
+                 # Decrease the product quantity
+                product = item.product
+                if product.inventory >= item.quantity:
+                    product.inventory -= item.quantity
+                    product.save()
 
                 # Create Installment Payments
                 product = item.product
