@@ -1,4 +1,3 @@
-
 {% extends 'products/base.html' %}
 {% load static %}
 
@@ -6,17 +5,30 @@
     <div class="container">
         <section class="main-section">
             <h1>Our Products</h1>
+
+            <!-- Search Form -->
+            <form method="get" action="{% url 'products:category_list' %}" class="form-inline mb-3">
+                <div class="input-group">
+                    <input type="text" name="search" class="form-control" placeholder="Search categories..." value="{{ request.GET.search }}">
+                    <div class="input-group-append">
+                        <button class="btn btn-primary" type="submit">Search</button>
+                    </div>
+                </div>
+            </form>
+
             <main>
                 {% for category in categories %}
-                <div class="products-card">
+                <div class="products-card mb-4">
                     <a href="{% url 'products:products_list' category.name %}" class="product-link">
-                      <img class="image-product" src="{{ category.photo.url }}" alt="{{category.name}}">
+                      <img class="image-product img-fluid" src="{{ category.photo.url }}" alt="{{ category.name }}">
                     </a>
-                    <p>{{category.category_moto}}</p>
-                    <h2 class="product-name">{{category.name}}</h2>
+                    <p>{{ category.category_moto }}</p>
+                    <h2 class="product-name">{{ category.name }}</h2>
                 </div>
-                  {% endfor %}
+                {% empty %}
+                    <p>No categories found.</p>
+                {% endfor %}
             </main>
         </section>
     </div>
-    {% endblock content %}
+{% endblock content %}

@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     'cart',
     'order',
     'widget_tweaks',
+    'django_extensions'
 ]
 
 MIDDLEWARE = [

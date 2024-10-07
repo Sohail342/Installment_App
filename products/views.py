@@ -8,11 +8,13 @@ from django.shortcuts import render, get_object_or_404
 
 @login_required(login_url='account:signin')
 def category_list_view(request):
-    categories = Category.objects.all()
-    context = {
-        'categories': categories
-    }
-    return render(request, 'products/category_list.html', context)
+    query = request.GET.get('search', '')
+    if query:
+        categories = Category.objects.filter(name__icontains=query)
+    else:
+        categories = Category.objects.all()
+
+    return render(request, 'products/category_list.html', {'categories': categories})
 
 
 
