@@ -72,7 +72,7 @@ def checkout(request, user_id):
             phone_number = form.cleaned_data['phone']
             email = form.cleaned_data['emailaddress']
             
-            # Check if the customer already exists based on phone number or email
+            # Check if the customer already exists based on phone number
             customer, created = Customer.objects.get_or_create(
                 phone_number=phone_number,
                 defaults={

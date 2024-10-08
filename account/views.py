@@ -5,21 +5,24 @@ from django.contrib import messages
 from .forms import UserRegForm, EmailLoginForm
 from django.contrib.auth import authenticate
 
+
 def signup(request):
     if not request.user.is_authenticated:
         if request.method == 'POST':
             form = UserRegForm(request.POST)
             if form.is_valid():
-                user = form.save(commit=False)  # Don't save yet, we may need to add more data
-                user.set_password(form.cleaned_data['password1'])  # Set the password
-                user.save()  
-                login(request, user)
-                return redirect(reverse("products:category_list"))
+                user = form.save(commit=False)
+                user.set_password(form.cleaned_data['password1'])
+                user.is_approved = False  # Set to False initially
+                user.save()
+                messages.info(request, "Registration successful! Please wait for approval.")
+                return redirect(reverse("account:signin"))
         else:
             form = UserRegForm()
         return render(request, 'account/signup.html', {'form': form})
     else:
         return redirect(reverse('products:category_list'))
+
 
 
 def signin(request):
@@ -32,15 +35,21 @@ def signin(request):
                 user = authenticate(request, username=email, password=password)
 
                 if user is not None:
+                    if not user.is_approved:
+                        messages.error(request, "Your account is not approved yet.")
+                        return redirect(reverse('account:signin'))
                     login(request, user)
-                    return redirect(reverse('products:category_list')) 
+                    return redirect(reverse('products:category_list'))
                 else:
                     messages.error(request, "Invalid email or password.")
         else:
             form = EmailLoginForm()
+        
+        # If there are messages to display, render the form with those messages
         return render(request, 'account/signin.html', {'form': form})
     else:
         return redirect(reverse('products:category_list'))
+    
 
 def signout(request):
     logout(request)
