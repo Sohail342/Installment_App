@@ -72,15 +72,16 @@ def checkout(request, user_id):
             phone_number = form.cleaned_data['phone']
             email = form.cleaned_data['emailaddress']
             
-            # Create Customer
-            customer = Customer.objects.create(
-                first_name=firstname,
-                last_name= lastname,
-                email= email,
-                phone_number= phone_number,
-                address= shipping_address
+            # Check if the customer already exists based on phone number or email
+            customer, created = Customer.objects.get_or_create(
+                phone_number=phone_number,
+                defaults={
+                    'first_name': firstname,
+                    'last_name': lastname,
+                    'email': email,
+                    'address': shipping_address,
+                }
             )
-            customer.save()
             
 
             # Create Order
