@@ -16,7 +16,7 @@ def add_to_cart(request, product_id):
     # Validate that an installment plan was selected
     if not installment_plan:
         messages.error(request, "Please select an installment plan.")
-        return redirect('cart:cart')  
+        return redirect('cart:view')  
 
     # Get or create a cart for the current user
     cart, created = Cart.objects.get_or_create(user=request.user)
@@ -37,7 +37,7 @@ def add_to_cart(request, product_id):
 
     messages.success(request, "Product updated in the cart.")
     
-    return redirect('cart:cart')
+    return redirect('cart:view')
  
 
 
@@ -62,7 +62,7 @@ def clear_cart(request, product_id):
     
     # Remove the item from the cart
     cart_item.delete()
-    return redirect('cart:cart') 
+    return redirect('cart:view') 
 
 
 def clear_all_cart(request):
@@ -73,6 +73,6 @@ def clear_all_cart(request):
     
     # Remove the items from the cart
     cart_items.delete()
-    return redirect('cart:cart') 
+    return redirect('cart:view') 
     
     

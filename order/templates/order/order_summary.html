@@ -1,26 +1,29 @@
+{% extends "base.html" %}
 {% load static %}
+{% load humanize %}
+{% load replace_filter %}
 
 {% block content %}
 <section class="ftco-section">
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-xl-8 ftco-animate">
-                <h2 class="mb-4">Thank You {{ request.user.name | title }} For Your Order🎉</h2>
+                <h2 class="mb-4 text-center">Thank You {{ request.user.name | title }} For Your Order 🎉</h2>
 
-                <div class="order-details">
+                <div class="order-details border p-4 rounded bg-light">
                     <h3>Order #{{ order.id }}</h3>
                     <p><strong>Order Date:</strong> {{ order.created_at }}</p>
                     <p><strong>Shipping Address:</strong> {{ order.shipping_address }}</p>
                     <p><strong>Payment Method:</strong> {{ order.payment_method }}</p>
 
                     {% if order.installment_plan %}
-                    <p><strong>Installment Plan:</strong> {{ order.installment_plan | title }}</p>
+                    <p><strong>Installment Plan:</strong> {{ order.installment_plan  | remove_underscore }}</p>
                     {% endif %}
 
                     <h4 class="mt-4">Order Items</h4>
 
-                    <table class="table table-bordered">
-                        <thead>
+                    <table class="table table-bordered table-striped">
+                        <thead class="thead-dark">
                             <tr>
                                 <th>Product Name</th>
                                 <th>Quantity</th>
@@ -34,21 +37,23 @@
                             <tr>
                                 <td>{{ product.product_name }}</td>
                                 <td>{{ product.quantity }}</td>
-                                <td>Rs. {{ product.down_payment }}</td>
-                                <td>Rs. {{ product.monthly_payment }}</td>
-                                <td>Rs. {{ product.total_amount }}</td>
+                                <td>Rs. {{ product.down_payment | intcomma:False }}</td>
+                                <td>Rs. {{ product.monthly_payment | intcomma:False }}</td>
+                                <td>Rs. {{ product.total_amount | intcomma:False }}</td>
                             </tr>
                             {% endfor %}
                         </tbody>
                     </table>
 
                     <h4 class="mt-4">Down Payment Details</h4>
-                    <p><strong>Subtotal:</strong> Rs. <span id="subtotal">{{ subtotal }}</span></p>
+                    <p><strong>Subtotal:</strong> Rs. <span id="subtotal">{{ subtotal | intcomma:False }}</span></p>
                     <p><strong>Total Quantity:</strong> {{ total_quantity }}</p> 
-                    <p><strong>Delivery fee:</strong> Rs. <span id="delivery-fee">{{ delivery_fee }}</span></p>
-                    <p><strong>Total:</strong> Rs. <span id="total-price">{{ order.total_price }}</span></p>
+                    <p><strong>Delivery Fee:</strong> Rs. <span id="delivery-fee">{{ delivery_fee | intcomma:False }}</span></p>
+                    <p><strong>Total:</strong> Rs. <span id="total-price">{{ order.total_price | intcomma:False }}</span></p>
 
-                    <a href="{% url 'products:category_list' %}" class="btn btn-primary">Continue Shopping</a>
+                    <div class="text-center mt-4">
+                        <a href="{% url 'products:category_list' %}" class="btn btn-primary">Goto Products</a>
+                    </div>
                 </div>
             </div>
         </div>
