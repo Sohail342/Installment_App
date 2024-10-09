@@ -1,4 +1,5 @@
 from django import forms
+import re
 
 class CheckoutForm(forms.Form):
     firstname = forms.CharField(max_length=100)
@@ -12,5 +13,27 @@ class CheckoutForm(forms.Form):
     payment_method = forms.ChoiceField(choices=[
         ('Installment', 'Installment Payment'),
     ])
+
+    def clean(self):
+        cleaned_data = super().clean()
+        phone_number = cleaned_data.get("phone")
+        name = cleaned_data.get('firstname')
+        
+        errors = []
+
+        if name:
+            if len(name) < 5:
+                errors.append('Name must contains atleast 5 characters')
+
+        # Pakistani Mobile Number Pattern
+        phone_pattern = re.compile(r'^((\+92 ?)|0)?(3[0-9]{2})[0-9]{7}$')
+
+        if phone_number:
+            if not phone_pattern.match(phone_number):
+                errors.append('Enter a valid mobile number (e.g., 03001234567 or +92 3001234567).')
+
+        if errors:
+            raise forms.ValidationError(errors)
+    
 
     

@@ -22,6 +22,7 @@ class PaidFilter(admin.SimpleListFilter):
 class OrderADminModel(admin.ModelAdmin):
     list_display = ('id','user', 'customer', 'cart', 'payment_method', 'is_paid', 'installment_plan')
     list_filter = ['user', PaidFilter, 'customer']
+    readonly_fields = ['created_at', 'updated_at', 'installment_plan']
 
 @admin.register(OrderItem)
 class OrderADminModel(admin.ModelAdmin):

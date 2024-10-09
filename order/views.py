@@ -3,10 +3,12 @@ from django.contrib import messages
 from cart.models import Cart, CartItem
 from . models import Order, OrderItem, InstallmentPayment
 from .forms import CheckoutForm
+from collections import defaultdict
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404
 from account.models import User, Customer
 from django.utils import timezone
+from django.views.generic.list import ListView
 
 
 @login_required(login_url='account:signin')
@@ -150,9 +152,21 @@ def checkout(request, user_id):
 
             messages.success(request, 'Order placed and installment plan created successfully!')
             return redirect('order:order_summary', order_id=order.id)
+        
+        else:
+          form = CheckoutForm(request.POST)
+          return render(request, 'order/checkout.html', {
+            'form': form,
+            'cart_is_empty': cart_is_empty,
+            'cart_items': cart_items,
+            'subtotal': subtotal,
+            'total': total,
+            'product_delivery_fee': product.delivery_fee,
+        })
+
     else:
         form = CheckoutForm()
-    
+
     return render(request, 'order/checkout.html', {
         'form': form,
         'cart_is_empty': cart_is_empty,
@@ -165,8 +179,13 @@ def checkout(request, user_id):
 
     
 
+
+
 def order_summary(request, order_id):
     order = get_object_or_404(Order, id=order_id)
+
+    # Total orders by Sales Person
+    total_orders = Order.objects.filter(user=request.user).count()
     
     # List to store detailed product summary for each product
     product_summaries = []
@@ -220,5 +239,30 @@ def order_summary(request, order_id):
         'subtotal': down_payment,
         'product_summaries': product_summaries, 
         'delivery_fee': product.delivery_fee,
+        'total_orders':total_orders,
     })
+
+
+
+
+def total_bill_view(request):
+    '''
+    Total installment plan for all Customers
+    
+    '''
+
+    # Get all instances of InstallmentPayment
+    installments = InstallmentPayment.objects.all()
+
+    # Group installments by customer
+    grouped_installments = defaultdict(list)
+    for installment in installments:
+        grouped_installments[installment.customer].append(installment)
+
+
+    # Pass the grouped installments to the template
+    return render(request, 'order/installmentpayment_list.html', {
+     "grouped_installments": dict(grouped_installments)
+    })
+    
 

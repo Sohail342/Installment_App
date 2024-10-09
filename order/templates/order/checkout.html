@@ -16,6 +16,14 @@
                 <form action="{% url 'order:checkout' user.id %}" class="billing-form" method="POST">
                     {% csrf_token %}
                     <h3 class="mb-4 billing-heading">Customer Details</h3>
+
+                    <!-- Display non-field errors here -->
+                    {% if form.non_field_errors %}
+                    <div class="alert alert-danger">
+                        {{ form.non_field_errors }}
+                    </div>
+                    {% endif %}
+
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group mb-4">  
@@ -66,7 +74,7 @@
                         <div class="col-md-6">
                             <div class="form-group mb-4">  
                                 <label for="towncity">Town / City*</label>
-                                <input type="text" name="towncity" class="form-control" placeholder="Karachi" required>
+                                <input type="text" name="towncity" class="form-control" placeholder="e.g, Karachi" required>
                                 {% if form.towncity.errors %}
                                 <div class="invalid-feedback">{{ form.towncity.errors.0 }}</div>
                                 {% endif %}
@@ -75,7 +83,7 @@
                         <div class="col-md-6">
                             <div class="form-group mb-4">  
                                 <label for="postcodezip">Postcode / ZIP (Optional)</label>
-                                <input type="text" name="postcodezip" class="form-control" placeholder="71400">
+                                <input type="text" name="postcodezip" class="form-control" placeholder="e.g, 71400">
                                 {% if form.postcodezip.errors %}
                                 <div class="invalid-feedback">{{ form.postcodezip.errors.0 }}</div>
                                 {% endif %}
@@ -84,9 +92,9 @@
                         <div class="col-md-6">
                             <div class="form-group mb-4">  
                                 <label for="phone">Phone*</label>
-                                <input type="text" name="phone" class="form-control" placeholder="0342 9812112" required>
+                                <input type="text" name="phone" class="form-control" placeholder="e.g, 0342 9812112" required>
                                 {% if form.phone.errors %}
-                                <div class="invalid-feedback">{{ form.phone.errors.0 }}</div>
+                                    <div class="invalid-feedback">{{ form.phone.errors.0 }}</div>
                                 {% endif %}
                             </div>
                         </div>
@@ -115,24 +123,21 @@
                                 {{ item.quantity }} x {{ item.product.name }}{% if not forloop.last %}, {% endif %}
                                 {% endfor %}
                             </span>
-                            <div class="mt-3">  <!-- Added margin top here -->
-                                <p class="d-flex">
-                                    <span>Total:</span>
+                            <div class="mt-3">
+                                <p class="d-flex justify-content-between">
+                                    <span>Subtotal</span>
                                     <span>{{ subtotal | intcomma:False }} PKR</span>
                                 </p>
-                                <p class="d-flex">
-                                    <span>Delivery:</span>
+                                <p class="d-flex justify-content-between">
+                                    <span>Delivery</span>
                                     <span>{{ product_delivery_fee | intcomma:False }} PKR</span>
                                 </p>
                             </div>
                             <hr>
-                            <p class="d-flex total-price">
-                                <b><span>Total:</span>
-                                <span>{{ total | intcomma:False }} PKR</span></b>
+                            <p class="d-flex justify-content-between total-price">
+                                <span><b>Total</b></span>
+                                <span><b>{{ total | intcomma:False }} PKR</b></span>
                             </p>
-                            {% if form.non_field_errors %}
-                            <div class="text-danger">{{ form.non_field_errors }}</div>
-                            {% endif %}
                         </div>
                     </div>                    
                     <div class="col-md-12">

@@ -9,7 +9,7 @@
         <div class="row">
             <div class="col-md-12 ftco-animate">
                 {% if cart_is_empty %}
-                <h3 class="text-center">Your Bugket is empty</h3>
+                <h3 class="text-center">{{request.user.name | title }} your Bugket is empty</h3>
                 <div class="text-center">
                     <a href="{% url 'products:category_list' %}" class="btn btn-primary">Goto Products</a>
                 </div>

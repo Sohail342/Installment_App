@@ -3,9 +3,14 @@
 {% load humanize %}
 
 {% block content %}
-    <div class="container">
-        <section class="main-section">
-            <h1>Our Products</h1>
+<div class="container">
+    <section class="main-section">
+            {% if not products %}
+                <h1>No product available</h1>
+                <div class="text-center">
+                    <a href="{% url 'products:category_list' %}" class="btn btn-primary">Goto Products</a>
+                </div>
+            {% endif %}
             <main>
                 {% for product in products %}
                 <div class="products-card">

@@ -8,7 +8,18 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-xl-8 ftco-animate">
-                <h2 class="mb-4 text-center">Thank You {{ request.user.name | title }} For Your Order 🎉</h2>
+                <h2 class="mb-4 text-center">
+                    {% if total_orders == 0 %}
+                    You don't have complete any order yet.
+                    {% else %}
+                    Thank you {{ request.user.name }} for total {{ total_orders }}
+                    {% if total_orders == 1 %}
+                    sale
+                    {% else %}
+                    sales
+                    {% endif %}
+                    🎉
+                </h2>
 
                 <div class="order-details border p-4 rounded bg-light">
                     <h3>Order #{{ order.id }}</h3>
@@ -17,7 +28,7 @@
                     <p><strong>Payment Method:</strong> {{ order.payment_method }}</p>
 
                     {% if order.installment_plan %}
-                    <p><strong>Installment Plan:</strong> {{ order.installment_plan  | remove_underscore }}</p>
+                    <p><strong>Installment Plan:</strong> {{ order.installment_plan | remove_underscore }}</p>
                     {% endif %}
 
                     <h4 class="mt-4">Order Items</h4>
@@ -47,9 +58,10 @@
 
                     <h4 class="mt-4">Down Payment Details</h4>
                     <p><strong>Subtotal:</strong> Rs. <span id="subtotal">{{ subtotal | intcomma:False }}</span></p>
-                    <p><strong>Total Quantity:</strong> {{ total_quantity }}</p> 
-                    <p><strong>Delivery Fee:</strong> Rs. <span id="delivery-fee">{{ delivery_fee | intcomma:False }}</span></p>
-                    <p><strong>Total:</strong> Rs. <span id="total-price">{{ order.total_price | intcomma:False }}</span></p>
+                    <p><strong>Total Quantity:</strong> {{ total_quantity }}</p>
+                    <p><strong>Delivery Fee:</strong> Rs. <span id="delivery-fee">{{ delivery_fee | intcomma:False}}</span></p>
+                    <p><strong>Total:</strong> Rs. <span id="total-price">{{ order.total_price | intcomma:False
+                            }}</span></p>
 
                     <div class="text-center mt-4">
                         <a href="{% url 'products:category_list' %}" class="btn btn-primary">Goto Products</a>
@@ -71,5 +83,6 @@
     // Display the total price
     document.getElementById('total-price').innerText = totalPrice.toFixed(2);
 </script>
+{% endif %}
 
 {% endblock %}

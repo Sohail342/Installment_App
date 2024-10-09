@@ -34,8 +34,8 @@ class ProductListView(LoginRequiredMixin, ListView):
 
 class ProductDetailView(LoginRequiredMixin, View):
     login_url = 'account:signin'  # Redirect to login page if not logged in
-    redirect_field_name = 'next'  # After login, redirect back to this view
-
+    redirect_field_name = 'next' 
+    
     def get(self, request, product_id):
         product = get_object_or_404(Product, id=product_id)
         

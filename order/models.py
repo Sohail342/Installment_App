@@ -29,9 +29,7 @@ class Order(models.Model):
     status = models.CharField(max_length=20, choices=[
         ('Pending', 'Pending'),
         ('Processing', 'Processing'),
-        ('Shipped', 'Shipped'),
-        ('Delivered', 'Delivered'),
-        ('Cancelled', 'Cancelled')
+        ('Paid', 'Paid'),
     ], default='Pending')
 
     def __str__(self):
