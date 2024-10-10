@@ -69,6 +69,7 @@ class InstallmentPayment(models.Model):
     amount_paid = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
     is_paid = models.BooleanField(default=False)
     initial_amount_due = models.DecimalField(max_digits=10, decimal_places=2, editable=False)  # Track the original amount_due
+    due_date = models.DateTimeField(null=True, blank=True)
 
     def __str__(self):
         return f"Installment {self.month_number} for {self.order_item.product.name}"
@@ -104,5 +105,15 @@ class InstallmentPayment(models.Model):
         order.update_installment_status()
 
         order.save()
+
+class DownPayment(models.Model):
+    order = models.ForeignKey(Order, related_name='down_payments', on_delete=models.CASCADE)
+    customer = models.ForeignKey(Customer, on_delete=models.CASCADE, related_name='down_payments')
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
+    installment_form_fee = models.DecimalField(max_digits=10, decimal_places=2)
+    payment_date = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Down Payment of {self.amount} for Order {self.order.id}"
 
 

@@ -73,19 +73,19 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-group mb-4">  
+                                <label for="cnic_no">CNIC No*</label>
+                                <input type="text" name="cnic_no" class="form-control" placeholder="e.g, 12345-1234567-1" oninput="formatCNIC(this)">
+                                {% if form.cnic_no.errors %}
+                                <div class="invalid-feedback">{{ form.cnic_no.errors.0 }}</div>
+                                {% endif %}
+                            </div>
+                        </div>                        
+                        <div class="col-md-6">
+                            <div class="form-group mb-4">  
                                 <label for="towncity">Town / City*</label>
                                 <input type="text" name="towncity" class="form-control" placeholder="e.g, Karachi" required>
                                 {% if form.towncity.errors %}
                                 <div class="invalid-feedback">{{ form.towncity.errors.0 }}</div>
-                                {% endif %}
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group mb-4">  
-                                <label for="postcodezip">Postcode / ZIP (Optional)</label>
-                                <input type="text" name="postcodezip" class="form-control" placeholder="e.g, 71400">
-                                {% if form.postcodezip.errors %}
-                                <div class="invalid-feedback">{{ form.postcodezip.errors.0 }}</div>
                                 {% endif %}
                             </div>
                         </div>
@@ -146,7 +146,7 @@
                             <div class="form-group">
                                 <div class="col-md-12">
                                     <div class="form-check mb-3"> 
-                                        <input type="radio" name="payment_method" value="Installment" class="form-check-input" id="installment" required>
+                                        <input checked type="radio" name="payment_method" value="Installment" class="form-check-input" id="installment" required>
                                         <label class="form-check-label" for="installment">Installment Payment</label>
                                     </div>
                                     <button type="submit" class="btn btn-primary py-3 px-4">Confirm order</button>
@@ -160,4 +160,26 @@
         </div>
     </div>
 </section> <!-- .section -->
+
+<script>
+    function formatCNIC(input) {
+        // Remove non-digit characters
+        const digits = input.value.replace(/\D/g, '');
+        
+        // Format the digits
+        let formatted = '';
+        if (digits.length > 0) {
+            formatted += digits.substring(0, 5); // First 5 digits
+        }
+        if (digits.length > 5) {
+            formatted += '-' + digits.substring(5, 12); // Next 7 digits
+        }
+        if (digits.length > 12) {
+            formatted += '-' + digits.charAt(12); // Last digit
+        }
+        
+        // Update the input value
+        input.value = formatted;
+    }
+    </script>
 {% endblock %}

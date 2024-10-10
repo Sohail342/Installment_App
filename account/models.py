@@ -15,7 +15,7 @@ class MyUserManager(BaseUserManager):
             name=name,
             terms_conditions = terms_conditions,
         )
-
+        
         user.set_password(password)
         user.save(using=self._db)
         return user
@@ -75,13 +75,22 @@ class User(AbstractBaseUser):
         # Simplest possible answer: All admins are staff
         return self.is_admin
     
+    def save(self, *args, **kwargs):
+        if self.pk is None:  # User is being created
+            self.set_password(self.password)  # Hash the password
+        super(User, self).save(*args, **kwargs)
+
+    class Meta:
+        verbose_name = "Sales Team"
+    
 
 class Customer(models.Model):
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
     email = models.EmailField(max_length=50)
-    phone_number = models.CharField(max_length=15, unique=True)
+    phone_number = models.CharField(max_length=15)
     address = models.TextField()
+    cnic = models.CharField(max_length=15, unique=True)
     
     def __str__(self):
         return f"{self.first_name} {self.last_name}"

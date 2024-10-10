@@ -60,8 +60,7 @@
                     <p><strong>Subtotal:</strong> Rs. <span id="subtotal">{{ subtotal | intcomma:False }}</span></p>
                     <p><strong>Total Quantity:</strong> {{ total_quantity }}</p>
                     <p><strong>Delivery Fee:</strong> Rs. <span id="delivery-fee">{{ delivery_fee | intcomma:False}}</span></p>
-                    <p><strong>Total:</strong> Rs. <span id="total-price">{{ order.total_price | intcomma:False
-                            }}</span></p>
+                    <p><strong>Total:</strong> Rs. <span id="total-price">{{ order.total_price | intcomma:False }}</span></p>
 
                     <div class="text-center mt-4">
                         <a href="{% url 'products:category_list' %}" class="btn btn-primary">Goto Products</a>
@@ -72,17 +71,6 @@
     </div>
 </section>
 
-<script>
-    // Fetch the subtotal and delivery fee
-    const subtotal = parseFloat(document.getElementById('subtotal').innerText);
-    const deliveryFee = parseFloat(document.getElementById('delivery-fee').innerText);
-
-    // Calculate total price
-    const totalPrice = subtotal + deliveryFee;
-
-    // Display the total price
-    document.getElementById('total-price').innerText = totalPrice.toFixed(2);
-</script>
 {% endif %}
 
 {% endblock %}

@@ -8,8 +8,9 @@ class UserAdmin(admin.ModelAdmin):
     list_filter = ['name', 'email']
 
 
+
 @admin.register(Customer)
 class UserAdmin(admin.ModelAdmin):
-    list_display = ['id', 'first_name', 'last_name', 'email','phone_number']
-    search_fields = ('email', 'first_name', 'phone_number')
+    list_display = ['id', 'first_name', 'last_name', 'cnic',  'email','phone_number']
+    search_fields = ('email', 'first_name', 'phone_number', 'cnic')
     list_filter = ['first_name', 'email', 'phone_number']
