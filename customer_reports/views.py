@@ -13,7 +13,7 @@ def download_installments_csv(request, customer_id):
 
     # Create a CSV response
     response = HttpResponse(content_type='text/csv')
-    response['Content-Disposition'] = 'attachment; filename="installments.csv"'
+    response['Content-Disposition'] = f'attachment; filename=" {customer.first_name} {customer.last_name} installments.csv"'
 
     writer = csv.writer(response)
     writer.writerow(['Order Item', 'Month Number', 'Amount Due', 'Amount Paid', 'Status', 'Due Date'])
@@ -39,7 +39,7 @@ def download_installments_pdf(request, customer_id):
 
     # Create a PDF response
     response = HttpResponse(content_type='application/pdf')
-    response['Content-Disposition'] = f'attachment; filename="{customer.first_name}_{customer.last_name}_installments.pdf"'
+    response['Content-Disposition'] = f'attachment; filename="{customer.first_name} {customer.last_name} installments.pdf"'
     
     # Create the PDF
     buffer = BytesIO()
