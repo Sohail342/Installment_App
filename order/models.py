@@ -65,8 +65,8 @@ class InstallmentPayment(models.Model):
     order_item = models.ForeignKey('OrderItem', related_name='installments', on_delete=models.CASCADE)
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE, related_name='installments')
     month_number = models.PositiveIntegerField()
-    amount_due = models.DecimalField(max_digits=10, decimal_places=2)
-    amount_paid = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
+    amount_due = models.IntegerField()
+    amount_paid = models.IntegerField(default=0)
     is_paid = models.BooleanField(default=False)
     initial_amount_due = models.DecimalField(max_digits=10, decimal_places=2, editable=False)  # Track the original amount_due
     due_date = models.DateTimeField(null=True, blank=True)

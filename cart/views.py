@@ -33,7 +33,7 @@ def add_to_cart(request, product_id):
 
     # Create a new cart item with the updated details
     new_cart_item = CartItem(cart=cart, product=product, quantity=quantity, installment_plan=installment_plan)
-    new_cart_item.save()
+    new_cart_item.save()    
 
     messages.success(request, "Product updated in the cart.")
     

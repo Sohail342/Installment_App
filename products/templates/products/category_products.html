@@ -5,23 +5,63 @@
 {% block content %}
 <div class="container">
     <section class="main-section">
-            {% if not products %}
-                <h1>No product available</h1>
-                <div class="text-center">
-                    <a href="{% url 'products:category_list' %}" class="btn btn-primary">Goto Products</a>
+        <h1>{{ category.name }} Products</h1>
+
+        <!-- Search Form -->
+        <form method="get" action="{% url 'products:products_list' category.name %}" class="form-inline mb-3">
+            <div class="input-group">
+                <input type="text" name="search" class="form-control" placeholder="Search products..." value="{{ search_query }}">
+                <div class="input-group-append">
+                    <button class="btn btn-primary" type="submit">Search</button>
                 </div>
-            {% endif %}
+            </div>
+        </form>
+
+        {% if not products %}
+            <h2>No products available</h2>
+            <div class="text-center">
+                <a href="{% url 'products:category_list' %}" class="btn btn-primary">Go to Products</a>
+            </div>
+        {% else %}
             <main>
                 {% for product in products %}
-                <div class="products-card">
-                    <a href="{% url 'products:product_detail' product.id %}" class="product-link">
-                      <img class="image-product" src="{{ product.photo.url }}" alt="{{product.name}}">
-                    </a>
-                    <h2 class="product-name">{{product.name}}</h2>
-                    <h3 class="price">Rs.{{product.price |intcomma:False }}</h3>
-                </div>
-                  {% endfor %}
+                    <div class="products-card">
+                        <a href="{% url 'products:product_detail' product.id %}" class="product-link">
+                          <img class="image-product" src="{{ product.photo.url }}" alt="{{ product.name }}">
+                        </a>
+                        <h2 class="product-name">{{ product.name }}</h2>
+                        <h3 class="price">Rs. {{ product.price | intcomma:False }}</h3>
+                    </div>
+                {% endfor %}
             </main>
-        </section>
-    </div>
-    {% endblock content %}
+
+            <!-- Pagination Controls -->
+            <nav aria-label="Page navigation">
+                <ul class="pagination justify-content-center">
+                    {% if products.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page=1{% if search_query %}&search={{ search_query }}{% endif %}">First</a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ products.previous_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}">Previous</a>
+                        </li>
+                    {% endif %}
+
+                    <li class="page-item disabled">
+                        <span class="page-link">Page {{ products.number }} of {{ products.paginator.num_pages }}</span>
+                    </li>
+
+                    {% if products.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ products.next_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}">Next</a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ products.paginator.num_pages }}{% if search_query %}&search={{ search_query }}{% endif %}">Last</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </nav>
+        {% endif %}
+    </section>
+</div>
+{% endblock content %}

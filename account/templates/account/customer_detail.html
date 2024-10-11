@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load humanize %}
 
 {% block content %}
 <div class="container mt-4">
@@ -31,9 +32,15 @@
                 {% for installment in installments %}
                     <tr>
                         <td>{{ installment.month_number }}</td>
-                        <td>{{ installment.amount_due }}</td>
-                        <td>{{ installment.amount_paid }}</td>
-                        <td>{{ installment.is_paid|yesno:"Paid, Not Paid" }}</td>
+                        <td>{{ installment.amount_due | intcomma:False }}</td>
+                        <td>{{ installment.amount_paid | intcomma:False }}</td>
+                        <td>
+                            {% if installment.is_paid %}
+                            <i class="fas fa-check text-success"></i> 
+                            {% else %}
+                            <i class="fas fa-times text-danger"></i>
+                            {% endif %}
+                        </td>
                         <td>{{ installment.due_date|date:"F j, Y" }}</td>
                     </tr>
                 {% empty %}

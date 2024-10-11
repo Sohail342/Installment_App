@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from cart.models import Cart
+from django.core.paginator import Paginator
 from . models import Order, OrderItem, InstallmentPayment, DownPayment
 from .forms import CheckoutForm
 from collections import defaultdict
@@ -9,18 +10,9 @@ from django.shortcuts import get_object_or_404
 from account.models import User, Customer
 from django.utils import timezone
 from django.db.models import Q
-
-
-from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib import messages
-from cart.models import Cart, CartItem
-from .models import Order, OrderItem, InstallmentPayment
-from .forms import CheckoutForm
-from collections import defaultdict
-from django.contrib.auth.decorators import login_required
-from account.models import User, Customer
-from django.utils import timezone
 from datetime import timedelta
+
+
 
 @login_required(login_url='account:signin')
 def checkout(request, user_id):
@@ -30,18 +22,27 @@ def checkout(request, user_id):
     
     cart_is_empty = cart_items.count() == 0
     subtotal = 0
+    form_fee = 500  # physical form fee (fixed)
     product_summaries = []
+
+    # Store the first installment plan to use in Order
+    installment_plan = None
 
     for item in cart_items:
         product = item.product
         quantity = item.quantity
-        installment_plan = item.installment_plan
+        current_installment_plan = item.installment_plan
+        
+        # If it's the first item, set the installment plan
+        if installment_plan is None:
+            installment_plan = current_installment_plan
 
+        # Get installment details for the current product
         installment_details = product.get_installment_plan()
 
-        down_payment = installment_details['down_payments'][installment_plan]
-        monthly_payment = installment_details['installments'][installment_plan]
-        total_amount = installment_details['total_amounts'][installment_plan]
+        down_payment = installment_details['down_payments'][current_installment_plan]
+        monthly_payment = installment_details['installments'][current_installment_plan]
+        total_amount = installment_details['total_amounts'][current_installment_plan]
 
         product_summaries.append({
             'product_name': product.name,
@@ -49,12 +50,14 @@ def checkout(request, user_id):
             'down_payment': down_payment,
             'monthly_payment': monthly_payment,
             'total_amount': total_amount,
-            'installment_plan': installment_plan,
+            'installment_plan': current_installment_plan,
         })
 
+        # Only add the down payment for the subtotal
         subtotal += down_payment
 
-    total = subtotal + product.delivery_fee
+    # Calculate total
+    total = form_fee + subtotal + product.delivery_fee
 
     if request.method == 'POST':
         form = CheckoutForm(request.POST)
@@ -70,13 +73,13 @@ def checkout(request, user_id):
 
             # Get or create customer
             customer, created = Customer.objects.get_or_create(
-                cnic = cnic,
+                cnic=cnic,
                 defaults={
                     'first_name': firstname,
                     'last_name': lastname,
                     'email': email,
                     'address': shipping_address,
-                    'phone_number':phone_number
+                    'phone_number': phone_number
                 }
             )
 
@@ -88,7 +91,7 @@ def checkout(request, user_id):
                 total_price=total,
                 shipping_address=shipping_address,
                 payment_method=payment_method,
-                installment_plan=cart_items.first().installment_plan,  # Use first item for plan
+                installment_plan=installment_plan,  # Use the determined installment plan
                 created_at=timezone.now(),
                 updated_at=timezone.now(),
                 is_paid=True,  # Set as paid since down payment is paid at checkout
@@ -96,30 +99,33 @@ def checkout(request, user_id):
 
             # Create Down Payment
             DownPayment.objects.create(
-            order=order,
-            customer=customer,
-            installment_form_fee = 500.00,    # physical form fee
-            amount=subtotal,  # Use the subtotal as the down payment amount
-        )
+                order=order,
+                customer=customer,
+                installment_form_fee=form_fee,
+                amount=subtotal,  # Use the subtotal as the down payment amount
+            )
 
             # Create OrderItems and Installment Payments
             for item in cart_items:
+                product = item.product
                 order_item = OrderItem.objects.create(
                     order=order,
                     customer=customer,
-                    product=item.product,
+                    product=product,
                     quantity=item.quantity,
-                    price=item.product.price
+                    price=product.price
                 )
 
                 # Update product inventory
-                product = item.product
                 if product.inventory >= item.quantity:
                     product.inventory -= item.quantity
                     product.save()
 
-                # Create Installment Payments
+                # Get the installment plan for this item
                 months = int(item.installment_plan.split('_')[0])  # Get month count from plan
+                installment_details = product.get_installment_plan()
+                monthly_payment = installment_details['installments'][item.installment_plan]
+
                 for month in range(1, months + 1):
                     installment_payment = InstallmentPayment.objects.create(
                         order_item=order_item,
@@ -211,24 +217,32 @@ def total_bill_view(request):
     '''
 
     # Get all instances of InstallmentPayment
-    installments = InstallmentPayment.objects.all()
+    installments = InstallmentPayment.objects.all().order_by('customer')
 
     # Get the search query
     search_query = request.GET.get('search', '')
+    clean_search_query = search_query.strip()
 
-    if search_query:
+    if clean_search_query:
         # Filter by CNIC or phone number
-        filters = Q(customer__cnic__icontains=search_query) | Q(customer__phone_number__icontains=search_query)
-        installments = installments.filter(filters)
+        filters = Q(customer__cnic__icontains=clean_search_query) | Q(customer__phone_number__icontains=clean_search_query)
+        installments = installments.filter(filters).order_by('customer')
+
+
+    # Set up pagination
+    paginator = Paginator(installments, 38)  
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
 
     # Group installments by customer
     grouped_installments = defaultdict(list)
-    for installment in installments:
+    for installment in page_obj:
         grouped_installments[installment.customer].append(installment)
 
-    # Pass the grouped installments to the template
+    
     return render(request, 'order/installmentpayment_list.html', {
-        "grouped_installments": dict(grouped_installments)
+        "grouped_installments": dict(grouped_installments),
+        "page_obj": page_obj,
     })
 
 

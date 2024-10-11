@@ -8,8 +8,8 @@
         <div class="row justify-content-center">
             <div class="col-md-8 col-lg-6">
                 <h2 class="text-center mb-4">Sales Person Dashboard</h2>
-                <div class="form-container">
-                    <form class="bg-white p-5 contact-form" action="{% url 'account:signin' %}" method="post">
+                <div class="form-container border border-primary rounded p-4 bg-white mt-4">
+                    <form class="contact-form" action="{% url 'account:signin' %}" method="post">
                         {% csrf_token %}
 
                         {# Display messages #}
@@ -28,7 +28,7 @@
                             </div>
                         {% endif %}
 
-                        <div class="form-group mb-3">
+                        <div class="form-group mb-4"> 
                             <label for="email">Email</label>
                             {{ form.email|attr:"class:form-control" }}
                             {% if form.email.errors %}
@@ -36,7 +36,7 @@
                             {% endif %}
                         </div>
 
-                        <div class="form-group mb-3">
+                        <div class="form-group mb-4"> 
                             <label for="password">Password</label>
                             {{ form.password|attr:"class:form-control" }}
                             {% if form.password.errors %}
@@ -44,7 +44,7 @@
                             {% endif %}
                         </div>
 
-                        <div class="form-group mb-4">
+                        <div class="form-group mb-5"> 
                             <input type="submit" value="Sign In" class="btn btn-primary w-100">
                         </div>
 

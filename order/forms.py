@@ -23,7 +23,7 @@ class CheckoutForm(forms.Form):
         errors = []
 
         if name:
-            if len(name) < 5:
+            if len(name) < 3:
                 errors.append('Name must contain at least 5 characters')
 
         # Pakistani Mobile Number Pattern

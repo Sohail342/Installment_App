@@ -3,8 +3,20 @@ from django.contrib.auth import authenticate
 
 
 class EmailLoginForm(forms.Form):
-    email = forms.EmailField(label='Email', widget=forms.EmailInput(attrs={'class': 'form-control'}))
-    password = forms.CharField(label='Password', widget=forms.PasswordInput(attrs={'class': 'form-control'}))
+    email = forms.EmailField(
+        label='Email',
+        widget=forms.EmailInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Enter your email'
+        })
+    )
+    password = forms.CharField(
+        label='Password',
+        widget=forms.PasswordInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Enter your password'
+        })
+    )
 
     def clean(self):
         cleaned_data = super().clean()
@@ -16,4 +28,3 @@ class EmailLoginForm(forms.Form):
             if user is None:
                 raise forms.ValidationError("Invalid email or password.")
         return cleaned_data
-
