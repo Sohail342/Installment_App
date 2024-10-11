@@ -30,7 +30,7 @@
                             Unnamed Customer
                         {% endif %}
                         Installment Reports
-                        <a href="{% url 'account:customer_detail' customer.id %}" class="text-secondary small ml-2">More Details</a>
+                        <a href="{% url 'account:customer_detail' customer.id %}" class="text-secondary small ml-2">more details</a>
                     </h3>
                 </div>
                 <div class="card-body">
@@ -59,7 +59,15 @@
                                         <i class="fas fa-times text-danger"></i>
                                         {% endif %}
                                     </td>
-                                    <td>{{ installment.due_date|date:"F j, Y" }}</td>
+                                    <td>
+                                        {% if installment.is_paid %}
+                                        <b>
+                                            <span class=" text-success">Paid</span>
+                                        </b>
+                                        {% else %}
+                                        {{ installment.due_date|date:"F j, Y" }}
+                                        {% endif %}
+                                    </td>
                                 </tr>
                             {% empty %}
                                 <tr>

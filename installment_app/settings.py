@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     'account', 
     'cart',
     'order',
+    'customer_reports',
     'widget_tweaks',
     'django_extensions',
     'import_export',

@@ -246,5 +246,8 @@ def total_bill_view(request):
     })
 
 
+
+
+
     
 

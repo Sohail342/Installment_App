@@ -1,0 +1,11 @@
+from django.urls import path
+from . import views
+
+app_name = 'customer_reports'
+
+urlpatterns = [
+
+    path('download_installments/<int:customer_id>/', views.download_installments_csv, name='download_installments'),
+    path('download_installments_html/<int:customer_id>/', views.download_installments_pdf, name='download_installments_pdf'),
+]
+    
