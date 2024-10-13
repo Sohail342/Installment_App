@@ -1,0 +1,13 @@
+@ECHO off
+
+REM Activate the virtual environment
+call "D:\Projects dir\Installment\env\Scripts\activate.bat"
+
+REM Start Django server in minimized window
+start /min cmd /c "python manage.py runserver"
+
+
+REM Start Electron app
+start /min cmd /c "npm run Installment"
+
+EXIT
