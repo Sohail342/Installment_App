@@ -11,6 +11,7 @@ from account.models import User, Customer
 from django.utils import timezone
 from django.db.models import Q
 from datetime import timedelta
+import re
 
 
 
@@ -21,7 +22,9 @@ def checkout(request, user_id):
     cart_items = cart.items.all()
     
     cart_is_empty = cart_items.count() == 0
-    subtotal = 0
+    down_payment_againts_hire = 0
+    monthly_installment_of_hire = 0
+    total_installments = ''
     form_fee = 500  # physical form fee (fixed)
     product_summaries = []
 
@@ -53,11 +56,16 @@ def checkout(request, user_id):
             'installment_plan': current_installment_plan,
         })
 
-        # Only add the down payment for the subtotal
-        subtotal += down_payment
+        # Product downpayment, monthly payment and total installments
+        down_payment_againts_hire += down_payment
+        monthly_installment_of_hire += monthly_payment
+        total_installments += current_installment_plan
+
+        # Extract numbers from total_installments using regex
+        extracted_installments = re.findall(r'\d+', total_installments)
 
     # Calculate total
-    total = form_fee + subtotal + product.delivery_fee
+    total = form_fee + down_payment_againts_hire
 
     if request.method == 'POST':
         form = CheckoutForm(request.POST)
@@ -70,6 +78,7 @@ def checkout(request, user_id):
             phone_number = form.cleaned_data['phone']
             email = form.cleaned_data['emailaddress']
             cnic = form.cleaned_data['cnic_no']
+            guaranteed_cnic_no = form.cleaned_data['guaranteed_cnic_no']
 
             # Get or create customer
             customer, created = Customer.objects.get_or_create(
@@ -102,7 +111,7 @@ def checkout(request, user_id):
                 order=order,
                 customer=customer,
                 installment_form_fee=form_fee,
-                amount=subtotal,  # Use the subtotal as the down payment amount
+                amount=down_payment_againts_hire,  # Use the down_payment_againts_hire as the down payment amount
             )
 
             # Create OrderItems and Installment Payments
@@ -147,14 +156,14 @@ def checkout(request, user_id):
 
     else:
         form = CheckoutForm()
-
-    return render(request, 'order/checkout.html', {
+    return render(request, 'order/application_form.html', {
         'form': form,
         'cart_is_empty': cart_is_empty,
         'cart_items': cart_items,
-        'subtotal': subtotal,
+        'down_payment_againts_hire': down_payment_againts_hire,
         'total': total,
-        'product_delivery_fee': product.delivery_fee,
+        'product_delivery_fee': monthly_installment_of_hire,
+        'total_installments':''.join(extracted_installments)
     })
 
 
@@ -166,8 +175,8 @@ def order_summary(request, order_id):
     # Total orders by Sales Person
     total_orders = Order.objects.filter(user=request.user).count()
     
-    # Prepare to calculate subtotal and delivery fee
-    subtotal = 0
+    # Prepare to calculate down_payment_againts_hire and delivery fee
+    down_payment_againts_hire = 0
     delivery_fee = 0
     product_summaries = []
 
@@ -192,16 +201,16 @@ def order_summary(request, order_id):
             'installment_plan': installment_plan,
         })
 
-        subtotal += down_payment
+        down_payment_againts_hire += down_payment
         delivery_fee += product.delivery_fee  # Aggregate delivery fee
 
-    total_price = subtotal + delivery_fee  
+    total_price = down_payment_againts_hire + delivery_fee  
 
     return render(request, 'order/order_summary.html', {
         'order': order,
         'total_quantity': sum(item.quantity for item in order.items.all()),
-        'subtotal': subtotal,
-        'delivery_fee': delivery_fee,
+        'down_payment_againts_hire': down_payment_againts_hire,
+        'delivery_fee': monthly_payment,
         'total_price': total_price, 
         'product_summaries': product_summaries,
         'total_orders': total_orders,

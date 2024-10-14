@@ -10,6 +10,41 @@ class CheckoutForm(forms.Form):
     cnic_no = forms.CharField(max_length=15, required=True)
     phone = forms.CharField(max_length=20)
     emailaddress = forms.EmailField(required=False)
+    father_name = forms.CharField(max_length=100, required=False)
+    customer_occupation = forms.CharField(max_length=100, required=False)
+    customer_designation = forms.CharField(max_length=100, required=False)
+    customer_monthly_income = forms.IntegerField(required=False)
+    customer_office_address = forms.CharField(max_length=100, required=False)
+    customer_home_phone = forms.CharField(max_length=20, required=False)
+    customer_office_phone = forms.CharField(max_length=100, required=False)
+    country = forms.CharField(max_length=100)
+
+    # Guaranteed 1 Fields
+    guaranteed_cnic_no = forms.CharField(max_length=15, required=True)
+    guaranteed_name = forms.CharField(max_length=100, required=True)
+    guaranteed_father_name = forms.CharField(max_length=100, required=False)
+    guaranteed_occupation = forms.CharField(max_length=100, required=False)
+    guaranteed_residential_address = forms.CharField(max_length=255, required=False)
+    guaranteed_designation = forms.CharField(max_length=100, required=False)
+    guaranteed_monthly_income = forms.IntegerField(required=False)
+    guaranteed_office_address = forms.CharField(max_length=100, required=False)
+    guaranteed_office_phone = forms.CharField(max_length=100, required=False)
+    guaranteed_phone_no = forms.CharField(max_length=100, required=True)
+    guaranteed_home_phone = forms.CharField(max_length=100, required=False)
+
+    # Guaranteed 2 Fields
+    guaranteed2_cnic_no = forms.CharField(max_length=15, required=False)
+    guaranteed2_name = forms.CharField(max_length=100, required=False)
+    guaranteed2_father_name = forms.CharField(max_length=100, required=False)
+    guaranteed2_occupation = forms.CharField(max_length=100, required=False)
+    guaranteed2_residential_address = forms.CharField(max_length=255, required=False)
+    guaranteed2_designation = forms.CharField(max_length=100, required=False)
+    guaranteed2_monthly_income = forms.IntegerField(required=False)
+    guaranteed2_office_address = forms.CharField(max_length=100, required=False)
+    guaranteed2_office_phone = forms.CharField(max_length=100, required=False)
+    guaranteed2_phone_no = forms.CharField(max_length=100, required=False)
+    guaranteed2_home_phone = forms.CharField(max_length=100, required=False)
+
     payment_method = forms.ChoiceField(choices=[
         ('Installment', 'Installment Payment'),
     ])
