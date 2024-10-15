@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container text-center mt-5">
+    <h1 class="display-1">404</h1>
+    <p class="lead">This is not the web page you are looking for.</p>
+    <div class="mt-4">
+        <a href="{% url 'products:category_list' %}" class="btn btn-primary">Go to Homepage</a>
+    </div>
+</div>
+{% endblock content %}

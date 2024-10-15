@@ -1,0 +1,150 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block title %}{{ product.name }}{% endblock title %}
+
+{% block content %}
+<section class="py-5">
+    <div class="container">
+        <div class="row gx-5 align-items-center">
+            <aside class="col-lg-6 col-md-12 mb-4">
+                <div class="border rounded-4 d-flex justify-content-center align-items-center" style="max-width: 400px; margin: auto;">
+                    <img style="max-width: 100%; height: auto;" class="rounded-4" src="{{ product.photo.url }}" />
+                </div>
+            </aside>
+            <main class="col-lg-6 col-md-12">
+                <div class="ps-lg-3">
+                    <h4 class="title text-dark">{{ product.name }}</h4>
+                    <div class="d-flex flex-row my-3">
+                        <div class="text-warning mb-1 me-2">
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i>
+                            <span class="ms-1">4.5</span>
+                        </div>
+                        <span class="text-muted"><i class="fas fa-shopping-basket fa-sm mx-1"></i>{{ product.inventory }}</span>
+                        <span class="text-success ms-2">In stock</span>
+                    </div>
+                    <div class="mb-3">
+                        <span class="h5">Rs.{{ product.price | intcomma:False }}</span>
+                    </div>
+                    <p>{{ product.details }}</p>
+
+                    <!-- Add to Cart Form -->
+                    <form action="{% url 'cart:add_to_cart' product.id %}" method="post">
+                        {% csrf_token %}
+                        <div class="input-group mb-3" style="max-width: 300px;">
+                            <select name="installment_plan" class="form-select" required>
+                                <option value="" disabled selected>Select Installment Plan</option>
+                                <option value="12_months">12 Months</option>
+                                <option value="9_months">9 Months</option>
+                                <option value="6_months">6 Months</option>
+                                <option value="3_months">3 Months</option>
+                            </select>
+                            {% if product.inventory > 0 %}
+                            <button type="submit" class="btn btn-primary ms-2">
+                                <i class="fa fa-shopping-cart"></i> Add to basket
+                            </button>
+                            {% else %}
+                            <span class="text-danger ms-2">Out of stock</span>
+                            {% endif %}
+                        </div>
+                    </form>
+
+                    <!--Dynamic Installment plan form-->
+                    <form action="{% url 'products:product_detail' product.id %}" method="POST">
+                        {% csrf_token %}
+                        <h5 class="my-4">Calculate Your Installment Plan</h5>
+                    
+                        <div class="mb-3">
+                            <label for="user_down_payment" class="form-label">Down Payment (Rs.)</label>
+                            <input type="number" name="user_down_payment" class="form-control" required min="0" placeholder="Enter Down Payment">
+                        </div>
+                    
+                        <div class="mb-3">
+                            <label for="user_months" class="form-label">Months</label>
+                            <input type="number" name="user_months" class="form-control" required min="1" max="12" placeholder="Enter Number of Months">
+                        </div>
+                    
+                        <button type="submit" class="btn btn-success">Calculate</button>
+                    </form>
+                </div>
+            </main>
+        </div>
+    </div>
+</section>
+
+<!-- Installment Plan Header -->
+<div class="container my-5">
+    <h2 class="text-center">Installment Plan</h2>
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered table-hover mt-4">
+            <thead>
+                <tr>
+                    <th>Month</th>
+                    <th>3 Months</th>
+                    <th>6 Months</th>
+                    <th>9 Months</th>
+                    <th>12 Months</th>
+                </tr>
+            </thead>
+            <thead>
+                <tr>
+                    <td>Down Payment</td>
+                    <td>Rs.{{ down_payments.3_months | intcomma:False }}</td>
+                    <td>Rs.{{ down_payments.6_months | intcomma:False }}</td>
+                    <td>Rs.{{ down_payments.9_months | intcomma:False }}</td>
+                    <td>Rs.{{ down_payments.12_months | intcomma:False }}</td>
+                </tr>
+            </thead>
+            <tbody>
+                {% for month in months %}
+                <tr>
+                    <td>Month {{ month }}</td>
+            
+                    <!-- 3 Months -->
+                    {% if month <= 3 %}
+                        <td>Rs. {{ installments.3_months | intcomma:False }}</td>
+                    {% else %}
+                        <td></td> <!-- Empty cell for months beyond 3 -->
+                    {% endif %}
+            
+                    <!-- 6 Months -->
+                    {% if month <= 6 %}
+                        <td>Rs. {{ installments.6_months | intcomma:False }}</td>
+                    {% else %}
+                        <td></td> <!-- Empty cell for months beyond 6 -->
+                    {% endif %}
+            
+                    <!-- 9 Months -->
+                    {% if month <= 9 %}
+                        <td>Rs. {{ installments.9_months | intcomma:False }}</td>
+                    {% else %}
+                        <td></td> <!-- Empty cell for months beyond 9 -->
+                    {% endif %}
+            
+                    <!-- 12 Months -->
+                    {% if month <= 12 %}
+                        <td>Rs. {{ installments.12_months | intcomma:False }}</td>
+                    {% else %}
+                        <td></td> <!-- Empty cell for months beyond 12 -->
+                    {% endif %}
+                </tr>
+                {% endfor %}
+            </tbody>
+            <thead>
+                <tr>
+                    <th>Total in PKR</th>
+                    <th>Rs.{{ total_amounts.3_months | intcomma:False }}</th>
+                    <th>Rs.{{ total_amounts.6_months | intcomma:False }}</th>
+                    <th>Rs.{{ total_amounts.9_months | intcomma:False }}</th>
+                    <th>Rs.{{ total_amounts.12_months | intcomma:False }}</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+{% endblock content %}

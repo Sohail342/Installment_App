@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% load humanize %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1>{{ customer.first_name }} {{ customer.last_name }}</h1>
+    <p><strong>Email:</strong> {{ customer.email }}</p>
+    <p><strong>Phone Number:</strong> {{ customer.phone_number }}</p>
+    <p><strong>Address:</strong> {{ customer.address }}</p>
+    <p><strong>CNIC:</strong> {{ customer.cnic }}</p>
+
+    <!-- Card for the centered heading -->
+    <div class="card text-white bg-primary text-center mb-4">
+        <div class="card-body">
+            <h2 class="card-title">Installment Payments</h2>
+        </div>
+    </div>
+
+    <!-- Download Button -->
+    <a href="{% url 'customer_reports:download_installments' customer.id %}" class="btn btn-success mb-3">Download CSV</a>
+    <a href="{% url 'customer_reports:download_installments_pdf' customer.id %}" class="btn btn-success mb-3">Download PDF</a>
+
+    {% for order_item, installments in grouped_installments.items %}
+        <h3>{{ order_item.product.name }}</h3>
+        <table class="table table-striped table-bordered mb-4">
+            <thead class="thead-dark">
+                <tr>
+                    <th>Month Number</th>
+                    <th>Amount Due</th>
+                    <th>Amount Paid</th>
+                    <th>Status</th>
+                    <th>Due Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for installment in installments %}
+                    <tr>
+                        <td>{{ installment.month_number }}</td>
+                        <td>{{ installment.amount_due | intcomma:False }}</td>
+                        <td>{{ installment.amount_paid | intcomma:False }}</td>
+                        <td>
+                            {% if installment.is_paid %}
+                            <i class="fas fa-check text-success"></i> 
+                            {% else %}
+                            <i class="fas fa-times text-danger"></i>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if installment.is_paid %}
+                            <b>
+                                <span class="text-success">Paid</span>
+                            </b>
+                            {% else %}
+                            {{ installment.due_date|date:"F j, Y" }}
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="5" class="text-center">No installments found for this order item.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endfor %}
+
+    <a href="{% url 'order:total_bill' %}" class="btn btn-secondary">Back to Installments</a>
+</div>
+{% endblock content %}

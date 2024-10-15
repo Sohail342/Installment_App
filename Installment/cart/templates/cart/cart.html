@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% load static %}
+{% load humanize %}
+
+{% block content %}
+
+<section class="ftco-section ftco-cart">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12 ftco-animate">
+                {% if cart_is_empty %}
+                <h3 class="text-center">{{request.user.name | title }} your Basket is empty</h3>
+                <div class="text-center">
+                    <a href="{% url 'products:category_list' %}" class="btn btn-primary">Goto Products</a>
+                </div>
+                {% else %}
+                <div class="cart-list">
+                    <!-- Card-based layout for cart items -->
+                    <div class="row">
+                        {% for item in cart_items %}
+                        <div class="col-md-12 mb-4">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="row align-items-center">
+                                        <div class="col-md-3">
+                                            <div class="img" style="background-image:url('{{ item.product.photo.url }}'); height: 100px; background-size: cover;"></div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <h5 class="card-title">{{ item.product.name }}</h5>
+                                            <p class="card-text">Price: <strong>RS.{{ item.product.price | intcomma:False }}</strong></p>
+                                            <p class="card-text">Quantity: {{ item.quantity }}</p>
+                                        </div>
+                                        <div class="col-md-3 text-right">
+                                            <p class="card-text"><strong>Total: RS.{{ item.total_price | intcomma:False }}</strong></p>
+                                            <a href="{% url 'cart:clear_cart' item.product.id %}" class="btn btn-danger">Remove</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                        <div class="col-md-12 text-center mb-3">
+                            <a href="{% url 'cart:clear_all'  %}" class="btn btn-danger">Remove All Items</a>
+                        </div>
+                    </div>
+                </div>
+                <br>
+                <div class="row justify-content-center">
+                    {% if cart_items %}
+                    <p>
+                        <a href="{% url 'order:checkout' request.user.id %}" class="btn btn-primary py-3 px-4">Proceed to Application Form</a>
+                    </p>
+                    {% else %}
+                    <p>
+                        <a href="{% url 'products:category_list' %}" class="btn btn-primary py-3 px-4">Go to Shop</a>
+                    </p>
+                    {% endif %}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}
