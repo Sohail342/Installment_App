@@ -53,7 +53,7 @@
                             {% endif %}
                         </div>
                     </form>
-
+                    
                     <!--Dynamic Installment plan form-->
                     <form action="{% url 'products:product_detail' product.id %}" method="POST">
                         {% csrf_token %}
@@ -68,8 +68,9 @@
                             <label for="user_months" class="form-label">Months</label>
                             <input type="number" name="user_months" class="form-control" required min="1" max="12" placeholder="Enter Number of Months">
                         </div>
-                    
-                        <button type="submit" class="btn btn-success">Calculate</button>
+                        {% if product.inventory > 0 %}
+                        <button type="submit" class="btn btn-primary ms-2">Calculate</button>
+                        {% endif %}
                     </form>
                 </div>
             </main>

@@ -1,11 +1,11 @@
-from django.shortcuts import render
-from django.views import View
+from django.shortcuts import render, redirect
+from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from .models import Category, Product
 from django.db.models import Q 
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, get_object_or_404
+from cart.models import Cart, CartItem
 
 
 @login_required(login_url='account:signin')
@@ -67,9 +67,18 @@ def product_detail_view(request, product_id):
         user_down_payment = request.POST.get('user_down_payment')
         user_months = request.POST.get('user_months')
 
-        dynamic_installment = product.calculate_dynamic_installment_plan(user_down_payment=user_down_payment, user_months=user_months)
+        dynamic_installment = product.calculate_dynamic_installment_plan(user_down_payment, user_months)
 
-        print(dynamic_installment)
+
+        # Store data in session
+        request.session['down_payment'] = dynamic_installment['down_payment']
+        request.session['installment_plan'] = dynamic_installment['installment_plan']
+        request.session['monthly_payment'] = dynamic_installment['monthly_payment']
+        request.session['total_amount'] = dynamic_installment['total_amount']
+        request.session['product'] = product.inventory
+
+        
+        return redirect(reverse('order:dynamic_installment_details'))
     
     return render(request, 'products/product_details.html', {
         'product': product, 

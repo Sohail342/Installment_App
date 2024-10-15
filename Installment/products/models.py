@@ -101,15 +101,9 @@ class Product(models.Model):
 
         # installment feed
         installment_fee = int(price * ( 40 / 100))
-        print("installment_fee = ", installment_fee)
-        print("user_down_payment = ", user_down_payment)
-        print("user_months = ", user_months)
-
 
         # update Total price 
         new_price = price+installment_fee
-        print("new_price = ", new_price)
-
 
         # Validate user down payment
         if user_down_payment < 0 or user_down_payment > new_price:
@@ -117,16 +111,16 @@ class Product(models.Model):
 
         # Calculate the base monthly payment
         monthly_payment = (new_price - user_down_payment) / user_months
-        print("monthly_payment = ", monthly_payment)
         
+        # Round Off float monthly payment
+        monthly_payment = round(monthly_payment)
 
         # Calculate the total amount
         total_amount = int(user_down_payment + (monthly_payment * user_months))
-        print("total = ", total_amount)
 
         return {
             'monthly_payment': monthly_payment,
-            'amount_remaing': total_amount,
+            'total_amount': total_amount,
             'down_payment':user_down_payment,
             'installment_plan':user_months
         }

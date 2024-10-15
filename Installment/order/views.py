@@ -255,6 +255,25 @@ def total_bill_view(request):
     })
 
 
+def dynamic_installment_details(request):
+    # Retrieve data from session
+    down_payment = request.session.get('down_payment')
+    installment_plan = request.session.get('installment_plan')
+    monthly_payment = request.session.get('monthly_payment')
+    total_amount = request.session.get('total_amount')
+    product_inventory = request.session.get('product')
+
+
+    return render(request, 'order/dynamic_installment_details.html', {
+        'down_payment': down_payment,
+        'installment_plan': installment_plan,
+        'monthly_payment': monthly_payment,
+        'total_amount': total_amount,
+        'product_inventory':product_inventory
+    })
+
+
+
 
 
 
