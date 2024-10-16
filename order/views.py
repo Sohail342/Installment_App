@@ -97,7 +97,7 @@ def checkout(request, user_id):
 
             # Get or create customer
             customer, created = Customer.objects.get_or_create(
-                cnic=cnic,
+                cnic=cnic.replace('-', ''),
                 defaults={
                     'first_name': firstname,
                     'last_name': lastname,
@@ -259,6 +259,8 @@ def total_bill_view(request):
     # Get the search query
     search_query = request.GET.get('search', '')
     clean_search_query = search_query.strip()
+
+    clean_search_query = clean_search_query.replace("-", '')
 
     if clean_search_query:
         # Filter by CNIC or phone number

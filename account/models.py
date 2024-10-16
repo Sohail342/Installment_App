@@ -33,6 +33,7 @@ class MyUserManager(BaseUserManager):
         )
         user.is_admin = True
         user.is_approved = True 
+        user.is_active = True 
         user.save(using=self._db)
         return user
 
@@ -50,6 +51,7 @@ class User(AbstractBaseUser):
     create_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     is_approved = models.BooleanField(default=False)
+    _password_set = False  
 
     objects = MyUserManager()
 
@@ -76,9 +78,15 @@ class User(AbstractBaseUser):
         return self.is_admin
     
     def save(self, *args, **kwargs):
-        if self.pk is None:  # User is being created
+        # Hash the password if it's being set or changed
+        if self.pk is None or self._password_set:
             self.set_password(self.password)  # Hash the password
+            self._password_set = False  # Reset flag after hashing
         super(User, self).save(*args, **kwargs)
+
+    def set_password(self, raw_password):
+        super().set_password(raw_password)
+        self._password_set = True  # 
 
     class Meta:
         verbose_name = "Sales Team"

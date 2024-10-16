@@ -40,9 +40,9 @@
                         <td>{{ installment.amount_paid | intcomma:False }}</td>
                         <td>
                             {% if installment.is_paid %}
-                            <i class="fas fa-check text-success"></i> 
+                            Paid
                             {% else %}
-                            <i class="fas fa-times text-danger"></i>
+                            Unpaid
                             {% endif %}
                         </td>
                         <td>

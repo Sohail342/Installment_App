@@ -50,24 +50,23 @@ def signin(request):
         if request.method == "POST":
             form = EmailLoginForm(request.POST)
             if form.is_valid():
-                print("Form is valid")
+                
                 email = form.cleaned_data.get('email')
                 password = form.cleaned_data.get('password')
                 user = authenticate(request, username=email, password=password)
+                print(f'Authenticating user: {email}, Password: {password}, User: {user}')
+
 
                 if user is not None:
-                    print("User is Not None")
                     if not user.is_approved:
                         messages.error(request, "Your account is not approved yet.")
                         return redirect(reverse('account:signin'))
                     login(request, user)
                     return redirect(reverse('products:category_list'))
                 else:
-                    print("User is None")
-
                     messages.error(request, "Invalid email or password.")
         else:
-            print("Form is not valid")
+            
             form = EmailLoginForm()
         
         # If there are messages to display, render the form with those messages
