@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load humanize %}
 
 <title>{% block title %}Installment Details{% endblock title %}</title>
 
@@ -11,28 +12,23 @@
             <div class="card-body">
                 <h5 class="card-title">Your Installment Plan</h5>
                 <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th scope="col">Description</th>
-                            <th scope="col">Values</th>
-                        </tr>
-                    </thead>
                     <tbody>
                         <tr>
                             <td><strong>Down Payment:</strong></td>
-                            <td>Rs. {{ down_payment }}</td>
+                            <td>Rs. {{ down_payment | intcomma:False }}</td>
                         </tr>
                         <tr>
                             <td><strong>Installment Plan:</strong></td>
-                            <td>{{ installment_plan }} months</td>
+                            <td>{{ installment_plan  }} months</td>
                         </tr>
                         <tr>
                             <td><strong>Monthly Payment:</strong></td>
-                            <td>Rs. {{ monthly_payment }}</td>
+                            <td>Rs. {{ monthly_payment | intcomma:False }}</td>
                         </tr>
                         <tr>
                             <td><strong>Total Amount:</strong></td>
-                            <td>Rs. {{ total_amount }}</td>
+                            <hr>
+                            <td>Rs. {{ total_amount | intcomma:False }}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -40,14 +36,17 @@
         </div>
         
         <div class="mt-3">
+            <a href="{% url 'products:product_detail' product_id %}" class="btn btn-primary ms-2">
+                <i class="fa fa-arrow-left"></i> Re calculate
+            </a>
             {% if product_inventory > 0 %}
-                <button type="button" class="btn btn-primary ms-2" data-toggle="modal" data-target="#addToBasketModal">
+                <a href={% url 'cart:add_to_cart' product_id %} class="btn btn-primary ms-2" data-toggle="modal" data-target="#addToBasketModal">
                     <i class="fa fa-shopping-cart"></i> Add to basket
-                </button>
+                </a>
             {% else %}
                 <span class="text-danger ms-2">Out of stock</span>
             {% endif %}
-        </div>
+        </div>      
 
         <!-- Modal for confirmation -->
         <div class="modal fade" id="addToBasketModal" tabindex="-1" role="dialog" aria-labelledby="addToBasketModalLabel" aria-hidden="true">

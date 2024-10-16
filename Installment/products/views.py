@@ -76,8 +76,8 @@ def product_detail_view(request, product_id):
         request.session['monthly_payment'] = dynamic_installment['monthly_payment']
         request.session['total_amount'] = dynamic_installment['total_amount']
         request.session['product'] = product.inventory
+        request.session['product_id'] = product.pk
 
-        
         return redirect(reverse('order:dynamic_installment_details'))
     
     return render(request, 'products/product_details.html', {
