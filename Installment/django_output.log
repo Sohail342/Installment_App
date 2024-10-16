@@ -1,4 +1,0 @@
-Watching for file changes with StatReloader
-[14/Oct/2024 18:28:57] "GET / HTTP/1.1" 200 9741
-[14/Oct/2024 18:29:08] "GET / HTTP/1.1" 200 9741
-^C

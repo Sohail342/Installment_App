@@ -192,7 +192,7 @@ def checkout(request, user_id):
 
 
 
-
+@login_required(login_url='account:signin')
 def order_summary(request, order_id):
     order = get_object_or_404(Order, id=order_id)
     
@@ -247,7 +247,7 @@ def order_summary(request, order_id):
 
 
 
-
+@login_required(login_url='account:signin')
 def total_bill_view(request):
     '''
     Total installment plan for all Customers
@@ -283,6 +283,8 @@ def total_bill_view(request):
     })
 
 
+
+@login_required(login_url='account:signin')
 def dynamic_installment_details(request):
     # Retrieve data from session
     down_payment = request.session.get('down_payment')

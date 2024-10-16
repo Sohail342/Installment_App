@@ -5,7 +5,6 @@ from django.core.paginator import Paginator
 from .models import Category, Product
 from django.db.models import Q 
 from django.shortcuts import render, get_object_or_404
-from cart.models import Cart, CartItem
 
 
 @login_required(login_url='account:signin')
