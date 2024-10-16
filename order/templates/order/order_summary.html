@@ -57,9 +57,10 @@
                     </table>
 
                     <h4 class="mt-4">Down Payment Details</h4>
-                    <p><strong>Subtotal:</strong> Rs. <span id="subtotal">{{ subtotal | intcomma:False }}</span></p>
+                    <p><strong>Down Payment:</strong> Rs. <span id="down_payment">{{ down_payment | intcomma:False }}</span></p>
                     <p><strong>Total Quantity:</strong> {{ total_quantity }}</p>
-                    <p><strong>Delivery Fee:</strong> Rs. <span id="delivery-fee">{{ delivery_fee | intcomma:False}}</span></p>
+                    <p><strong>Form fee: </strong>Rs. 500</p>
+                    <p><strong>Monthly Payment:</strong> Rs. <span id="monthly_payment">{{ monthly_payment | intcomma:False}}</span></p>
                     <p><strong>Total:</strong> Rs. <span id="total-price">{{ order.total_price | intcomma:False }}</span></p>
 
                     <div class="text-center mt-4">

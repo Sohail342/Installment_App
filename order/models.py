@@ -13,13 +13,22 @@ class Order(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     is_paid = models.BooleanField(default=False)
     shipping_address = models.TextField(null=True, blank=True)
+    installment_type = models.CharField(max_length=100, default=None)
     payment_method = models.CharField(max_length=30, choices=[
         ('Installment', 'Installment Payment'),
     ])
     installment_plan = models.CharField(max_length=30, choices=[
+        ('1_months', '1 Months Plan'),
+        ('2_months', '2 Months Plan'),
         ('3_months', '3 Months Plan'),
+        ('4_months', '4 Months Plan'),
+        ('5_months', '5 Months Plan'),
         ('6_months', '6 Months Plan'),
+        ('7_months', '7 Months Plan'),
+        ('8_months', '8 Months Plan'),
         ('9_months', '9 Months Plan'),
+        ('10_months', '10 Months Plan'),
+        ('11_months', '11 Months Plan'),
         ('12_months', '12 Months Plan'),
     ], default=None)
     

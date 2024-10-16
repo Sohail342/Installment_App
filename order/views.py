@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
-from cart.models import Cart
+from cart.models import Cart, CartItem
 from django.core.paginator import Paginator
 from . models import Order, OrderItem, InstallmentPayment, DownPayment
 from .forms import CheckoutForm
@@ -20,11 +20,14 @@ def checkout(request, user_id):
     user = get_object_or_404(User, id=user_id)
     cart, created = Cart.objects.get_or_create(user=user)
     cart_items = cart.items.all()
+
+    cartItem, created = CartItem.objects.get_or_create(cart=cart)
     
     cart_is_empty = cart_items.count() == 0
-    down_payment_againts_hire = 0
-    monthly_installment_of_hire = 0
+    down_payment = 0
+    monthly_installment = 0
     total_installments = ''
+    installment_type = ''
     form_fee = 500  # physical form fee (fixed)
     product_summaries = []
 
@@ -40,32 +43,44 @@ def checkout(request, user_id):
         if installment_plan is None:
             installment_plan = current_installment_plan
 
-        # Get installment details for the current product
-        installment_details = product.get_installment_plan()
+        # For static Installment Plan
+        if cartItem.installment_type == 'static':
+            # Get installment details for the current product
+            installment_details = product.get_installment_plan()
 
-        down_payment = installment_details['down_payments'][current_installment_plan]
-        monthly_payment = installment_details['installments'][current_installment_plan]
-        total_amount = installment_details['total_amounts'][current_installment_plan]
+            down_payment = installment_details['down_payments'][current_installment_plan]
+            monthly_installment = installment_details['installments'][current_installment_plan]
+            total_amount = installment_details['total_amounts'][current_installment_plan]
 
-        product_summaries.append({
-            'product_name': product.name,
-            'quantity': quantity,
-            'down_payment': down_payment,
-            'monthly_payment': monthly_payment,
-            'total_amount': total_amount,
-            'installment_plan': current_installment_plan,
-        })
+            product_summaries.append({
+                'product_name': product.name,
+                'quantity': quantity,
+                'down_payment': down_payment,
+                'monthly_payment': monthly_installment,
+                'total_amount': total_amount,
+                'installment_plan': current_installment_plan,
+            })
 
-        # Product downpayment, monthly payment and total installments
-        down_payment_againts_hire += down_payment
-        monthly_installment_of_hire += monthly_payment
+            # Set type is equal to static in order model
+            installment_type = 'static'
+
+        # For Dynamic Installment Plan
+        elif cartItem.installment_type == 'dynamic':
+            down_payment = request.session.get('down_payment')
+            installment_plan = request.session.get('installment_plan')
+            monthly_installment = request.session.get('monthly_payment')
+            print(monthly_installment)
+            total_amount = request.session.get('total_amount')
+
+            # Set type is equal to static in order model
+            installment_type = 'dynamic'
+
+        # Total installments
         total_installments += current_installment_plan
-
-        # Extract numbers from total_installments using regex
-        extracted_installments = re.findall(r'\d+', total_installments)
+        extracted_installments = re.findall(r'\d+', total_installments)   # Extract numbers from total_installments using regex
 
     # Calculate total
-    total = form_fee + down_payment_againts_hire
+    total = form_fee + down_payment
 
     if request.method == 'POST':
         form = CheckoutForm(request.POST)
@@ -98,9 +113,10 @@ def checkout(request, user_id):
                 customer=customer,
                 cart=cart,
                 total_price=total,
+                installment_type=installment_type,
                 shipping_address=shipping_address,
                 payment_method=payment_method,
-                installment_plan=installment_plan,  # Use the determined installment plan
+                installment_plan=current_installment_plan,  # Use the determined installment plan
                 created_at=timezone.now(),
                 updated_at=timezone.now(),
                 is_paid=True,  # Set as paid since down payment is paid at checkout
@@ -111,10 +127,13 @@ def checkout(request, user_id):
                 order=order,
                 customer=customer,
                 installment_form_fee=form_fee,
-                amount=down_payment_againts_hire,  # Use the down_payment_againts_hire as the down payment amount
+                amount=down_payment,  # Use the down_payment_againts_hire as the down payment amount
             )
 
             # Create OrderItems and Installment Payments
+
+            monthly_payment = 0
+
             for item in cart_items:
                 product = item.product
                 order_item = OrderItem.objects.create(
@@ -132,8 +151,13 @@ def checkout(request, user_id):
 
                 # Get the installment plan for this item
                 months = int(item.installment_plan.split('_')[0])  # Get month count from plan
-                installment_details = product.get_installment_plan()
-                monthly_payment = installment_details['installments'][item.installment_plan]
+
+                if cartItem.installment_type == 'static':
+                    installment_details = product.get_installment_plan()
+                    monthly_payment = installment_details['installments'][item.installment_plan]
+                
+                elif cartItem.installment_type == 'dynamic':
+                    monthly_payment = request.session.get('monthly_payment')
 
                 for month in range(1, months + 1):
                     installment_payment = InstallmentPayment.objects.create(
@@ -160,9 +184,9 @@ def checkout(request, user_id):
         'form': form,
         'cart_is_empty': cart_is_empty,
         'cart_items': cart_items,
-        'down_payment_againts_hire': down_payment_againts_hire,
+        'down_payment_againts_hire': down_payment,
         'total': total,
-        'product_delivery_fee': monthly_installment_of_hire,
+        'monthly_installment': monthly_installment,
         'total_installments':''.join(extracted_installments)
     })
 
@@ -176,9 +200,9 @@ def order_summary(request, order_id):
     total_orders = Order.objects.filter(user=request.user).count()
     
     # Prepare to calculate down_payment_againts_hire and delivery fee
-    down_payment_againts_hire = 0
-    delivery_fee = 0
+    down_payment = 0
     product_summaries = []
+    monthly_payment = 0
 
     # Loop through each item in the order
     for item in order.items.all():
@@ -186,11 +210,19 @@ def order_summary(request, order_id):
         quantity = item.quantity
         installment_plan = order.installment_plan
 
-        installment_details = product.get_installment_plan()
-        
-        down_payment = installment_details['down_payments'][installment_plan]
-        monthly_payment = installment_details['installments'][installment_plan]
-        total_amount = installment_details['total_amounts'][installment_plan]
+        if order.installment_type == "static":
+            installment_details = product.get_installment_plan()
+            
+            down_payment = installment_details['down_payments'][installment_plan]
+            monthly_payment = installment_details['installments'][installment_plan]
+            total_amount = installment_details['total_amounts'][installment_plan]
+
+        elif order.installment_type == "dynamic":
+            down_payment = request.session.get('down_payment')
+            installment_plan = request.session.get('installment_plan')
+            monthly_payment = request.session.get('monthly_payment')
+            total_amount = request.session.get('total_amount')
+            print(down_payment)
 
         product_summaries.append({
             'product_name': product.name,
@@ -201,17 +233,13 @@ def order_summary(request, order_id):
             'installment_plan': installment_plan,
         })
 
-        down_payment_againts_hire += down_payment
-        delivery_fee += product.delivery_fee  # Aggregate delivery fee
 
-    total_price = down_payment_againts_hire + delivery_fee  
 
     return render(request, 'order/order_summary.html', {
         'order': order,
         'total_quantity': sum(item.quantity for item in order.items.all()),
-        'down_payment_againts_hire': down_payment_againts_hire,
-        'delivery_fee': monthly_payment,
-        'total_price': total_price, 
+        'down_payment': down_payment,
+        'monthly_payment': monthly_payment,
         'product_summaries': product_summaries,
         'total_orders': total_orders,
     })
@@ -253,6 +281,27 @@ def total_bill_view(request):
         "grouped_installments": dict(grouped_installments),
         "page_obj": page_obj,
     })
+
+
+def dynamic_installment_details(request):
+    # Retrieve data from session
+    down_payment = request.session.get('down_payment')
+    installment_plan = request.session.get('installment_plan')
+    monthly_payment = request.session.get('monthly_payment')
+    total_amount = request.session.get('total_amount')
+    product_inventory = request.session.get('product')
+    product_id = request.session.get('product_id')
+
+    
+    return render(request, 'order/dynamic_installment_details.html', {
+        'down_payment': down_payment,
+        'installment_plan': installment_plan,
+        'monthly_payment': monthly_payment,
+        'total_amount': total_amount,
+        'product_inventory':product_inventory,
+        "product_id":product_id
+    })
+
 
 
 

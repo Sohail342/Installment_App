@@ -1,11 +1,11 @@
-from django.shortcuts import render
-from django.views import View
+from django.shortcuts import render, redirect
+from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from .models import Category, Product
 from django.db.models import Q 
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, get_object_or_404
+from cart.models import Cart, CartItem
 
 
 @login_required(login_url='account:signin')
@@ -54,21 +54,37 @@ def product_list_view(request, category_name):
 
 
 
-class ProductDetailView(LoginRequiredMixin, View):
-    login_url = 'account:signin'  # Redirect to login page if not logged in
-    redirect_field_name = 'next' 
+@login_required(login_url='account:signin')
+def product_detail_view(request, product_id):
+    product = get_object_or_404(Product, id=product_id)
     
-    def get(self, request, product_id):
-        product = get_object_or_404(Product, id=product_id)
-        
-        months = [months for months in range(1, 13)]
-        installments = product.get_installment_plan()
-        
-        return render(request, 'products/product_details.html', {
-            'product': product, 
-            'installments': installments['installments'],
-            'down_payments': installments['down_payments'],
-            'total_amounts': installments['total_amounts'],
-            'months': months,
-            'quantity': product.inventory,
-        })
+    months = [month for month in range(1, 13)]
+    installments = product.get_installment_plan()
+
+
+    #  dynamic Installments
+    if request.method == "POST":
+        user_down_payment = request.POST.get('user_down_payment')
+        user_months = request.POST.get('user_months')
+
+        dynamic_installment = product.calculate_dynamic_installment_plan(user_down_payment, user_months)
+
+
+        # Store data in session
+        request.session['down_payment'] = dynamic_installment['down_payment']
+        request.session['installment_plan'] = dynamic_installment['installment_plan']
+        request.session['monthly_payment'] = dynamic_installment['monthly_payment']
+        request.session['total_amount'] = dynamic_installment['total_amount']
+        request.session['product'] = product.inventory
+        request.session['product_id'] = product.pk
+
+        return redirect(reverse('order:dynamic_installment_details'))
+    
+    return render(request, 'products/product_details.html', {
+        'product': product, 
+        'installments': installments['installments'],
+        'down_payments': installments['down_payments'],
+        'total_amounts': installments['total_amounts'],
+        'months': months,
+        'quantity': product.inventory,
+    })

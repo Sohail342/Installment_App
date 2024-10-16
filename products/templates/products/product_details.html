@@ -53,6 +53,23 @@
                             {% endif %}
                         </div>
                     </form>
+                    
+                    <!--Dynamic Installment plan form-->
+                    <form action="{% url 'products:product_detail' product.id %}" method="POST">
+                        {% csrf_token %}
+                        <h5 class="my-4">Calculate Your Installment Plan</h5>
+                    
+                        <div class="mb-3">
+                            <label for="user_down_payment" class="form-label">Down Payment (Rs.)</label>
+                            <input type="number" name="user_down_payment" class="form-control" required min="0" max={{product.price}} placeholder="Enter Down Payment">
+                        </div>
+                    
+                        <div class="mb-3">
+                            <label for="user_months" class="form-label">Months</label>
+                            <input type="number" name="user_months" class="form-control" required min="1" max="12" placeholder="Enter Number of Months">
+                        </div>
+                        <button type="submit" class="btn btn-primary ms-2">Calculate</button>
+                    </form>
                 </div>
             </main>
         </div>

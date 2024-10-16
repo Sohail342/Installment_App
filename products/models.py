@@ -47,7 +47,7 @@ class Product(models.Model):
         price = self.price
         
         # Dynamic down payment percentages
-        down_payments = {
+        down_payments = {  
             '3_months': int(price * (self.down_payment_3_months / 100)),
             '6_months': int(price * (self.down_payment_6_months / 100)),
             '9_months': int(price * (self.down_payment_9_months / 100)),
@@ -87,4 +87,40 @@ class Product(models.Model):
             'installments': installments,
             'down_payments': down_payments,
             'total_amounts': total_amounts,
+        }
+    
+    
+    def calculate_dynamic_installment_plan(self, user_down_payment, user_months):
+        """
+        Calculate installment plan based on user input for down payment and months.
+        """
+        price = self.price
+        user_down_payment = int(user_down_payment)
+        user_months = int(user_months)
+
+
+        # installment feed
+        installment_fee = int(price * ( 40 / 100))
+
+        # update Total price 
+        new_price = price+installment_fee
+
+        # Validate user down payment
+        if user_down_payment < 0 or user_down_payment > new_price:
+            raise ValueError("Invalid down payment amount.")
+
+        # Calculate the base monthly payment
+        monthly_payment = (new_price - user_down_payment) / user_months
+        
+        # Round Off float monthly payment
+        monthly_payment = round(monthly_payment)
+
+        # Calculate the total amount
+        total_amount = int(user_down_payment + (monthly_payment * user_months))
+
+        return {
+            'monthly_payment': monthly_payment,
+            'total_amount': total_amount,
+            'down_payment':user_down_payment,
+            'installment_plan':user_months
         }
