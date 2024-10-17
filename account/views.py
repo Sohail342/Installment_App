@@ -54,7 +54,6 @@ def signin(request):
                 email = form.cleaned_data.get('email')
                 password = form.cleaned_data.get('password')
                 user = authenticate(request, username=email, password=password)
-                print(f'Authenticating user: {email}, Password: {password}, User: {user}')
 
 
                 if user is not None:

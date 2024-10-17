@@ -7,5 +7,6 @@ urlpatterns = [
 
     path('download_installments/<int:customer_id>/', views.download_installments_csv, name='download_installments'),
     path('download_installments_html/<int:customer_id>/', views.download_installments_pdf, name='download_installments_pdf'),
+    path('order_summary/<int:order_id>/', views.order_summary, name="order_summary")
 ]
     

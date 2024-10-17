@@ -1,0 +1,121 @@
+{% include 'base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block content %}
+<div class="container mt-5 border border-primary rounded p-4 bg-light mx-auto my-1">   
+    <div class="row justify-content-center">
+        <div class="receipt-main col-md-10">
+            <div class="row mb-4">
+                <div class="col-6">
+                    <div class="receipt-left">
+                        <img src="{% static 'images/frame.png' %}" alt="Profile" class="img-fluid rounded-circle" style="width: 150px;">
+                    </div>
+                </div>
+                <div class="col-6 text-right">
+                    <div class="receipt-right">
+                        <h5 class="mb-2">HAJI ELECTRONICS</h5>
+                        <p class="mb-1">Deals in All Kinds of Refrigerator, AC, LED & Electronics Items</p>
+                        <p><i class="fa fa-location-arrow"></i> Shop # 147, Karela Shop, Near Imran Medical Store, North Karachi.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row mb-4">
+                <div class="col-8">
+                    <div class="receipt-right">
+                        <h5>{{order.customer}}</h5>
+                        <p><strong>Mobile:</strong> {{order.customer.phone_number}}</p>
+                        <p><strong>CNIC:</strong> {{order.customer.cnic}}</p>
+                        <p><strong>Address:</strong> {{order.customer.address}}</p>
+                        {% if order.customer.email %}
+                        <p><strong>EMAIL:</strong> {{order.customer.email}}</p>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="col-4 text-right">
+                    <h3>INVOICE # {{order.id}}</h3>
+                </div>
+            </div>
+            
+            <div class="mb-4">
+                <table class="table table-bordered table-hover">
+                    <tbody>
+                        {% for item in order.items.all %}
+                        <tr>
+                            <td>ARTICLE</td>
+                            <td>{{item.product.category}}</td>
+                        </tr>
+                        <tr>
+                            <td>MAKE</td>
+                            <td>{{item.product.name}}</td>
+                        </tr>
+                        <tr>
+                            <td>MODEL NO</td>
+                            <td></td>
+                        </tr>
+                        <tr class="font-weight-bold">
+                            <td>SIZE</td>
+                            <td></td>
+                        </tr>
+                        <tr class="font-weight-bold">
+                            <td>SERIAL NO</td>
+                            <td></td>
+                        </tr>
+                        {% endfor %}
+                        <tr class="font-weight-bold">
+                            <td>MODE OF PAYMENT</td>
+                            <td>{{order.payment_method}}</td>
+                        </tr>
+                        <tr class="font-weight-bold">
+                            <td>TOTAL AMOUNT OF HIRE</td>
+                            <td>Rs. {{order.total_bill | floatformat:0 | intcomma:False }}</td>
+                        </tr>
+                        <tr class="font-weight-bold">
+                            <td>DOWN PAYMENT AGAINST HIRE</td>
+                            <td>Rs. {{order.downpayment | floatformat:0 | intcomma:False }}</td>
+                        </tr>
+                        <tr class="font-weight-bold">
+                            <td>BALANCE PAYMENT OF HIRE</td>
+                            <td>Rs. {{balance | floatformat:0 | intcomma:False }}</td>
+                        </tr>
+                        <tr class="font-weight-bold">
+                            <td>MONTHLY INSTALLMENT</td>
+                            <td>Rs. {{order.monthly_installment | floatformat:0 | intcomma:False }}</td>
+                        </tr>
+                        <tr class="font-weight-bold">
+                            <td>TOTAL INSTALLMENT</td>
+                            <td>{{extracted_installments}} X</td>
+                        </tr>
+                        <tr class="font-weight-bold">
+                            <td>INSTALLMENT DUE DATE</td>
+                            <td>{{due_date|date:"F j, Y"}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="row mt-4 border p-3 bg-light">
+                    <div class="col-8">
+                        <p><strong>Verified By:</strong></p> 
+                        <p>Date: {{ order.created_at|date:"F j, Y" }}</p>
+                        <p>Time: {{ order.created_at|date:"h:i A" }}</p>
+                        <p>H.D BY</p>
+                        <p>Signature</p>
+                        <h7><strong>Cheque Bounce Charges Rs. 500/-</strong></h7>
+                    </div>
+                    <div class="col-3 text-right mt-4">
+                        <hr>
+                        <h5>HIRER'S SIGNATURE</h5>
+                    </div>
+                </div>
+                
+                <div class="row mt-2">
+                    <div class="col-2 text-right mt-4 ">
+                        <hr>
+                        <h5>SIGNATURE</h5>
+                    </div>
+                </div>
+            </div>
+        </div>    
+    </div>
+</div>
+{% endblock content %}

@@ -38,7 +38,7 @@ class OrderAdmin(ImportExportModelAdmin, ModelAdmin):
 class OrderItemAdminModel(ImportExportModelAdmin, ModelAdmin):
     export_form_class = ExportForm
     import_form_class = ImportForm
-    list_display = ('id', 'order', 'customer', 'customer_cnic', 'product', 'quantity', 'price', 'total_price')
+    list_display = ('id', 'order', 'customer', 'customer_cnic', 'product', 'quantity', 'original_price', 'installment_total_price')
 
     def customer_cnic(self, obj):
         return obj.customer.cnic

@@ -69,7 +69,6 @@ def checkout(request, user_id):
             down_payment = request.session.get('down_payment')
             installment_plan = request.session.get('installment_plan')
             monthly_installment = request.session.get('monthly_payment')
-            print(monthly_installment)
             total_amount = request.session.get('total_amount')
 
             # Set type is equal to static in order model
@@ -112,11 +111,14 @@ def checkout(request, user_id):
                 user=user,
                 customer=customer,
                 cart=cart,
-                total_price=total,
+                total_bill=total_amount,                  # After 40% included in origin price
+                downpayment_plus_form_fee = total,        # this amount includes form fee + down payment
+                downpayment = down_payment,
+                monthly_installment = monthly_installment,
                 installment_type=installment_type,
                 shipping_address=shipping_address,
                 payment_method=payment_method,
-                installment_plan=current_installment_plan,  # Use the determined installment plan
+                installment_plan=current_installment_plan.replace('_', ' '),  # Replace _ from installment plan (e.g, 3_months = 3 months)
                 created_at=timezone.now(),
                 updated_at=timezone.now(),
                 is_paid=True,  # Set as paid since down payment is paid at checkout
@@ -141,7 +143,8 @@ def checkout(request, user_id):
                     customer=customer,
                     product=product,
                     quantity=item.quantity,
-                    price=product.price
+                    original_price=product.price,
+                    installment_total_price=total_amount,
                 )
 
                 # Update product inventory
@@ -176,7 +179,7 @@ def checkout(request, user_id):
             cart.items.all().delete()
 
             messages.success(request, 'Order placed and installment plan created successfully!')
-            return redirect('order:order_summary', order_id=order.id)
+            return redirect('customer_reports:order_summary', order_id=order.id)
 
     else:
         form = CheckoutForm()
@@ -191,58 +194,6 @@ def checkout(request, user_id):
     })
 
 
-
-@login_required(login_url='account:signin')
-def order_summary(request, order_id):
-    order = get_object_or_404(Order, id=order_id)
-    
-    # Total orders by Sales Person
-    total_orders = Order.objects.filter(user=request.user).count()
-    
-    # Prepare to calculate down_payment_againts_hire and delivery fee
-    down_payment = 0
-    product_summaries = []
-    monthly_payment = 0
-
-    # Loop through each item in the order
-    for item in order.items.all():
-        product = item.product
-        quantity = item.quantity
-        installment_plan = order.installment_plan
-
-        if order.installment_type == "static":
-            installment_details = product.get_installment_plan()
-            
-            down_payment = installment_details['down_payments'][installment_plan]
-            monthly_payment = installment_details['installments'][installment_plan]
-            total_amount = installment_details['total_amounts'][installment_plan]
-
-        elif order.installment_type == "dynamic":
-            down_payment = request.session.get('down_payment')
-            installment_plan = request.session.get('installment_plan')
-            monthly_payment = request.session.get('monthly_payment')
-            total_amount = request.session.get('total_amount')
-            print(down_payment)
-
-        product_summaries.append({
-            'product_name': product.name,
-            'quantity': quantity,
-            'down_payment': down_payment,
-            'monthly_payment': monthly_payment,
-            'total_amount': total_amount,
-            'installment_plan': installment_plan,
-        })
-
-
-
-    return render(request, 'order/order_summary.html', {
-        'order': order,
-        'total_quantity': sum(item.quantity for item in order.items.all()),
-        'down_payment': down_payment,
-        'monthly_payment': monthly_payment,
-        'product_summaries': product_summaries,
-        'total_orders': total_orders,
-    })
 
 
 

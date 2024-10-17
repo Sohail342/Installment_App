@@ -2,35 +2,26 @@ from django.db import models
 from account.models import User, Customer
 from products.models import Product
 from cart.models import Cart
+from django.utils import timezone
 
 
 class Order(models.Model):
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE, related_name='orders') 
     cart = models.ForeignKey(Cart, on_delete=models.CASCADE)
-    total_price = models.DecimalField(max_digits=10, decimal_places=2)
+    downpayment_plus_form_fee = models.DecimalField(max_digits=10, decimal_places=2)
+    total_bill = models.DecimalField(max_digits=10, decimal_places=2)
+    downpayment = models.DecimalField(max_digits=10, decimal_places=2, default=None)
+    monthly_installment = models.DecimalField(max_digits=10, decimal_places=2, default=None)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     is_paid = models.BooleanField(default=False)
     shipping_address = models.TextField(null=True, blank=True)
     installment_type = models.CharField(max_length=100, default=None)
     payment_method = models.CharField(max_length=30, choices=[
-        ('Installment', 'Installment Payment'),
+        ('Every Month', 'Every Month'),
     ])
-    installment_plan = models.CharField(max_length=30, choices=[
-        ('1_months', '1 Months Plan'),
-        ('2_months', '2 Months Plan'),
-        ('3_months', '3 Months Plan'),
-        ('4_months', '4 Months Plan'),
-        ('5_months', '5 Months Plan'),
-        ('6_months', '6 Months Plan'),
-        ('7_months', '7 Months Plan'),
-        ('8_months', '8 Months Plan'),
-        ('9_months', '9 Months Plan'),
-        ('10_months', '10 Months Plan'),
-        ('11_months', '11 Months Plan'),
-        ('12_months', '12 Months Plan'),
-    ], default=None)
+    installment_plan = models.CharField(max_length=30)
     
     # Track which installments are paid
     installment_status = models.TextField(default="", blank=True) 
@@ -59,15 +50,11 @@ class OrderItem(models.Model):
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE, related_name='order_items') 
     product = models.ForeignKey(Product, on_delete=models.SET_NULL, null=True)
     quantity = models.PositiveIntegerField(default=1)
-    price = models.DecimalField(max_digits=10, decimal_places=2)  
-    total_price = models.DecimalField(max_digits=10, decimal_places=2)  # Pre-calculated
+    original_price = models.DecimalField(max_digits=10, decimal_places=2)  
+    installment_total_price = models.DecimalField(max_digits=10, decimal_places=2)
 
     def __str__(self):
         return f"{self.quantity} x {self.product} in Order {self.order.id}"
-
-    def save(self, *args, **kwargs):
-        self.total_price = self.quantity * self.price
-        super().save(*args, **kwargs)
         
 
 class InstallmentPayment(models.Model):
@@ -77,11 +64,36 @@ class InstallmentPayment(models.Model):
     amount_due = models.IntegerField()
     amount_paid = models.IntegerField(default=0)
     is_paid = models.BooleanField(default=False)
+    balance = models.DecimalField(max_digits=10, decimal_places=2, default=0.00, null=True, blank=True)
     initial_amount_due = models.DecimalField(max_digits=10, decimal_places=2, editable=False)  # Track the original amount_due
     due_date = models.DateTimeField(null=True, blank=True)
 
     def __str__(self):
         return f"Installment {self.month_number} for {self.order_item.product.name}"
+    
+
+    @property
+    def balance(self):
+        """Calculate the remaining balance for this installment."""
+        balance = self.amount_due - self.amount_paid
+        return balance + self.amount_paid
+    
+    @property
+    def paid_amount(self):
+        """Calculate the paid amount."""
+        return self.amount_paid
+    
+    @property
+    def due_amount(self):
+        """Calculate the due amount."""
+        return self.amount_due
+    
+    @staticmethod
+    def upcoming_due_dates():
+        """Return a list of upcoming due dates for unpaid installments."""
+        now = timezone.now()
+        return list(InstallmentPayment.objects.filter(due_date__gt=now, is_paid=False).values_list('due_date', flat=True))
+    
 
     def save(self, *args, **kwargs):
         if not self.pk:  # If it's a new record, store the initial amount_due

@@ -26,5 +26,6 @@ class EmailLoginForm(forms.Form):
         if email and password:
             user = authenticate(username=email, password=password)
             if user is None:
+                print("form error k")
                 raise forms.ValidationError("Invalid email or password.")
         return cleaned_data
