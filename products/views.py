@@ -27,13 +27,12 @@ def category_list_view(request):
 
 
 
-
 def filter_categories(request):
     query = request.GET.get('filter', '').strip()
     print(query)
     
     if query:  # Only perform the search if query is not empty
-        categories = Category.objects.filter(name__icontains=query).values('name', 'id')[:10]
+        categories = Category.objects.filter(name__icontains=query).values('name', 'id')[:6]
     else:
         categories = Category.objects.none()  # Return an empty queryset if no query
     

@@ -17,7 +17,7 @@ class CheckoutForm(forms.Form):
     customer_office_address = forms.CharField(max_length=250, required=False)
     customer_home_phone = forms.CharField(max_length=20, required=False)
     customer_office_phone = forms.CharField(max_length=100, required=False)
-    country = forms.CharField(max_length=100)
+    country = forms.CharField(max_length=100, required=False)
 
     # Guaranteed 1 Fields
     guaranteed_cnic_no = forms.CharField(max_length=15, required=True)

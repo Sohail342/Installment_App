@@ -1,6 +1,8 @@
 {% extends "base.html" %}
 {% load humanize %}
 
+<title>{% block title %}Installment Bills{% endblock title %}</title>
+
 {% block content %}
 <div class="container mt-4">
     <div class="card text-white bg-primary text-center mb-4">
@@ -12,7 +14,7 @@
     <!-- Search Form -->
     <form method="get" action="{% url 'order:total_bill' %}" class="form-inline mb-3">
         <div class="input-group">
-            <input type="text" name="search" class="form-control" placeholder="Search by CNIC or Phone Number..." value="{{ request.GET.search }}">
+            <input type="text" name="search" class="form-control" placeholder="Search by CNIC, INVOICE NO or Phone Number..." value="{{ request.GET.search }}">
             <div class="input-group-append">
                 <button class="btn btn-primary" type="submit">Search</button>
             </div>
@@ -21,7 +23,7 @@
 
     {% if grouped_installments %}
         {% for customer, installments in grouped_installments.items %}
-            <div class="card mb-4">
+            <div class="card mb-4 shadow-sm">
                 <div class="card-header">
                     <h3 class="mb-0">
                         {% if customer.first_name or customer.last_name %}
@@ -54,20 +56,14 @@
                                     <td>{{ installment.amount_paid | intcomma:False }}</td>
                                     <td>
                                         {% if installment.is_paid %}
-                                        <b>
-                                            <span class=" text-success">Paid<span>
-                                        </b>
+                                        <span class="text-success font-weight-bold" data-toggle="tooltip" title="Payment Received">Paid</span>
                                         {% else %}
-                                        <b>
-                                            <span class=" text-danger">Unpaid<span>
-                                        </b>
+                                        <span class="text-danger font-weight-bold" data-toggle="tooltip" title="Payment Pending">Unpaid</span>
                                         {% endif %}
                                     </td>
                                     <td>
                                         {% if installment.is_paid %}
-                                        <b>
-                                            <span class=" text-success">Paid</span>
-                                        </b>
+                                        <span class="text-success font-weight-bold">Paid</span>
                                         {% else %}
                                         {{ installment.due_date|date:"F j, Y" }}
                                         {% endif %}
@@ -111,7 +107,17 @@
             </ul>
         </nav>
     {% else %}
-        <p>No customers with installment payments found.</p>
+        <div class="alert alert-warning" role="alert">
+            No customers with installment payments found.
+        </div>
     {% endif %}
 </div>
+
+<!-- Initialize tooltips -->
+<script>
+    $(function () {
+        $('[data-toggle="tooltip"]').tooltip();
+    });
+</script>
+
 {% endblock content %}

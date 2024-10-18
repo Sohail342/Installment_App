@@ -214,8 +214,12 @@ def total_bill_view(request):
     clean_search_query = clean_search_query.replace("-", '')
 
     if clean_search_query:
-        # Filter by CNIC or phone number
-        filters = Q(customer__cnic__icontains=clean_search_query) | Q(customer__phone_number__icontains=clean_search_query)
+        # Filter by CNIC, phone number, or order ID
+        filters = (
+            Q(customer__cnic__icontains=clean_search_query) |
+            Q(customer__phone_number__icontains=clean_search_query) |
+            Q(order_item__order__id__icontains=clean_search_query) 
+        )
         installments = installments.filter(filters).order_by('customer')
 
 

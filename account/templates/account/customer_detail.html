@@ -1,73 +1,95 @@
 {% extends "base.html" %}
 {% load humanize %}
 
-{% block content %}
-<div class="container mt-4">
-    <h1>{{ customer.first_name }} {{ customer.last_name }}</h1>
-    <p><strong>Email:</strong> {{ customer.email }}</p>
-    <p><strong>Phone Number:</strong> {{ customer.phone_number }}</p>
-    <p><strong>Address:</strong> {{ customer.address }}</p>
-    <p><strong>CNIC:</strong> {{ customer.cnic }}</p>
+<title>{% block title %}{{ customer.first_name }} Reports{% endblock title %}</title>
 
-    <!-- Card for the centered heading -->
-    <div class="card text-white bg-primary text-center mb-4">
+{% block content %}
+
+<!-- Card for the centered heading -->
+<div class="card text-center mt-4">
+    <div class="card-body">
+        <h2 class="card-title"><b>{{ customer.first_name }}'s Installment Reports</b></h2>
+    </div>
+</div>
+
+<!-- Button Group -->
+<div class="d-flex justify-content-center mb-2">
+    <button type="button" id="download" class="btn btn-success mx-2" data-toggle="tooltip" data-placement="top" title="Download your invoice as PDF">Download PDF</button>
+    <a href="{% url 'customer_reports:download_installments' customer.id %}" class="btn btn-success mx-2" data-toggle="tooltip" data-placement="top" title="Download your installments as CSV">Download CSV</a>
+</div>
+
+<div id="invoice" class="container mt-4">
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5>{{ customer.first_name }} {{ customer.last_name }}</h5>
+        </div>
         <div class="card-body">
-            <h2 class="card-title">Installment Payments</h2>
+            <p><strong>Email:</strong> {{ customer.email }}</p>
+            <p><strong>Phone Number:</strong> {{ customer.phone_number }}</p>
+            <p><strong>Address:</strong> {{ customer.address }}</p>
+            <p><strong>CNIC:</strong> {{ customer.cnic }}</p>
         </div>
     </div>
 
-    <!-- Download Button -->
-    <a href="{% url 'customer_reports:download_installments' customer.id %}" class="btn btn-success mb-3">Download CSV</a>
-    <a href="{% url 'customer_reports:download_installments_pdf' customer.id %}" class="btn btn-success mb-3">Download PDF</a>
-
-    {% for order_item, installments in grouped_installments.items %}
-        <h3>{{ order_item.product.name }}</h3>
-        <table class="table table-striped table-bordered mb-4">
-            <thead class="thead-dark">
-                <tr>
-                    <th>Month Number</th>
-                    <th>Amount Due</th>
-                    <th>Amount Paid</th>
-                    <th>Status</th>
-                    <th>Due Date</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for installment in installments %}
+    {% for order_item, data in grouped_installments.items %}
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5>{{ order_item.product.name }} (INVOICE # {{ data.order_id }})</h5>
+        </div>
+        <div class="card-body">
+            <table class="table table-striped table-bordered">
+                <thead class="thead-dark">
                     <tr>
-                        <td>{{ installment.month_number }}</td>
-                        <td>{{ installment.amount_due | intcomma:False }}</td>
-                        <td>{{ installment.amount_paid | intcomma:False }}</td>
-                        <td>
-                            {% if installment.is_paid %}
-                            <b>
-                                <span class=" text-success">Paid<span>
-                            </b>
-                            {% else %}
-                            <b>
-                                <span class=" text-danger">Unpaid<span>
-                            </b>
-                            {% endif %}
-                        </td>
-                        <td>
-                            {% if installment.is_paid %}
-                            <b>
-                                <span class="text-success">Paid</span>
-                            </b>
-                            {% else %}
-                            {{ installment.due_date|date:"F j, Y" }}
-                            {% endif %}
-                        </td>
+                        <th>Month Number</th>
+                        <th>Amount Due</th>
+                        <th>Amount Paid</th>
+                        <th>Status</th>
+                        <th>Due Date</th>
                     </tr>
-                {% empty %}
-                    <tr>
-                        <td colspan="5" class="text-center">No installments found for this order item.</td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    {% endfor %}
+                </thead>
+                <tbody>
+                    {% for installment in data.installments %}
+                        <tr>
+                            <td>{{ installment.month_number }}</td>
+                            <td>{{ installment.amount_due | intcomma:False }}</td>
+                            <td>{{ installment.amount_paid | intcomma:False }}</td>
+                            <td>
+                                {% if installment.is_paid %}
+                                <span class="text-success font-weight-bold" data-toggle="tooltip" data-placement="top" title="Payment Received">Paid</span>
+                                {% else %}
+                                <span class="text-danger font-weight-bold" data-toggle="tooltip" data-placement="top" title="Payment Pending">Unpaid</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if installment.is_paid %}
+                                <span class="text-success font-weight-bold">Paid</span>
+                                {% else %}
+                                {{ installment.due_date|date:"F j, Y" }}
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="5" class="text-center">No installments found for this order item.</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endfor %}
 
+</div>
+
+<div class="d-flex justify-content-center mb-2">
     <a href="{% url 'order:total_bill' %}" class="btn btn-secondary">Back to Installments</a>
 </div>
+
+<!-- Initialize tooltips -->
+<script>
+    $(function () {
+        $('[data-toggle="tooltip"]').tooltip();
+    });
+</script>
+
 {% endblock content %}

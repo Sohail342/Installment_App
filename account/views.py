@@ -12,15 +12,19 @@ def customer_detail_view(request, customer_id):
     customer = get_object_or_404(Customer, id=customer_id)
     installments = customer.installments.all()
 
-    # Group installments by order item
-    grouped_installments = defaultdict(list)
+    # Group installments by order item and include order ID
+    grouped_installments = defaultdict(lambda: {'order_id': None, 'installments': []})
     for installment in installments:
-        grouped_installments[installment.order_item].append(installment)
+        order_item = installment.order_item
+        order_id = order_item.order.id  # Get the order ID
+        grouped_installments[order_item]['order_id'] = order_id
+        grouped_installments[order_item]['installments'].append(installment)
 
     return render(request, 'account/customer_detail.html', {
         'customer': customer,
         'grouped_installments': dict(grouped_installments),
     })
+
 
 
 
