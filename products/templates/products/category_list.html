@@ -3,20 +3,29 @@
 
 {% block title %} Home {% endblock title %}
 
-{% block content %}
+{% block content %} 
+
     <div class="container">
         <section class="main-section">
             <h1>Our Categories</h1>
 
-            <!-- Search Form -->
-            <form method="get" action="{% url 'products:category_list' %}" class="form-inline mb-3">
+           <!-- Search Form -->
+            <form class="form-inline mb-3" id="filter-form">
                 <div class="input-group">
-                    <input type="text" name="search" class="form-control" placeholder="Search categories..." value="{{ request.GET.search }}">
-                    <div class="input-group-append">
-                        <button class="btn btn-primary" type="submit">Search</button>
-                    </div>
+                    <input type="text" id="filter-input" class="form-control" placeholder="search categories...">
+                    <button class="btn btn-outline-secondary" type="button">
+                        <i class="fas fa-search"></i> <!-- Search Icon -->
+                    </button>
                 </div>
             </form>
+
+            <!-- Styled Dropdown Results -->
+            <div class="dropdown">
+                <div id="filter-results" class="dropdown-menu w-100" style="max-height: 300px; overflow-y: auto;"></div>
+            </div>
+
+
+
 
             <main>
                 {% for category in categories %}
@@ -60,4 +69,49 @@
             </nav>
         </section>
     </div>
+    <script>
+        $(document).ready(function() {
+            $("#filter-input").on("input", function() {
+                const query = $(this).val().trim();
+        
+                if (query.length > 0) {
+                    $.ajax({
+                        url: "{% url 'products:filter_categories' %}",
+                        data: { 'filter': query },
+                        success: function(data) {
+                            $('#filter-results').empty();  // Clear previous results
+        
+                            if (data.length > 0) {
+                                // Show dropdown if there are results
+                                $('#filter-results').addClass('show');
+        
+                                data.forEach(function(category) {
+                                    $('#filter-results').append(
+                                        `<a class="dropdown-item result-item" href="${category.url}">${category.name}</a>`
+                                    );
+                                });
+                            } else {
+                                $('#filter-results').append('<div class="dropdown-item no-results">No categories found.</div>');
+                            }
+                        },
+                        error: function() {
+                            $('#filter-results').empty();
+                            $('#filter-results').append('<div class="dropdown-item no-results">Error retrieving results.</div>');
+                        }
+                    });
+                } else {
+                    $('#filter-results').removeClass('show');  // Hide the dropdown if input is empty
+                }
+            });
+        
+            // Close the dropdown if clicked outside
+            $(document).click(function(event) {
+                if (!$(event.target).closest("#filter-form, #filter-results").length) {
+                    $('#filter-results').removeClass('show');
+                }
+            });
+        });
+        
+    </script>        
+
 {% endblock content %}

@@ -1,0 +1,135 @@
+﻿/* General Body Styles */
+body {
+    margin: 0;
+    font-family: Roboto, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+    font-size: .8125rem;
+    font-weight: 400;
+    line-height: 1.5385;
+    color: #333;
+    text-align: left;
+    background-color: #eee;
+}
+
+/* Margins for spacing */
+.mt-50 {
+    margin-top: 50px;
+}
+
+.mb-50 {
+    margin-bottom: 50px;
+}
+
+/* Card Styles */
+.card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    word-wrap: break-word;
+    background-color: #fff;
+    background-clip: border-box;
+    border: 1px solid rgba(0, 0, 0, .125);
+    border-radius: .1875rem;
+}
+
+/* Card Content */
+.card-img-actions {
+    position: relative;
+}
+
+.card-body {
+    flex: 1 1 auto;
+    padding: 1.25rem;
+    text-align: center;
+}
+
+.card-title {
+    margin-top: 10px;
+    font-size: 17px;
+}
+
+/* Invoice Color */
+.invoice-color {
+    color: red !important;
+}
+
+/* Card Header */
+.card-header {
+    padding: .9375rem 1.25rem;
+    margin-bottom: 0;
+    background-color: rgba(0, 0, 0, .02);
+    border-bottom: 1px solid rgba(0, 0, 0, .125);
+}
+
+/* Links */
+a {
+    text-decoration: none !important;
+}
+
+/* Button Styles */
+.btn-light {
+    color: #333;
+    background-color: #fafafa;
+    border-color: #ddd;
+}
+
+.btn-primary {
+    color: #fff;
+    background-color: #2196f3;
+}
+
+.btn-labeled > b {
+    position: absolute;
+    top: -1px;
+    background-color: blue;
+    display: block;
+    line-height: 1;
+    padding: .62503rem;
+}
+
+/* Header Elements Inline */
+.header-elements-inline {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: nowrap;
+}
+
+/* Media Queries */
+@media (min-width: 768px) {
+    .wmin-md-400 {
+        min-width: 400px !important;
+    }
+}
+
+/* Print Styles */
+@media print {
+    body {
+        margin: 0;
+        padding: 0;
+    }
+
+    .card {
+        margin: 0;
+        border: none; /* Remove borders for printing */
+    }
+
+    .card-body {
+        padding: 0; /* Remove padding for print */
+        text-align: left; /* Align text to the left for readability */
+    }
+
+    .invoice-color {
+        color: red !important; /* Keep specific colors if needed */
+    }
+
+    /* Prevent page breaks inside the invoice */
+    #invoice {
+        page-break-inside: avoid;
+    }
+
+    /* Hide buttons when printing */
+    .btn {
+        display: none;
+    }
+}

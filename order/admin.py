@@ -51,7 +51,7 @@ class InstallmentPaymentAdmin(ImportExportModelAdmin, ModelAdmin):
     export_form_class = ExportForm
     import_form_class = ImportForm
     list_display = ('id', 'customer', 'customer_cnic', 'order_item', 'month_number', 'amount_due', 'amount_paid', 'is_paid')
-    list_filter = (PaidFilter,)
+    list_filter = ("customer__cnic", "customer__phone_number", PaidFilter)
 
     def customer_cnic(self, obj):
         return obj.customer.cnic
@@ -63,7 +63,7 @@ class DownPaymentAdmin(ImportExportModelAdmin, ModelAdmin):
     export_form_class = ExportForm
     import_form_class = ImportForm
     list_display = ('id', 'order', 'customer', 'customer_cnic', 'amount', 'payment_date')
-    list_filter = ('payment_date',)
+    list_filter = ("customer__cnic", "customer__phone_number", 'payment_date')
 
     def customer_cnic(self, obj):
         return obj.customer.cnic

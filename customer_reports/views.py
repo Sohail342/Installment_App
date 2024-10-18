@@ -29,6 +29,7 @@ def order_summary(request, order_id):
     # Find balance
     balance = sum(installment.balance for installment in installments)
 
+
     context = {
         'order': order,
         'order_items': order_items,

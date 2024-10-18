@@ -14,7 +14,7 @@ class CheckoutForm(forms.Form):
     customer_occupation = forms.CharField(max_length=100, required=False)
     customer_designation = forms.CharField(max_length=100, required=False)
     customer_monthly_income = forms.IntegerField(required=False)
-    customer_office_address = forms.CharField(max_length=100, required=False)
+    customer_office_address = forms.CharField(max_length=250, required=False)
     customer_home_phone = forms.CharField(max_length=20, required=False)
     customer_office_phone = forms.CharField(max_length=100, required=False)
     country = forms.CharField(max_length=100)
@@ -27,7 +27,7 @@ class CheckoutForm(forms.Form):
     guaranteed_residential_address = forms.CharField(max_length=255, required=False)
     guaranteed_designation = forms.CharField(max_length=100, required=False)
     guaranteed_monthly_income = forms.IntegerField(required=False)
-    guaranteed_office_address = forms.CharField(max_length=100, required=False)
+    guaranteed_office_address = forms.CharField(max_length=250, required=False)
     guaranteed_office_phone = forms.CharField(max_length=100, required=False)
     guaranteed_phone_no = forms.CharField(max_length=100, required=True)
     guaranteed_home_phone = forms.CharField(max_length=100, required=False)
@@ -40,13 +40,13 @@ class CheckoutForm(forms.Form):
     guaranteed2_residential_address = forms.CharField(max_length=255, required=False)
     guaranteed2_designation = forms.CharField(max_length=100, required=False)
     guaranteed2_monthly_income = forms.IntegerField(required=False)
-    guaranteed2_office_address = forms.CharField(max_length=100, required=False)
+    guaranteed2_office_address = forms.CharField(max_length=250, required=False)
     guaranteed2_office_phone = forms.CharField(max_length=100, required=False)
     guaranteed2_phone_no = forms.CharField(max_length=100, required=False)
     guaranteed2_home_phone = forms.CharField(max_length=100, required=False)
 
-    payment_method = forms.ChoiceField(choices=[
-        ('Installment', 'Installment Payment'),
+    payment_method = forms.ChoiceField(required=False, choices=[
+        ('Every Month', 'Every Month'),
     ])
 
     def clean(self):
@@ -56,10 +56,6 @@ class CheckoutForm(forms.Form):
         cnic_no = cleaned_data.get('cnic_no')
         
         errors = []
-
-        if name:
-            if len(name) < 3:
-                errors.append('Name must contain at least 5 characters')
 
         # Pakistani Mobile Number Pattern
         phone_pattern = re.compile(r'^((\+92 ?)|0)?(3[0-9]{2})[0-9]{7}$')

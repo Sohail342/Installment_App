@@ -88,7 +88,7 @@ def checkout(request, user_id):
             firstname = form.cleaned_data['firstname']
             lastname = form.cleaned_data['lastname']
             shipping_address = f"{form.cleaned_data['streetaddress']} {form.cleaned_data['apartment']}, {form.cleaned_data['towncity']}"
-            payment_method = form.cleaned_data['payment_method']
+            payment_method = form.cleaned_data.get('payment_method', 'Every Month')
             phone_number = form.cleaned_data['phone']
             email = form.cleaned_data['emailaddress']
             cnic = form.cleaned_data['cnic_no']

@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from .models import Category, Product
 from django.db.models import Q 
+from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404
 
 
@@ -23,6 +24,25 @@ def category_list_view(request):
     page_obj = paginator.get_page(page_number)
 
     return render(request, 'products/category_list.html', {'categories': page_obj})
+
+
+
+
+def filter_categories(request):
+    query = request.GET.get('filter', '').strip()
+    print(query)
+    
+    if query:  # Only perform the search if query is not empty
+        categories = Category.objects.filter(name__icontains=query).values('name', 'id')[:10]
+    else:
+        categories = Category.objects.none()  # Return an empty queryset if no query
+    
+    results = [
+        {'name': category['name'], 'url': reverse('products:products_list', args=[category['name']])}
+        for category in categories
+    ]
+    
+    return JsonResponse(results, safe=False)
 
 
 
