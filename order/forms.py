@@ -30,7 +30,6 @@ class CheckoutForm(forms.Form):
     guaranteed_office_address = forms.CharField(max_length=250, required=False)
     guaranteed_office_phone = forms.CharField(max_length=100, required=False)
     guaranteed_phone_no = forms.CharField(max_length=100, required=True)
-    guaranteed_home_phone = forms.CharField(max_length=100, required=False)
 
     # Guaranteed 2 Fields
     guaranteed2_cnic_no = forms.CharField(max_length=15, required=False)
@@ -43,7 +42,6 @@ class CheckoutForm(forms.Form):
     guaranteed2_office_address = forms.CharField(max_length=250, required=False)
     guaranteed2_office_phone = forms.CharField(max_length=100, required=False)
     guaranteed2_phone_no = forms.CharField(max_length=100, required=False)
-    guaranteed2_home_phone = forms.CharField(max_length=100, required=False)
 
     payment_method = forms.ChoiceField(required=False, choices=[
         ('Every Month', 'Every Month'),

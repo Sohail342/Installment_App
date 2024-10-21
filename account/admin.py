@@ -1,15 +1,21 @@
 from django.contrib import admin
-from .models import User, Customer
+from .models import User, Customer, Guarantor
 from unfold.admin import ModelAdmin
 from import_export.admin import ImportExportModelAdmin
 from unfold.contrib.import_export.forms import ExportForm, ImportForm
+
+@admin.register(Guarantor)
+class UserAdmin(ModelAdmin):
+    list_display = ['name', 'cnic_no','phone_no',]
+    search_fields = ('name',)
+    list_filter = ('name',)
+
 
 @admin.register(User)
 class UserAdmin(ModelAdmin):
     list_display = ['id', 'name', 'email','is_admin']
     search_fields = ('email', 'email')
     list_filter = ['name', 'email']
-
 
 
 @admin.register(Customer)

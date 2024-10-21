@@ -1,7 +1,7 @@
 @ECHO off
 
 REM Activate the virtual environment
-call "C:\Users\pc\Desktop\Installment\virtual\Scripts\activate.bat"
+call "C:\Users\pc\Desktop\Installment\venv\Scripts\activate.bat"
 
 REM Start Django server in minimized window
 start /min cmd /c "python manage.py runserver"

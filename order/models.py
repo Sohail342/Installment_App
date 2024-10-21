@@ -1,5 +1,5 @@
 from django.db import models
-from account.models import User, Customer
+from account.models import User, Customer, Guarantor
 from products.models import Product
 from cart.models import Cart
 from django.utils import timezone
@@ -8,6 +8,7 @@ from django.utils import timezone
 class Order(models.Model):
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE, related_name='orders') 
+    guarantors = models.ManyToManyField(Guarantor, blank=True)
     cart = models.ForeignKey(Cart, on_delete=models.CASCADE)
     downpayment_plus_form_fee = models.DecimalField(max_digits=10, decimal_places=2)
     total_bill = models.DecimalField(max_digits=10, decimal_places=2)

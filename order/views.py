@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from cart.models import Cart, CartItem
+from account.models import Guarantor
 from django.core.paginator import Paginator
 from . models import Order, OrderItem, InstallmentPayment, DownPayment
 from .forms import CheckoutForm
@@ -92,7 +93,42 @@ def checkout(request, user_id):
             phone_number = form.cleaned_data['phone']
             email = form.cleaned_data['emailaddress']
             cnic = form.cleaned_data['cnic_no']
-            guaranteed_cnic_no = form.cleaned_data['guaranteed_cnic_no']
+
+
+            # gurantor1
+            guarantor1, created1 = Guarantor.objects.get_or_create(
+            cnic_no=form.cleaned_data['guaranteed_cnic_no'],
+            defaults={
+                'name': form.cleaned_data['guaranteed_name'],
+                'father_name': form.cleaned_data['guaranteed_father_name'],
+                'residential_address': form.cleaned_data['guaranteed_residential_address'],
+                'occupation': form.cleaned_data['guaranteed_occupation'],
+                'designation': form.cleaned_data['guaranteed_designation'],
+                'monthly_income': form.cleaned_data['guaranteed_monthly_income'],
+                'office_address': form.cleaned_data['guaranteed_office_address'],
+                'office_phone': form.cleaned_data['guaranteed_office_phone'],
+                'phone_no': form.cleaned_data['guaranteed_phone_no'],
+            }
+        )
+
+            # Create a second guarantor only if the fields are filled
+            guarantor2 = None
+            if form.cleaned_data['guaranteed2_cnic_no']:
+                guarantor2, created2 = Guarantor.objects.get_or_create(
+                    cnic_no=form.cleaned_data['guaranteed2_cnic_no'],
+                    defaults={
+                        'name': form.cleaned_data['guaranteed2_name'],
+                        'father_name': form.cleaned_data['guaranteed2_father_name'],
+                        'residential_address': form.cleaned_data['guaranteed2_residential_address'],
+                        'occupation': form.cleaned_data['guaranteed2_occupation'],
+                        'designation': form.cleaned_data['guaranteed2_designation'],
+                        'monthly_income': form.cleaned_data['guaranteed2_monthly_income'],
+                        'office_address': form.cleaned_data['guaranteed2_office_address'],
+                        'office_phone': form.cleaned_data['guaranteed2_office_phone'],
+                        'phone_no': form.cleaned_data['guaranteed2_phone_no'],
+                    }
+                )
+
 
             # Get or create customer
             customer, created = Customer.objects.get_or_create(
@@ -123,6 +159,11 @@ def checkout(request, user_id):
                 updated_at=timezone.now(),
                 is_paid=True,  # Set as paid since down payment is paid at checkout
             )
+
+            # Add guarantors to the order
+            order.guarantors.add(guarantor1)
+            if guarantor2:
+                order.guarantors.add(guarantor2)
 
             # Create Down Payment
             DownPayment.objects.create(

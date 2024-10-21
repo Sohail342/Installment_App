@@ -25,7 +25,7 @@ class PaidFilter(admin.SimpleListFilter):
 class OrderAdmin(ImportExportModelAdmin, ModelAdmin):
     export_form_class = ExportForm
     import_form_class = ImportForm
-    list_display = ('id', 'user', 'customer', 'customer_cnic', 'cart', 'payment_method', 'is_paid', 'installment_plan')
+    list_display = ('user', 'customer', 'customer_cnic', 'cart', 'payment_method', 'is_paid', 'installment_plan')
     list_filter = ['user', PaidFilter, 'customer']
     readonly_fields = ['created_at', 'updated_at', 'installment_plan', 'is_paid', 'installment_type']
 
@@ -38,7 +38,7 @@ class OrderAdmin(ImportExportModelAdmin, ModelAdmin):
 class OrderItemAdminModel(ImportExportModelAdmin, ModelAdmin):
     export_form_class = ExportForm
     import_form_class = ImportForm
-    list_display = ('id', 'order', 'customer', 'customer_cnic', 'product', 'quantity', 'original_price', 'installment_total_price')
+    list_display = ('order', 'customer', 'customer_cnic', 'product', 'quantity', 'original_price', 'installment_total_price')
 
     def customer_cnic(self, obj):
         return obj.customer.cnic
@@ -50,7 +50,7 @@ class OrderItemAdminModel(ImportExportModelAdmin, ModelAdmin):
 class InstallmentPaymentAdmin(ImportExportModelAdmin, ModelAdmin):
     export_form_class = ExportForm
     import_form_class = ImportForm
-    list_display = ('id', 'customer', 'customer_cnic', 'order_item', 'month_number', 'amount_due', 'amount_paid', 'is_paid')
+    list_display = ('customer', 'customer_cnic', 'order_item', 'month_number', 'amount_due', 'amount_paid', 'is_paid')
     list_filter = ("customer__cnic", "customer__phone_number", PaidFilter)
 
     def customer_cnic(self, obj):

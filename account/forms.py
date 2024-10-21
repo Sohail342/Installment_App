@@ -18,13 +18,17 @@ class EmailLoginForm(forms.Form):
         })
     )
 
+    def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop('request', None)  # Extract request from kwargs
+        super(EmailLoginForm, self).__init__(*args, **kwargs)
+
     def clean(self):
         cleaned_data = super().clean()
         email = cleaned_data.get("email")
         password = cleaned_data.get("password")
 
         if email and password:
-            user = authenticate(username=email, password=password)
+            user = authenticate(request=self.request, email=email, password=password)
             if user is None:
                 print("form error k")
                 raise forms.ValidationError("Invalid email or password.")

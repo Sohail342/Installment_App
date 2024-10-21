@@ -78,15 +78,16 @@ class User(AbstractBaseUser):
         return self.is_admin
     
     def save(self, *args, **kwargs):
-        # Hash the password if it's being set or changed
-        if self.pk is None or self._password_set:
+    # Hash the password only if it's being set and is not already hashed
+        if self.pk is None or (self._password_set and not self.password.startswith('pbkdf2_')):
             self.set_password(self.password)  # Hash the password
             self._password_set = False  # Reset flag after hashing
         super(User, self).save(*args, **kwargs)
 
+
     def set_password(self, raw_password):
         super().set_password(raw_password)
-        self._password_set = True  # 
+        self._password_set = True  
 
     class Meta:
         verbose_name = "Sales Team"
@@ -102,5 +103,23 @@ class Customer(models.Model):
     
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
+    
+
+
+class Guarantor(models.Model):
+    # Guarantor 1 Fields
+    cnic_no = models.CharField(max_length=15, unique=True)
+    name = models.CharField(max_length=100)
+    father_name = models.CharField(max_length=100, blank=True, null=True)
+    occupation = models.CharField(max_length=100, blank=True, null=True)
+    residential_address = models.CharField(max_length=255, blank=True, null=True)
+    designation = models.CharField(max_length=100, blank=True, null=True)
+    monthly_income = models.IntegerField(blank=True, null=True)
+    office_address = models.CharField(max_length=250, blank=True, null=True)
+    office_phone = models.CharField(max_length=100, blank=True, null=True)
+    phone_no = models.CharField(max_length=100)
+
+    def __str__(self):
+        return f"{self.name} (CNIC: {self.cnic_no})"
 
 

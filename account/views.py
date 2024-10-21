@@ -49,34 +49,31 @@ def customer_detail_view(request, customer_id):
 
 
 
-def signin(request):
+def login_view(request):
     if not request.user.is_authenticated:
-        if request.method == "POST":
-            form = EmailLoginForm(request.POST)
+        if request.method == 'POST':
+            form = EmailLoginForm(request.POST) 
             if form.is_valid():
-                
                 email = form.cleaned_data.get('email')
                 password = form.cleaned_data.get('password')
-                user = authenticate(request, username=email, password=password)
-
+                user = authenticate(request=request, username=email, password=password)
 
                 if user is not None:
                     if not user.is_approved:
                         messages.error(request, "Your account is not approved yet.")
                         return redirect(reverse('account:signin'))
+
                     login(request, user)
-                    return redirect(reverse('products:category_list'))
+                    return redirect('products:category_list')
                 else:
                     messages.error(request, "Invalid email or password.")
         else:
-            
-            form = EmailLoginForm()
-        
-        # If there are messages to display, render the form with those messages
-        return render(request, 'account/signin.html', {'form': form})
+            form = EmailLoginForm() 
     else:
         return redirect(reverse('products:category_list'))
-    
+
+    return render(request, 'account/signin.html', {'form': form})
+
 
 
 
