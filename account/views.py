@@ -64,13 +64,13 @@ def login_view(request):
                         return redirect(reverse('account:signin'))
 
                     login(request, user)
-                    return redirect('products:category_list')
+                    return redirect('dashboard:dashboard')
                 else:
                     messages.error(request, "Invalid email or password.")
         else:
             form = EmailLoginForm() 
     else:
-        return redirect(reverse('products:category_list'))
+        return redirect(reverse('dashboard:dashboard'))
 
     return render(request, 'account/signin.html', {'form': form})
 

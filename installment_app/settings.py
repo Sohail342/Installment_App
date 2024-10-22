@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'widget_tweaks',
     'django_extensions',
     'import_export',
+    'dashboard',
 ]
 
 MIDDLEWARE = [
