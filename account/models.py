@@ -27,10 +27,12 @@ class MyUserManager(BaseUserManager):
         """
         user = self.create_user(
             email,
-            password=password,
             name=name,
             terms_conditions=terms_conditions,
         )
+
+        user.set_password(password)
+
         user.is_admin = True
         user.is_approved = True 
         user.is_active = True 

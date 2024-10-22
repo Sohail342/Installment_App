@@ -1,5 +1,6 @@
 from django import forms
 from django.contrib.auth import authenticate
+from . models import User
 
 
 class EmailLoginForm(forms.Form):
@@ -28,8 +29,11 @@ class EmailLoginForm(forms.Form):
         password = cleaned_data.get("password")
 
         if email and password:
-            user = authenticate(request=self.request, email=email, password=password)
+            print("Email:", email, "and password:",password )
+            user = authenticate(email=email, password=password)
+            use = User.objects.all()
+            print("user", user)
+            print("All users\n", use)
             if user is None:
-                print("form error k")
                 raise forms.ValidationError("Invalid email or password.")
         return cleaned_data
