@@ -90,10 +90,13 @@ class InstallmentPayment(models.Model):
         return self.amount_due
     
     @staticmethod
-    def upcoming_due_dates():
+    def upcoming_due_dates(order_item=None):
         """Return a list of upcoming due dates for unpaid installments."""
         now = timezone.now()
-        return list(InstallmentPayment.objects.filter(due_date__gt=now, is_paid=False).values_list('due_date', flat=True))
+        queryset = InstallmentPayment.objects.filter(due_date__gt=now, is_paid=False)
+        if order_item:
+            queryset = queryset.filter(order_item=order_item)
+        return list(queryset.values_list('due_date', flat=True))
     
 
     def save(self, *args, **kwargs):
@@ -101,11 +104,9 @@ class InstallmentPayment(models.Model):
             self.initial_amount_due = self.amount_due
 
         if self.is_paid:
-            # If marked as paid, set amount_paid equal to amount_due, and set amount_due to 0
             self.amount_paid = self.amount_due
             self.amount_due = 0
         else:
-            # If not marked as paid, restore initial amount_due and reset amount_paid
             self.amount_due = self.initial_amount_due
             self.amount_paid = 0.00
 
@@ -114,18 +115,10 @@ class InstallmentPayment(models.Model):
         # Check if all installments for the order item are paid
         all_installments_paid = all(installment.is_paid for installment in self.order_item.installments.all())
 
-        # If all installments are paid, mark the order as paid
-        if all_installments_paid:
-            order = self.order_item.order
-            order.is_paid = True
-        else:
-            # If not all installments are paid, ensure the order is not marked as paid
-            order = self.order_item.order
-            order.is_paid = False
-
-        # Update installment status in the order
+        # Update order payment status
+        order = self.order_item.order
+        order.is_paid = all_installments_paid
         order.update_installment_status()
-
         order.save()
 
 class DownPayment(models.Model):
