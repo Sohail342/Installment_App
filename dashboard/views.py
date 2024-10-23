@@ -2,17 +2,19 @@ from django.shortcuts import render
 import json
 from collections import defaultdict
 from django.db.models import Sum
-from products.models import Product
+from products.models import Product, Category
 from order.models import Order, InstallmentPayment, OrderItem
 from account.models import Customer
 from django.db import connection
 from django.contrib.auth.decorators import login_required
-# Create your views here.
+
 
 @login_required(login_url='account:signin')
 def dashboard(request):
     total_customers = Customer.objects.all().count()
     total_orders = Order.objects.all().count()
+    total_products = Product.objects.all().count()
+    total_categories = Category.objects.all().count()
     installment_paid = InstallmentPayment.objects.filter(is_paid=True).count()
     installments_unpaid = InstallmentPayment.objects.filter(is_paid=False).count()
 
@@ -43,6 +45,7 @@ def dashboard(request):
         'total_installments': 0,
         'paid_installments': 0,
         'unpaid_installments': 0,
+        'id':None
     })
     
     order_items = OrderItem.objects.prefetch_related('installments').all()
@@ -56,6 +59,7 @@ def dashboard(request):
         stats[item.product.name]['total_installments'] += total_installments
         stats[item.product.name]['paid_installments'] += paid_installments
         stats[item.product.name]['unpaid_installments'] += unpaid_installments
+        stats[item.product.name]['id'] = item.product.id
 
     # Prepare the final list 
     final_stats = [
@@ -66,41 +70,38 @@ def dashboard(request):
         for product_name, values in stats.items()
     ]
 
+
     # State boxs
     stats_figures = [
         {
             'title': 'Total Orders',
             'figure': total_orders,
-            'meta': '20%',
-            'icon': 'bi-arrow-up',
             'meta_class': 'text-success',
         },
         {
             'title': 'Total Customers',
             'figure': total_customers,
-            'meta': '5%',
-            'icon': 'bi-arrow-down',
             'meta_class': 'text-success',
         },
         {
-            'title': 'Projects',
-            'figure': 23,  
-            'meta': 'Open',
+            'title': 'Total Categories',
+            'figure': total_categories,  
         },
         {
-            'title': 'Invoices',
-            'figure': 6,  
-            'meta': 'New',
+            'title': 'Total Products',
+            'figure': total_products,  
         },
         {
             'title': 'Unpiad Installments',
             'figure': installments_unpaid, 
-            'meta': '',
+            'meta': 'Unpaid',
+            'meta_class': 'text-danger',
         },
         {
             'title': 'Paid Installments',
             'figure': installment_paid,
-            'meta': 'New',
+            'meta': 'Paid',
+            'meta_class': 'text-success',
         },
     ]
 
