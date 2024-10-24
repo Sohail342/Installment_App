@@ -19,7 +19,7 @@
                         <span class="nav-link-text">Overview</span>
                     </a><!--//nav-link-->
                 </li><!--//nav-item-->
-                <li class="nav-item">
+                {% comment %} <li class="nav-item">
                     <!--//Bootstrap Icons: https://icons.getbootstrap.com/ -->
                     <a class="nav-link" href="{% url 'dashboard:orders' %}">
                         <span class="nav-icon">
@@ -36,7 +36,7 @@
                         </span>
                         <span class="nav-link-text">Orders</span>
                     </a><!--//nav-link-->
-                </li><!--//nav-item-->
+                </li><!--//nav-item--> {% endcomment %}
                 <li class="nav-item">
                     <!--//Bootstrap Icons: https://icons.getbootstrap.com/ -->
                     <a class="nav-link" href="{% url 'admin:index' %}">

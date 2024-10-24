@@ -2,7 +2,7 @@ from django.shortcuts import render
 from collections import defaultdict
 import json
 from django.db.models import Sum, Count
-from products.models import Product
+from products.models import Product, Category
 from order.models import Order, InstallmentPayment, OrderItem
 from account.models import Customer
 from django.db.models.functions import TruncMonth
@@ -18,6 +18,8 @@ def dashboard(request):
         'order_counts': json.dumps(get_monthly_order_counts()[1]),
         'months': json.dumps(get_monthly_order_counts()[0]),
         'current_year': get_monthly_order_counts()[2],
+        'top_categories':get_top_categories()[0],
+        'order_quantities_for_categories':get_top_categories()[1]
     }
     
     return render(request, 'dashboard/dashboard.html', context)
@@ -62,6 +64,23 @@ def get_stats_figures():
             'meta_class': 'text-success',
         },
     ]
+
+
+def get_top_categories():
+    # Get the top 5 categories with the most associated orders
+    top_categories = (
+        Category.objects.annotate(
+            total_orders=Count('product__orderitem__order')
+        )
+        .order_by('-total_orders')[:5]
+    )
+
+    # Extract category names and their order quantities
+    category_names = [category.name for category in top_categories]
+    order_quantities = [category.total_orders for category in top_categories]
+
+    return category_names, order_quantities
+
 
 
 def get_monthly_order_counts():
