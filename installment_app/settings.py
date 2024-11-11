@@ -1,6 +1,7 @@
 
 import os
 from pathlib import Path
+from urllib.parse import urlparse
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -16,6 +17,7 @@ SECRET_KEY = 'django-insecure-w#xs#_=jd^1wx6d_m+z#72dk3#ryk$n(djl=^8r2i)49*f8m5c
 DEBUG = True
 
 ALLOWED_HOSTS = ['*']
+DATABASE_URL = os.getenv("DATABASE_URL", "postgres://default:AnXt9aroqZT5@ep-old-thunder-a4k90yuh-pooler.us-east-1.aws.neon.tech:5432/verceldb?sslmode=require")
 
 
 # Application definition
@@ -77,10 +79,19 @@ WSGI_APPLICATION = 'installment_app.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
+url = urlparse(DATABASE_URL)
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': url.path[1:],  
+        'USER': url.username,
+        'PASSWORD': url.password,
+        'HOST': url.hostname,
+        'PORT': url.port,
+        'OPTIONS': {
+            'sslmode': 'require',
+        },
     }
 }
 

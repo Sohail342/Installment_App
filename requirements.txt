@@ -10,6 +10,7 @@ django-widget-tweaks==1.5.0
 packaging==24.1
 pefile==2024.8.26
 pillow==10.4.0
+psycopg2==2.9.10
 pywin32-ctypes==0.2.3
 reportlab==4.2.5
 setuptools==75.1.0
