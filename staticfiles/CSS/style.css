@@ -1,0 +1,111 @@
+:root {
+    /* Colors */
+    --color-red: hsl(14, 86%, 42%);
+    --color-rose-50: hsl(20, 50%, 98%);
+    --color-rose-100: hsl(13, 31%, 94%);
+    --color-rose-300: hsl(14, 25%, 72%);
+    --color-rose-500: hsl(12, 20%, 44%);
+    --color-rose-900: hsl(14, 65%, 9%);
+    
+    /* Typography */
+    --font-body: 'Red Hat Text', sans-serif;
+    
+    /* Font Sizes */
+    --font-size-body: 16px;
+
+    /* Font Weights */
+    --font-weight-normal: 400;
+    --font-weight-medium: 600;
+    --font-weight-bold: 700;
+}
+
+* {
+    font-family: var(--font-body);
+    box-sizing: border-box; /* Ensure padding and border are included in width and height */
+}
+
+body {
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+    font-size: var(--font-size-body);
+    background-color: var(--color-rose-50);
+}
+
+.container {
+    padding: 2rem 2rem 5rem;
+}
+
+.main-section {
+    margin: 0 auto; 
+}
+
+main {
+    display: flex; /* Use flexbox */
+    flex-wrap: wrap; /* Allow wrapping to new lines if needed */
+    gap: 20px; /* Space between cards */
+}
+
+.products-card {
+    background-color: #fff; /* Card background color */
+    border-radius: 10px; /* Rounded corners */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    padding: 16px; /* Inner spacing */
+    flex: 1 1 calc(25% - 20px); /* Four items per row with gap */
+    max-width: calc(25% - 20px); /* Set a maximum width for the cards */
+    text-align: center; /* Center align text */
+    transition: transform 0.3s; /* Smooth scaling on hover */
+}
+
+.products-card:hover {
+    transform: scale(1.05); /* Scale up on hover */
+}
+
+.products-card img {
+    max-width: 100%; /* Responsive image */
+    height: auto; /* Maintain aspect ratio */
+    border-radius: 10px; /* Rounded corners for the image */
+}
+
+.products-card p {
+    margin-top: 1.5rem;
+    font-size: 0.9em;
+    color: var(--color-rose-500);
+    font-weight: var(--font-weight-medium);
+}
+
+.product-name {
+    margin: 0;
+    font-size: 1em;
+    font-weight: var(--font-weight-bold);
+}
+
+.price {
+    margin: 5px 0;
+    font-size: 0.8em;
+    color: var(--color-red);
+}
+
+/* Media Queries for Responsiveness */
+@media (max-width: 768px) {
+    .products-card {
+        flex: 1 1 100%; /* Full width on small screens */
+        max-width: 100%; /* Ensure full width */
+    }
+}
+
+@media (min-width: 768px) and (max-width: 1024px) {
+    .products-card {
+        flex: 1 1 calc(50% - 20px); /* Two items per row for tablets */
+        max-width: calc(50% - 20px); /* Ensure correct width */
+    }
+}
+
+@media (min-width: 1025px) {
+    .products-card {
+        flex: 1 1 calc(25% - 20px); /* Four items per row for larger screens */
+        max-width: calc(25% - 20px); /* Ensure correct width */
+    }
+}
+
+

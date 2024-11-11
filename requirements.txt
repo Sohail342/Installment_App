@@ -16,3 +16,4 @@ setuptools==75.1.0
 sqlparse==0.5.1
 tablib==3.5.0
 tzdata==2024.2
+whitenoise==6.7.0
