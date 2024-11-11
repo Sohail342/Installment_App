@@ -17,9 +17,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-w#xs#_=jd^1wx6d_m+z#72dk3#ryk$n(djl=^8r2i)49*f8m5c'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['127.0.0.1', '.vercel.app']
 DATABASE_URL = os.getenv("DATABASE_URL", "postgres://default:AnXt9aroqZT5@ep-old-thunder-a4k90yuh-pooler.us-east-1.aws.neon.tech:5432/verceldb?sslmode=require")
 
 
