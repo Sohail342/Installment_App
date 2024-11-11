@@ -2,6 +2,9 @@
 import os
 from pathlib import Path
 from urllib.parse import urlparse
+import cloudinary 
+import cloudinary.uploader
+import cloudinary.api
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -42,6 +45,8 @@ INSTALLED_APPS = [
     'django_extensions',
     'import_export',
     'dashboard',
+
+    'cloudinary',
 ]
 
 MIDDLEWARE = [
@@ -97,6 +102,7 @@ DATABASES = {
 
 
 
+
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
 
@@ -140,6 +146,15 @@ STATICFILES_DIRS = [BASE_DIR / 'static']
 # Media file
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
+
+
+cloudinary.config (
+    cloud_name = 'dqvuzjoji',
+    api_key = '795997967248592',
+    api_secret = 'LdggdzrPdn6__w4I6CBL7cu9sdM'
+)
+
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
 
 # Default primary key field type

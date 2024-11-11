@@ -8,7 +8,7 @@ from unfold.contrib.import_export.forms import ExportForm, ImportForm
 class ProductAdmin(ImportExportModelAdmin, ModelAdmin):
     export_form_class = ExportForm
     import_form_class = ImportForm
-    list_display = ['id', 'name', 'category_moto', 'date']
+    list_display = ['name', 'category_moto', 'date']
     search_fields = ['name']
     list_filter = ['name']
 
@@ -16,6 +16,6 @@ class ProductAdmin(ImportExportModelAdmin, ModelAdmin):
 class ProductAdmin(ImportExportModelAdmin, ModelAdmin):
     export_form_class = ExportForm
     import_form_class = ImportForm
-    list_display = ['id','name', 'price', 'inventory' ,'category']
+    list_display = ['name', 'price', 'inventory' ,'category']
     search_fields = ['name']
     list_filter = ('name',)
