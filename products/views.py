@@ -18,6 +18,7 @@ def category_list_view(request):
     else:
         categories = Category.objects.all().order_by('name')
 
+
     # Set up pagination
     paginator = Paginator(categories, 20) 
     page_number = request.GET.get('page')
@@ -46,8 +47,8 @@ def filter_categories(request):
 
 
 @login_required(login_url='account:signin') 
-def product_list_view(request, category_name):
-    category = get_object_or_404(Category, name=category_name)
+def product_list_view(request, category_slug):
+    category = get_object_or_404(Category, slug=category_slug)
     
     # Get the search query
     query = request.GET.get('search', '')

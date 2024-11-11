@@ -30,7 +30,7 @@
             <main>
                 {% for category in categories %}
                 <div class="products-card mb-4">
-                    <a href="{% url 'products:products_list' category.name %}" class="product-link">
+                    <a href="{% url 'products:products_list' category.slug %}" class="product-link">
                       <img class="image-product img-fluid" src="{{ category.photo.url }}" alt="{{ category.name }}">
                     </a>
                     <p>{{ category.category_moto }}</p>
@@ -87,7 +87,7 @@
         
                                 data.forEach(function(category) {
                                     $('#filter-results').append(
-                                        `<a class="dropdown-item result-item" href="${category.url}">${category.name}</a>`
+                                        `<a class="dropdown-item result-item" href="${category.url}">${category.slug}</a>`
                                     );
                                 });
                             } else {

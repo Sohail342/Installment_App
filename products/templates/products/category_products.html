@@ -8,7 +8,7 @@
         <h1>{{ category.name }} Products</h1>
 
         <!-- Search Form -->
-        <form method="get" action="{% url 'products:products_list' category.name %}" class="form-inline mb-3">
+        <form method="get" action="{% url 'products:products_list' category.slug %}" class="form-inline mb-3">
             <div class="input-group">
                 <input type="text" name="search" class="form-control" placeholder="Search products..." value="{{ search_query }}">
                 <div class="input-group-append">
