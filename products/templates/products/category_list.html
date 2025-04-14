@@ -16,26 +16,26 @@
                 <p class="text-gray-600 mt-4 max-w-2xl mx-auto">Browse through our collection of premium products organized by categories</p>
             </div>
 
-            <!-- Enhanced Search Form with Tailwind -->
+            <!-- Enhanced Search Form with Tailwind - Improved for Mobile -->
             <form class="mb-8" id="filter-form">
                 <div class="relative max-w-md mx-auto shadow-md rounded-lg overflow-hidden transition-all duration-300 hover:shadow-lg">
                     <input type="text" id="filter-input" 
-                           class="w-full pl-12 pr-16 py-3 border-0 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors" 
+                           class="w-full pl-12 pr-20 py-3 sm:py-3 border-0 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors text-base" 
                            placeholder="Search categories...">
                     <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                         <svg class="w-5 h-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
                             <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"></path>
                         </svg>
                     </div>
-                    <button class="absolute inset-y-0 right-0 px-4 flex items-center bg-blue-500 text-white hover:bg-blue-600 transition-colors focus:outline-none" type="button" id="search-button">
-                        Search
+                    <button class="absolute inset-y-0 right-0 px-4 flex items-center bg-blue-500 text-white hover:bg-blue-600 transition-colors focus:outline-none min-w-[70px] justify-center" type="button" id="search-button">
+                        <span>Search</span>
                     </button>
                 </div>
             </form>
 
-            <!-- Styled Dropdown Results with Tailwind -->
+            <!-- Styled Dropdown Results with Tailwind - Mobile Optimized -->
             <div class="dropdown relative max-w-md mx-auto">
-                <div id="filter-results" class="dropdown-menu absolute z-10 w-full mt-1 bg-white rounded-lg shadow-lg max-h-60 overflow-y-auto border border-gray-200 hidden"></div>
+                <div id="filter-results" class="dropdown-menu absolute z-10 w-full mt-1 bg-white rounded-lg shadow-lg max-h-[50vh] sm:max-h-60 overflow-y-auto border border-gray-200 hidden -webkit-overflow-scrolling: touch"></div>
             </div>
 
                        <!-- Improved Category Grid with Enhanced Cards -->
@@ -53,11 +53,7 @@
                                         </span>
                                     </div>
                                 </a>
-                                <div class="absolute top-3 right-3">
-                                    <span class="bg-blue-500 text-white text-xs px-2 py-1 rounded-full shadow-md">
-                                        {{ category.products.count|default:"0" }} products
-                                    </span>
-                                </div>
+                                
                             </div>
                             <div class="p-5 border-t border-gray-100 flex-grow flex flex-col justify-between">
                                 <div>
@@ -91,9 +87,9 @@
                 {% endfor %}
             </main>
 
-            <!-- Enhanced Pagination Controls with Tailwind -->
+            <!-- Enhanced Pagination Controls with Tailwind - Mobile Responsive -->
             <nav aria-label="Page navigation" class="mt-12 mb-8">
-                <ul class="flex justify-center items-center space-x-2">
+                <ul class="flex flex-wrap justify-center items-center gap-2 px-2">
                     {% if categories.has_previous %}
                         <li>
                             <a class="px-4 py-2 bg-white border border-gray-200 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors shadow-sm flex items-center" href="?page=1{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}">
@@ -154,8 +150,8 @@
     
                             data.forEach(function(category) {
                                 $('#filter-results').append(
-                                    `<a class="block px-4 py-3 hover:bg-blue-50 transition-colors border-b border-gray-100 last:border-0 text-gray-700 hover:text-blue-700" href="${category.url}">
-                                        <div class="font-medium">${category.name || category.slug}</div>
+                                    `<a class="block px-4 py-4 sm:py-3 hover:bg-blue-50 transition-colors border-b border-gray-100 last:border-0 text-gray-700 hover:text-blue-700" href="${category.url}">
+                                        <div class="font-medium text-base">${category.name || category.slug}</div>
                                         <div class="text-xs text-gray-500">${category.slug}</div>
                                     </a>`
                                 );

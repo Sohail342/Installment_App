@@ -112,6 +112,22 @@
         <!-- Page Content -->
         <main class="flex-1 bg-gray-50 p-4 md:p-6">
             <div class="max-w-7xl mx-auto">
+                <!-- Mobile Dashboard Navigation - Only visible on mobile -->
+                <div class="mobile-dashboard-nav hidden mb-4">
+                    <a href="{% url 'dashboard:dashboard' %}" class="active">
+                        <i class="fas fa-home mr-1"></i> Overview
+                    </a>
+                    <a href="{% url 'admin:index' %}">
+                        <i class="fas fa-cog mr-1"></i> Admin
+                    </a>
+                    <a href="{% url 'products:category_list' %}">
+                        <i class="fas fa-box mr-1"></i> Products
+                    </a>
+                    <a href="{% url 'order:total_bill' %}">
+                        <i class="fas fa-file-invoice-dollar mr-1"></i> Bills
+                    </a>
+                </div>
+                
                 <!-- Page Header -->
                 <div class="mb-6">
                     <p class="text-gray-600">Welcome to your installment management dashboard</p>

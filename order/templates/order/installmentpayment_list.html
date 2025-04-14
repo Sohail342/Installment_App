@@ -4,111 +4,143 @@
 <title>{% block title %}Installment Bills{% endblock title %}</title>
 
 {% block content %}
-<div class="container mt-4">
-    <div class="card text-white bg-primary text-center mb-4">
-        <div class="card-body">
-            <h2 class="card-title">Installment Payments</h2>
+<div class="container mx-auto px-4 sm:px-6 lg:px-8 mt-4">
+    <div class="bg-primary rounded-lg shadow-md text-center mb-4 text-white">
+        <div class="py-4 px-2">
+            <h2 class="text-xl sm:text-2xl font-bold">Installment Payments</h2>
         </div>
     </div>
 
-    <!-- Search Form -->
-    <form method="get" action="{% url 'order:total_bill' %}" class="form-inline mb-3">
-        <div class="input-group">
-            <input type="text" name="search" class="form-control" placeholder="Search by CNIC, INVOICE NO or Phone Number..." value="{{ request.GET.search }}">
-            <div class="input-group-append">
-                <button class="btn btn-primary" type="submit">Search</button>
-            </div>
+    <!-- Search Form - Mobile Responsive -->
+    <form method="get" action="{% url 'order:total_bill' %}" class="mb-4">
+        <div class="flex flex-col sm:flex-row">
+            <input type="text" name="search" class="w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring focus:ring-primary focus:ring-opacity-50 mb-2 sm:mb-0 sm:mr-2" 
+                   placeholder="Search by CNIC, INVOICE NO or Phone Number..." 
+                   value="{{ request.GET.search }}">
+            <button class="bg-primary hover:bg-primary-dark text-white font-medium py-2 px-4 rounded-md transition-colors duration-300" type="submit">
+                <span class="flex items-center justify-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    </svg>
+                    Search
+                </span>
+            </button>
         </div>
     </form>
 
     {% if grouped_installments %}
         {% for customer, installments in grouped_installments.items %}
-            <div class="card mb-4 shadow-sm">
-                <div class="card-header">
-                    <h3 class="mb-0">
-                        {% if customer.first_name or customer.last_name %}
-                            {{ customer.first_name }} {{ customer.last_name }}
-                        {% else %}
-                            Unnamed Customer
-                        {% endif %}
-                        Installment Reports
-                        <a href="{% url 'account:customer_detail' customer.id %}" class="text-secondary small ml-2">more details</a>
-                    </h3>
+            <div class="bg-white rounded-lg shadow-md mb-4 overflow-hidden">
+                <div class="bg-primary text-white px-4 py-3">
+                    <div class="flex flex-wrap justify-between items-center">
+                        <h3 class="text-lg font-semibold mb-0">
+                            {% if customer.first_name or customer.last_name %}
+                                {{ customer.first_name }} {{ customer.last_name }}
+                            {% else %}
+                                Unnamed Customer
+                            {% endif %}
+                            Installment Reports
+                        </h3>
+                        <a href="{% url 'account:customer_detail' customer.id %}" class="text-white text-sm hover:text-gray-200 underline mt-1 sm:mt-0">more details</a>
+                    </div>
                 </div>
-                <div class="card-body">
-                    <table class="table table-striped table-bordered">
-                        <thead class="thead-dark">
-                            <tr>
-                                <th>Order Item</th>
-                                <th>Month Number</th>
-                                <th>Amount Due</th>
-                                <th>Amount Paid</th>
-                                <th>Status</th>
-                                <th>Due Date</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for installment in installments %}
+                <div class="p-4">
+                    <!-- Responsive table with horizontal scroll on small screens -->
+                    <div class="overflow-x-auto -mx-4 sm:mx-0">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-100">
                                 <tr>
-                                    <td>{{ installment.order_item.product.name }}</td>
-                                    <td>{{ installment.month_number }}</td>
-                                    <td>{{ installment.amount_due | intcomma:False }}</td>
-                                    <td>{{ installment.amount_paid | intcomma:False }}</td>
-                                    <td>
-                                        {% if installment.is_paid %}
-                                        <span class="text-success font-weight-bold" data-toggle="tooltip" title="Payment Received">Paid</span>
-                                        {% else %}
-                                        <span class="text-danger font-weight-bold" data-toggle="tooltip" title="Payment Pending">Unpaid</span>
-                                        {% endif %}
-                                    </td>
-                                    <td>
-                                        {% if installment.is_paid %}
-                                        <span class="text-success font-weight-bold">Paid</span>
-                                        {% else %}
-                                        {{ installment.due_date|date:"F j, Y" }}
-                                        {% endif %}
-                                    </td>
+                                    <th class="px-3 sm:px-4 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Order Item</th>
+                                    <th class="px-3 sm:px-4 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Month</th>
+                                    <th class="px-3 sm:px-4 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount Due</th>
+                                    <th class="px-3 sm:px-4 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount Paid</th>
+                                    <th class="px-3 sm:px-4 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                    <th class="px-3 sm:px-4 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Due Date</th>
                                 </tr>
-                            {% empty %}
-                                <tr>
-                                    <td colspan="6" class="text-center">No installments found for this customer.</td>
-                                </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200">
+                                {% for installment in installments %}
+                                    <tr class="hover:bg-gray-50 transition-colors duration-150">
+                                        <td class="px-3 sm:px-4 py-2 sm:py-3 whitespace-nowrap text-xs sm:text-sm">{{ installment.order_item.product.name }}</td>
+                                        <td class="px-3 sm:px-4 py-2 sm:py-3 whitespace-nowrap text-xs sm:text-sm">{{ installment.month_number }}</td>
+                                        <td class="px-3 sm:px-4 py-2 sm:py-3 whitespace-nowrap text-xs sm:text-sm">{{ installment.amount_due | intcomma:False }}</td>
+                                        <td class="px-3 sm:px-4 py-2 sm:py-3 whitespace-nowrap text-xs sm:text-sm">{{ installment.amount_paid | intcomma:False }}</td>
+                                        <td class="px-3 sm:px-4 py-2 sm:py-3 whitespace-nowrap">
+                                            {% if installment.is_paid %}
+                                            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800" data-toggle="tooltip" title="Payment Received">Paid</span>
+                                            {% else %}
+                                            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800" data-toggle="tooltip" title="Payment Pending">Unpaid</span>
+                                            {% endif %}
+                                        </td>
+                                        <td class="px-3 sm:px-4 py-2 sm:py-3 whitespace-nowrap text-xs sm:text-sm">
+                                            {% if installment.is_paid %}
+                                            <span class="text-green-600 font-medium">Paid</span>
+                                            {% else %}
+                                            {{ installment.due_date|date:"F j, Y" }}
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                {% empty %}
+                                    <tr>
+                                        <td colspan="6" class="px-3 sm:px-4 py-2 sm:py-3 text-center text-gray-500 text-xs sm:text-sm">No installments found for this customer.</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <!-- Mobile-friendly hint -->
+                    <div class="sm:hidden mt-3">
+                        <p class="text-xs text-gray-500 mb-2">Swipe horizontally to view all columns →</p>
+                    </div>
                 </div>
             </div>
         {% endfor %}
 
-        <!-- Pagination Controls -->
-        <nav aria-label="Page navigation">
-            <ul class="pagination justify-content-center">
+        <!-- Pagination Controls - Mobile Responsive -->
+        <nav aria-label="Page navigation" class="my-6">
+            <div class="flex flex-wrap justify-center items-center space-x-1 sm:space-x-2">
                 {% if page_obj.has_previous %}
-                    <li class="page-item">
-                        <a class="page-link" href="?page=1{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}">First</a>
-                    </li>
-                    <li class="page-item">
-                        <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}">Previous</a>
-                    </li>
+                    <a href="?page=1{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}" 
+                       class="px-3 py-2 text-sm font-medium bg-white border border-gray-300 rounded-md hover:bg-gray-50 text-gray-700">
+                        First
+                    </a>
+                    <a href="?page={{ page_obj.previous_page_number }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}" 
+                       class="px-3 py-2 text-sm font-medium bg-white border border-gray-300 rounded-md hover:bg-gray-50 text-gray-700 flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                        Prev
+                    </a>
                 {% endif %}
 
-                <li class="page-item disabled">
-                    <span class="page-link">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
-                </li>
+                <span class="px-3 py-2 text-sm font-medium bg-gray-100 border border-gray-300 rounded-md text-gray-700">
+                    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+                </span>
 
                 {% if page_obj.has_next %}
-                    <li class="page-item">
-                        <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}">Next</a>
-                    </li>
-                    <li class="page-item">
-                        <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}">Last</a>
-                    </li>
+                    <a href="?page={{ page_obj.next_page_number }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}" 
+                       class="px-3 py-2 text-sm font-medium bg-white border border-gray-300 rounded-md hover:bg-gray-50 text-gray-700 flex items-center">
+                        Next
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                        </svg>
+                    </a>
+                    <a href="?page={{ page_obj.paginator.num_pages }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}" 
+                       class="px-3 py-2 text-sm font-medium bg-white border border-gray-300 rounded-md hover:bg-gray-50 text-gray-700">
+                        Last
+                    </a>
                 {% endif %}
-            </ul>
+            </div>
         </nav>
     {% else %}
-        <div class="alert alert-warning" role="alert">
-            No customers with installment payments found.
+        <div class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 rounded-md shadow-sm" role="alert">
+            <div class="flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                </svg>
+                <p>No customers with installment payments found.</p>
+            </div>
         </div>
     {% endif %}
 </div>

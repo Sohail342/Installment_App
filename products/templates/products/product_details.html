@@ -5,16 +5,16 @@
 {% block title %}{{ product.name }}{% endblock title %}
 
 {% block content %}
-<section class="py-4"><!-- Further reduced from py-5 -->
-    <div class="container">
+<section class="py-3 sm:py-4"><!-- Optimized padding for mobile -->
+    <div class="container px-4 sm:px-6 lg:px-8"><!-- Added horizontal padding for mobile -->
         <div class="flex flex-col md:flex-row md:space-x-8 items-center">
             <aside class="w-full md:w-1/2 mb-3 md:mb-0"><!-- Further reduced from mb-4 -->
-                <div class="border border-gray-200 rounded-xl shadow-sm flex justify-center items-center bg-white p-3 max-w-md mx-auto"><!-- Reduced from p-4 -->
+                <div class="border border-gray-200 rounded-xl shadow-sm flex justify-center items-center bg-white p-2 sm:p-3 max-w-md mx-auto"><!-- Reduced padding for mobile -->
                     <img class="max-w-full h-auto rounded-lg object-cover" src="{{ product.photo.url }}" alt="{{ product.name }}" />
                 </div>
             </aside>
             <main class="w-full md:w-1/2">
-                <div class="md:pl-8">
+                <div class="px-1 sm:px-0 md:pl-8"><!-- Added horizontal padding control for mobile -->
                     <h1 class="text-2xl md:text-3xl font-bold text-gray-800 mb-2">{{ product.name }}</h1>
                     <div class="mb-4">
                         <span class="text-xl font-semibold text-green-600">Rs.{{ product.price | intcomma:False }}</span>
@@ -22,9 +22,9 @@
                     <p class="text-gray-600 mb-4">{{ product.details }}</p>
 
                     <!-- Payment Options -->
-                    <div class="mb-4 bg-white p-4 rounded-lg shadow-sm border border-gray-200 transition-all hover:shadow-md"><!-- Further reduced from p-5 -->
-                        <h5 class="text-lg font-semibold mb-3 text-gray-800 border-b pb-2">Payment Options</h5>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="mb-3 sm:mb-4 bg-white p-3 sm:p-4 rounded-lg shadow-sm border border-gray-200 transition-all hover:shadow-md"><!-- Further optimized for mobile -->
+                        <h5 class="text-base sm:text-lg font-semibold mb-2 sm:mb-3 text-gray-800 border-b pb-2">Payment Options</h5>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                             <!-- Cash Payment Option -->
                             <form action="{% url 'cart:add_to_cart' product.id %}" method="post" class="w-full">
                                 {% csrf_token %}
@@ -72,27 +72,27 @@
                         </div>
                     </div>
                     <!-- Dynamic Installment Plan Calculator -->
-                    <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200 transition-all hover:shadow-md mb-3"><!-- Further reduced from p-5 and mb-4 -->
+                    <div class="bg-white p-3 sm:p-4 rounded-lg shadow-sm border border-gray-200 transition-all hover:shadow-md mb-3"><!-- Further optimized for mobile -->
                         <!-- Dynamic Installment Plan Form -->
                         <form action="{% url 'products:product_detail' product.id %}" method="POST" class="mb-2">
                             {% csrf_token %}
-                            <h5 class="text-lg font-semibold mb-3 text-gray-800 border-b pb-2">Calculate Your Installment Plan</h5>
+                            <h5 class="text-base sm:text-lg font-semibold mb-2 sm:mb-3 text-gray-800 border-b pb-2">Calculate Your Installment Plan</h5>
                         
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-3"><!-- Reduced from mb-4 -->
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mb-2 sm:mb-3"><!-- Further optimized for mobile -->
                                 <div class="w-full">
-                                    <label for="user_down_payment" class="block text-sm font-medium text-gray-700 mb-1">Down Payment (Rs.)</label>
-                                    <input type="number" name="user_down_payment" class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary" 
+                                    <label for="user_down_payment" class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">Down Payment (Rs.)</label>
+                                    <input type="number" name="user_down_payment" class="w-full p-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary" 
                                         required min="0" max={{product.price}} placeholder="Enter Down Payment">
                                 </div>
                             
                                 <div class="w-full">
-                                    <label for="user_months" class="block text-sm font-medium text-gray-700 mb-1">Months</label>
-                                    <input type="number" name="user_months" class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary" 
+                                    <label for="user_months" class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">Months</label>
+                                    <input type="number" name="user_months" class="w-full p-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary" 
                                         required min="1" max="24" placeholder="Enter Number of Months">
                                 </div>
                             </div>
                             
-                            <button type="submit" id="openCalculatorBtn" class="btn-primary w-full py-2 rounded-lg transition-all duration-300 hover:shadow-md flex items-center justify-center"><!-- Reduced from py-3 -->
+                            <button type="submit" id="openCalculatorBtn" class="btn-primary w-full py-2 text-sm sm:text-base rounded-lg transition-all duration-300 hover:shadow-md flex items-center justify-center"><!-- Optimized text size for mobile -->
                                 <i class="fa fa-calculator mr-2"></i> Calculate Your Installment Plan
                             </button>
                         </form>
@@ -104,85 +104,85 @@
     </div>
 </section>
 
-<!-- Product Description Section - Moved below product image and made more compact -->
+<!-- Product Description Section - Optimized for mobile -->
 <section class="py-2 bg-gray-50 mb-3"><!-- Further reduced from py-3 -->
-    <div class="container">
+    <div class="container px-4 sm:px-6 lg:px-8"><!-- Added horizontal padding for mobile -->
         <div class="max-w-4xl mx-auto bg-white p-3 rounded-lg shadow-sm border border-gray-200"><!-- Reduced from p-4 -->
-            <h2 class="text-lg font-bold text-center mb-2 text-gray-800 border-b pb-2"><!-- Reduced from text-xl and mb-3 -->
+            <h2 class="text-base sm:text-lg font-bold text-center mb-2 text-gray-800 border-b pb-2"><!-- Optimized text size for mobile -->
                 Product Description</h2>
             <div class="prose max-w-none">
-                <p class="text-gray-700 leading-relaxed text-sm">{{ product.details|default:"No description available." }}</p><!-- Added text-sm -->
+                <p class="text-gray-700 leading-relaxed text-xs sm:text-sm">{{ product.details|default:"No description available." }}</p><!-- Further optimized text size for mobile -->
             </div>
         </div>
     </div>
 </section>
 
-<!-- Installment Plan Header -->
-<div class="container my-4"><!-- Reduced from my-5 -->
-    <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200 transition-all hover:shadow-md"><!-- Reduced from p-5 -->
-        <h2 class="text-xl font-bold text-center mb-3 text-gray-800 border-b pb-2">Installment Plan</h2><!-- Reduced from mb-4 -->
-        <div class="overflow-x-auto">
-            <table class="w-full border-collapse">
+<!-- Installment Plan Header - Optimized for mobile -->
+<div class="container px-4 sm:px-6 lg:px-8 my-3 sm:my-4"><!-- Added horizontal padding and optimized vertical spacing -->
+    <div class="bg-white p-3 sm:p-4 rounded-lg shadow-sm border border-gray-200 transition-all hover:shadow-md"><!-- Optimized padding for mobile -->
+        <h2 class="text-lg sm:text-xl font-bold text-center mb-2 sm:mb-3 text-gray-800 border-b pb-2">Installment Plan</h2><!-- Optimized spacing for mobile -->
+        <div class="overflow-x-auto -mx-3 sm:mx-0"><!-- Negative margin to allow full-width scrolling on mobile -->
+            <table class="min-w-full border-collapse">
                 <thead>
                     <tr class="bg-gray-100">
-                        <th class="border border-gray-300 px-4 py-3 text-left font-semibold">Month</th>
-                        <th class="border border-gray-300 px-4 py-3 text-center font-semibold">3 Months</th>
-                        <th class="border border-gray-300 px-4 py-3 text-center font-semibold">6 Months</th>
-                        <th class="border border-gray-300 px-4 py-3 text-center font-semibold">9 Months</th>
-                        <th class="border border-gray-300 px-4 py-3 text-center font-semibold">12 Months</th>
+                        <th class="border border-gray-300 px-2 sm:px-4 py-2 sm:py-3 text-left text-xs sm:text-sm font-semibold">Month</th>
+                        <th class="border border-gray-300 px-2 sm:px-4 py-2 sm:py-3 text-center text-xs sm:text-sm font-semibold">3 Months</th>
+                        <th class="border border-gray-300 px-2 sm:px-4 py-2 sm:py-3 text-center text-xs sm:text-sm font-semibold">6 Months</th>
+                        <th class="border border-gray-300 px-2 sm:px-4 py-2 sm:py-3 text-center text-xs sm:text-sm font-semibold">9 Months</th>
+                        <th class="border border-gray-300 px-2 sm:px-4 py-2 sm:py-3 text-center text-xs sm:text-sm font-semibold">12 Months</th>
                     </tr>
                 </thead>
                 <thead>
                     <tr class="bg-gray-50">
-                        <td class="border border-gray-300 px-4 py-3 font-medium">Down Payment</td>
-                        <td class="border border-gray-300 px-4 py-3 text-center font-medium text-green-600">Rs.{{ down_payments.3_months | intcomma:False }}</td>
-                        <td class="border border-gray-300 px-4 py-3 text-center font-medium text-green-600">Rs.{{ down_payments.6_months | intcomma:False }}</td>
-                        <td class="border border-gray-300 px-4 py-3 text-center font-medium text-green-600">Rs.{{ down_payments.9_months | intcomma:False }}</td>
-                        <td class="border border-gray-300 px-4 py-3 text-center font-medium text-green-600">Rs.{{ down_payments.12_months | intcomma:False }}</td>
+                        <td class="border border-gray-300 px-2 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm font-medium">Down Payment</td>
+                        <td class="border border-gray-300 px-2 sm:px-4 py-2 sm:py-3 text-center text-xs sm:text-sm font-medium text-green-600">Rs.{{ down_payments.3_months | intcomma:False }}</td>
+                        <td class="border border-gray-300 px-2 sm:px-4 py-2 sm:py-3 text-center text-xs sm:text-sm font-medium text-green-600">Rs.{{ down_payments.6_months | intcomma:False }}</td>
+                        <td class="border border-gray-300 px-2 sm:px-4 py-2 sm:py-3 text-center text-xs sm:text-sm font-medium text-green-600">Rs.{{ down_payments.9_months | intcomma:False }}</td>
+                        <td class="border border-gray-300 px-2 sm:px-4 py-2 sm:py-3 text-center text-xs sm:text-sm font-medium text-green-600">Rs.{{ down_payments.12_months | intcomma:False }}</td>
                     </tr>
                 </thead>
                 <tbody>
                     {% for month in months %}
                     <tr class="{% cycle 'bg-white' 'bg-gray-50' %}">
-                        <td class="border border-gray-300 px-4 py-2">Month {{ month }}</td>
+                        <td class="border border-gray-300 px-2 sm:px-4 py-1 sm:py-2 text-xs sm:text-sm">Month {{ month }}</td>
                 
                         <!-- 3 Months -->
                         {% if month <= 3 %}
-                            <td class="border border-gray-300 px-4 py-2 text-center">Rs. {{ installments.3_months | intcomma:False }}</td>
+                            <td class="border border-gray-300 px-2 sm:px-4 py-1 sm:py-2 text-center text-xs sm:text-sm">Rs. {{ installments.3_months | intcomma:False }}</td>
                         {% else %}
-                            <td class="border border-gray-300 px-4 py-2 text-center text-gray-400">-</td>
+                            <td class="border border-gray-300 px-2 sm:px-4 py-1 sm:py-2 text-center text-gray-400 text-xs sm:text-sm">-</td>
                         {% endif %}
                 
                         <!-- 6 Months -->
                         {% if month <= 6 %}
-                            <td class="border border-gray-300 px-4 py-2 text-center">Rs. {{ installments.6_months | intcomma:False }}</td>
+                            <td class="border border-gray-300 px-2 sm:px-4 py-1 sm:py-2 text-center text-xs sm:text-sm">Rs. {{ installments.6_months | intcomma:False }}</td>
                         {% else %}
-                            <td class="border border-gray-300 px-4 py-2 text-center text-gray-400">-</td>
+                            <td class="border border-gray-300 px-2 sm:px-4 py-1 sm:py-2 text-center text-gray-400 text-xs sm:text-sm">-</td>
                         {% endif %}
                 
                         <!-- 9 Months -->
                         {% if month <= 9 %}
-                            <td class="border border-gray-300 px-4 py-2 text-center">Rs. {{ installments.9_months | intcomma:False }}</td>
+                            <td class="border border-gray-300 px-2 sm:px-4 py-1 sm:py-2 text-center text-xs sm:text-sm">Rs. {{ installments.9_months | intcomma:False }}</td>
                         {% else %}
-                            <td class="border border-gray-300 px-4 py-2 text-center text-gray-400">-</td>
+                            <td class="border border-gray-300 px-2 sm:px-4 py-1 sm:py-2 text-center text-gray-400 text-xs sm:text-sm">-</td>
                         {% endif %}
                 
                         <!-- 12 Months -->
                         {% if month <= 12 %}
-                            <td class="border border-gray-300 px-4 py-2 text-center">Rs. {{ installments.12_months | intcomma:False }}</td>
+                            <td class="border border-gray-300 px-2 sm:px-4 py-1 sm:py-2 text-center text-xs sm:text-sm">Rs. {{ installments.12_months | intcomma:False }}</td>
                         {% else %}
-                            <td class="border border-gray-300 px-4 py-2 text-center text-gray-400">-</td>
+                            <td class="border border-gray-300 px-2 sm:px-4 py-1 sm:py-2 text-center text-gray-400 text-xs sm:text-sm">-</td>
                         {% endif %}
                     </tr>
                     {% endfor %}
                 </tbody>
                 <tfoot>
                     <tr class="bg-gray-100">
-                        <th class="border border-gray-300 px-4 py-2 text-left">Total in PKR</th>
-                        <th class="border border-gray-300 px-4 py-2 text-center text-green-700">Rs.{{ total_amounts.3_months | intcomma:False }}</th>
-                        <th class="border border-gray-300 px-4 py-2 text-center text-green-700">Rs.{{ total_amounts.6_months | intcomma:False }}</th>
-                        <th class="border border-gray-300 px-4 py-2 text-center text-green-700">Rs.{{ total_amounts.9_months | intcomma:False }}</th>
-                        <th class="border border-gray-300 px-4 py-2 text-center text-green-700">Rs.{{ total_amounts.12_months | intcomma:False }}</th>
+                        <th class="border border-gray-300 px-2 sm:px-4 py-1 sm:py-2 text-left text-xs sm:text-sm font-semibold">Total in PKR</th>
+                        <th class="border border-gray-300 px-2 sm:px-4 py-1 sm:py-2 text-center text-green-700 text-xs sm:text-sm font-semibold">Rs.{{ total_amounts.3_months | intcomma:False }}</th>
+                        <th class="border border-gray-300 px-2 sm:px-4 py-1 sm:py-2 text-center text-green-700 text-xs sm:text-sm font-semibold">Rs.{{ total_amounts.6_months | intcomma:False }}</th>
+                        <th class="border border-gray-300 px-2 sm:px-4 py-1 sm:py-2 text-center text-green-700 text-xs sm:text-sm font-semibold">Rs.{{ total_amounts.9_months | intcomma:False }}</th>
+                        <th class="border border-gray-300 px-2 sm:px-4 py-1 sm:py-2 text-center text-green-700 text-xs sm:text-sm font-semibold">Rs.{{ total_amounts.12_months | intcomma:False }}</th>
                     </tr>
                 </tfoot>
             </table>
