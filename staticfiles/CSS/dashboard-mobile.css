@@ -1,0 +1,105 @@
+/**
+ * Dashboard Mobile Responsive Styling
+ * Enhances the dashboard for better mobile experience
+ */
+
+/* Base dashboard container adjustments */
+@media (max-width: 767px) {
+    /* Make main content use full width when sidebar is hidden */
+    .dashboard-container {
+        display: block !important;
+    }
+    
+    /* Hide sidebar on mobile */
+    #sidebar, 
+    #app-sidepanel {
+        display: none !important;
+    }
+    
+    /* Adjust main content to use full width */
+    .dashboard-content,
+    main.flex-1,
+    .flex.w-full.min-h-screen > div:last-child {
+        width: 100% !important;
+        margin-left: 0 !important;
+        padding-left: 1rem !important;
+        padding-right: 1rem !important;
+    }
+    
+    /* Improve card layouts on mobile */
+    .grid {
+        grid-template-columns: 1fr !important;
+    }
+    
+    /* Ensure tables are scrollable horizontally */
+    .overflow-x-auto {
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    /* Improve touch targets in dashboard */
+    .dashboard button,
+    .dashboard .btn,
+    .dashboard a.btn,
+    .dashboard input[type='button'],
+    .dashboard input[type='submit'] {
+        min-height: 44px;
+        min-width: 44px;
+    }
+    
+    /* Adjust chart containers for better mobile viewing */
+    .h-\[300px\] {
+        height: 250px !important;
+    }
+    
+    /* Improve spacing on mobile */
+    .p-4 {
+        padding: 0.75rem !important;
+    }
+    
+    .gap-4,
+    .gap-6 {
+        gap: 0.75rem !important;
+    }
+    
+    /* Add mobile navigation menu for dashboard */
+    .mobile-dashboard-nav {
+        display: flex !important;
+        background-color: var(--color-primary);
+        padding: 0.5rem;
+        border-radius: 0.5rem;
+        margin-bottom: 1rem;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        white-space: nowrap;
+    }
+    
+    .mobile-dashboard-nav a {
+        color: white;
+        padding: 0.5rem 1rem;
+        border-radius: 0.375rem;
+        font-weight: 500;
+        display: inline-block;
+    }
+    
+    .mobile-dashboard-nav a:hover,
+    .mobile-dashboard-nav a.active {
+        background-color: rgba(255, 255, 255, 0.1);
+    }
+}
+
+/* Tablet adjustments */
+@media (min-width: 768px) and (max-width: 1023px) {
+    /* Reduce sidebar width on tablets */
+    #sidebar,
+    #app-sidepanel {
+        width: 240px !important;
+    }
+    
+    /* Adjust main content accordingly */
+    .dashboard-content,
+    main.flex-1,
+    .flex.w-full.min-h-screen > div:last-child {
+        width: calc(100% - 240px) !important;
+        margin-left: 240px !important;
+    }
+}
