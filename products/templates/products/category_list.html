@@ -1,117 +1,230 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %} Home {% endblock title %}
+{% block title %}Categories | Installment App{% endblock title %}
 
 {% block content %} 
-
-    <div class="container">
+<div class="bg-gradient-to-br from-gray-50 to-blue-50 min-h-screen py-8">
+    <div class="container mx-auto px-4">
         <section class="main-section">
-            <h1>Our Categories</h1>
+            <!-- Improved Header with Decorative Elements -->
+            <div class="text-center mb-10">
+                <h1 class="text-3xl md:text-4xl font-bold text-gray-800 mb-3 relative inline-block">
+                    Our Categories
+                    <div class="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-24 h-1 bg-blue-500 rounded-full"></div>
+                </h1>
+                <p class="text-gray-600 mt-4 max-w-2xl mx-auto">Browse through our collection of premium products organized by categories</p>
+            </div>
 
-           <!-- Search Form -->
-            <form class="form-inline mb-3" id="filter-form">
-                <div class="input-group">
-                    <input type="text" id="filter-input" class="form-control" placeholder="search categories...">
-                    <button class="btn btn-outline-secondary" type="button">
-                        <i class="fas fa-search"></i> <!-- Search Icon -->
+            <!-- Enhanced Search Form with Tailwind -->
+            <form class="mb-8" id="filter-form">
+                <div class="relative max-w-md mx-auto shadow-md rounded-lg overflow-hidden transition-all duration-300 hover:shadow-lg">
+                    <input type="text" id="filter-input" 
+                           class="w-full pl-12 pr-16 py-3 border-0 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors" 
+                           placeholder="Search categories...">
+                    <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                        <svg class="w-5 h-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"></path>
+                        </svg>
+                    </div>
+                    <button class="absolute inset-y-0 right-0 px-4 flex items-center bg-blue-500 text-white hover:bg-blue-600 transition-colors focus:outline-none" type="button" id="search-button">
+                        Search
                     </button>
                 </div>
             </form>
 
-            <!-- Styled Dropdown Results -->
-            <div class="dropdown">
-                <div id="filter-results" class="dropdown-menu w-100" style="max-height: 300px; overflow-y: auto;"></div>
+            <!-- Styled Dropdown Results with Tailwind -->
+            <div class="dropdown relative max-w-md mx-auto">
+                <div id="filter-results" class="dropdown-menu absolute z-10 w-full mt-1 bg-white rounded-lg shadow-lg max-h-60 overflow-y-auto border border-gray-200 hidden"></div>
             </div>
 
-
-
-
-            <main>
-                {% for category in categories %}
-                <div class="products-card mb-4">
-                    <a href="{% url 'products:products_list' category.slug %}" class="product-link">
-                      <img class="image-product img-fluid" src="{{ category.photo.url }}" alt="{{ category.name }}">
-                    </a>
-                    <p>{{ category.category_moto }}</p>
-                    <h2 class="product-name">{{ category.name }}</h2>
+                       <!-- Improved Category Grid with Enhanced Cards -->
+                       <main class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
+                        {% for category in categories %}
+                        <div class="bg-white rounded-xl shadow-md overflow-hidden transform transition-all duration-300 hover:scale-102 hover:shadow-xl border border-gray-100 group h-full flex flex-col">
+                            <div class="relative overflow-hidden">
+                                <a href="{% url 'products:products_list' category.slug %}" class="block">
+                                    <img class="h-56 w-full object-cover transition-transform duration-500 group-hover:scale-110" 
+                                         src="{{ category.photo.url }}" 
+                                         alt="{{ category.name }}">
+                                    <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-start p-4">
+                                        <span class="text-white font-medium px-3 py-1 bg-blue-500/80 rounded-full text-sm">
+                                            View Products
+                                        </span>
+                                    </div>
+                                </a>
+                                <div class="absolute top-3 right-3">
+                                    <span class="bg-blue-500 text-white text-xs px-2 py-1 rounded-full shadow-md">
+                                        {{ category.products.count|default:"0" }} products
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="p-5 border-t border-gray-100 flex-grow flex flex-col justify-between">
+                                <div>
+                                    <h2 class="text-xl font-bold text-gray-800 mb-2 group-hover:text-blue-600 transition-colors">{{ category.name }}</h2>
+                                    <p class="text-gray-600 text-sm mb-4">{{ category.category_moto }}</p>
+                                </div>
+                                <div class="flex justify-between items-center mt-auto">
+                                    <a href="{% url 'products:products_list' category.slug %}" 
+                                       class="text-blue-600 hover:text-blue-800 text-sm font-medium flex items-center transition-colors">
+                                        Browse Category
+                                        <svg class="w-4 h-4 ml-1 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                                        </svg>
+                                    </a>
+                                    <button class="favorite-btn text-gray-400 hover:text-red-500 transition-colors" data-id="{{ category.id }}">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        {% empty %}
+                <div class="col-span-full text-center py-16 bg-white rounded-xl shadow-sm border border-gray-100">
+                    <svg class="w-16 h-16 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    <p class="text-gray-500 text-lg mb-4">No categories found.</p>
+                    <button class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors" onclick="window.location.reload()">Refresh Page</button>
                 </div>
-                {% empty %}
-                    <p>No categories found.</p>
                 {% endfor %}
             </main>
 
-            <!-- Pagination Controls -->
-            <nav aria-label="Page navigation">
-                <ul class="pagination justify-content-center">
+            <!-- Enhanced Pagination Controls with Tailwind -->
+            <nav aria-label="Page navigation" class="mt-12 mb-8">
+                <ul class="flex justify-center items-center space-x-2">
                     {% if categories.has_previous %}
-                        <li class="page-item">
-                            <a class="page-link" href="?page=1{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}">First</a>
+                        <li>
+                            <a class="px-4 py-2 bg-white border border-gray-200 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors shadow-sm flex items-center" href="?page=1{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}">
+                                <i class="fas fa-angle-double-left mr-1"></i> First
+                            </a>
                         </li>
-                        <li class="page-item">
-                            <a class="page-link" href="?page={{ categories.previous_page_number }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}">Previous</a>
+                        <li>
+                            <a class="px-4 py-2 bg-white border border-gray-200 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors shadow-sm flex items-center" href="?page={{ categories.previous_page_number }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}">
+                                <i class="fas fa-angle-left mr-1"></i> Previous
+                            </a>
                         </li>
                     {% endif %}
 
-                    <li class="page-item disabled">
-                        <span class="page-link">Page {{ categories.number }} of {{ categories.paginator.num_pages }}</span>
+                    <li>
+                        <span class="px-5 py-2 bg-blue-50 border border-blue-200 rounded-lg text-sm font-medium text-blue-700 shadow-sm">
+                            Page {{ categories.number }} of {{ categories.paginator.num_pages }}
+                        </span>
                     </li>
 
                     {% if categories.has_next %}
-                        <li class="page-item">
-                            <a class="page-link" href="?page={{ categories.next_page_number }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}">Next</a>
+                        <li>
+                            <a class="px-4 py-2 bg-white border border-gray-200 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors shadow-sm flex items-center" href="?page={{ categories.next_page_number }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}">
+                                Next <i class="fas fa-angle-right ml-1"></i>
+                            </a>
                         </li>
-                        <li class="page-item">
-                            <a class="page-link" href="?page={{ categories.paginator.num_pages }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}">Last</a>
+                        <li>
+                            <a class="px-4 py-2 bg-white border border-gray-200 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors shadow-sm flex items-center" href="?page={{ categories.paginator.num_pages }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}">
+                                Last <i class="fas fa-angle-double-right ml-1"></i>
+                            </a>
                         </li>
                     {% endif %}
                 </ul>
             </nav>
         </section>
     </div>
-    <script>
-        $(document).ready(function() {
-            $("#filter-input").on("input", function() {
-                const query = $(this).val().trim();
-        
-                if (query.length > 0) {
-                    $.ajax({
-                        url: "{% url 'products:filter_categories' %}",
-                        data: { 'filter': query },
-                        success: function(data) {
-                            $('#filter-results').empty();  // Clear previous results
-        
-                            if (data.length > 0) {
-                                // Show dropdown if there are results
-                                $('#filter-results').addClass('show');
-        
-                                data.forEach(function(category) {
-                                    $('#filter-results').append(
-                                        `<a class="dropdown-item result-item" href="${category.url}">${category.slug}</a>`
-                                    );
-                                });
-                            } else {
-                                $('#filter-results').append('<div class="dropdown-item no-results">No categories found.</div>');
-                            }
-                        },
-                        error: function() {
-                            $('#filter-results').empty();
-                            $('#filter-results').append('<div class="dropdown-item no-results">Error retrieving results.</div>');
+</div>
+
+<script>
+    $(document).ready(function() {
+        // Improved filter functionality
+        $("#filter-input").on("input", function() {
+            const query = $(this).val().trim();
+    
+            if (query.length > 0) {
+                // Show loading indicator
+                $('#filter-results').html('<div class="p-4 text-center"><div class="inline-block animate-spin rounded-full h-5 w-5 border-b-2 border-blue-500"></div> Searching...</div>');
+                $('#filter-results').removeClass('hidden').addClass('show');
+                
+                $.ajax({
+                    url: "{% url 'products:filter_categories' %}",
+                    data: { 'filter': query },
+                    success: function(data) {
+                        $('#filter-results').empty();  // Clear previous results
+    
+                        if (data.length > 0) {
+                            // Show dropdown if there are results
+                            $('#filter-results').removeClass('hidden').addClass('show');
+    
+                            data.forEach(function(category) {
+                                $('#filter-results').append(
+                                    `<a class="block px-4 py-3 hover:bg-blue-50 transition-colors border-b border-gray-100 last:border-0 text-gray-700 hover:text-blue-700" href="${category.url}">
+                                        <div class="font-medium">${category.name || category.slug}</div>
+                                        <div class="text-xs text-gray-500">${category.slug}</div>
+                                    </a>`
+                                );
+                            });
+                        } else {
+                            $('#filter-results').append('<div class="p-4 text-center text-gray-500">No categories found. Try a different search term.</div>');
                         }
-                    });
-                } else {
-                    $('#filter-results').removeClass('show');  // Hide the dropdown if input is empty
-                }
-            });
-        
-            // Close the dropdown if clicked outside
-            $(document).click(function(event) {
-                if (!$(event.target).closest("#filter-form, #filter-results").length) {
-                    $('#filter-results').removeClass('show');
-                }
-            });
+                    },
+                    error: function() {
+                        $('#filter-results').empty();
+                        $('#filter-results').append('<div class="p-4 text-center text-red-500">Error retrieving results. Please try again.</div>');
+                    }
+                });
+            } else {
+                $('#filter-results').removeClass('show').addClass('hidden');  // Hide the dropdown if input is empty
+            }
+        });
+    
+        // Close the dropdown if clicked outside
+        $(document).click(function(event) {
+            if (!$(event.target).closest("#filter-form, #filter-results").length) {
+                $('#filter-results').removeClass('show').addClass('hidden');
+            }
         });
         
-    </script>        
-
+        // Search button click handler
+        $("#search-button").click(function() {
+            const query = $("#filter-input").val().trim();
+            if (query.length > 0) {
+                $("#filter-input").trigger("input");
+            }
+        });
+        
+        // Favorite button functionality
+        $(".favorite-btn").click(function() {
+            const btn = $(this);
+            
+            // Toggle heart icon
+            if (btn.find('svg').hasClass('text-gray-400')) {
+                btn.find('svg').removeClass('text-gray-400').addClass('text-red-500 fill-current');
+                // Show toast notification
+                showToast('Category added to favorites!');
+            } else {
+                btn.find('svg').removeClass('text-red-500 fill-current').addClass('text-gray-400');
+                showToast('Category removed from favorites');
+            }
+            
+            // Here you would typically send an AJAX request to save the favorite status
+            // $.ajax({ url: '/save-favorite/', data: { category_id: $(this).data('id') } });
+        });
+        
+        // Toast notification function
+        function showToast(message) {
+            // Create toast element if it doesn't exist
+            if ($('#toast-notification').length === 0) {
+                $('body').append('<div id="toast-notification" class="fixed top-4 right-4 bg-blue-600 text-white px-6 py-3 rounded-lg shadow-lg transform transition-all duration-500 translate-y-[-100px] opacity-0 z-50"></div>');
+            }
+            
+            // Set message and show toast
+            $('#toast-notification').text(message)
+                .removeClass('translate-y-[-100px] opacity-0')
+                .addClass('translate-y-0 opacity-100');
+                
+            // Hide toast after 3 seconds
+            setTimeout(function() {
+                $('#toast-notification').removeClass('translate-y-0 opacity-100')
+                    .addClass('translate-y-[-100px] opacity-0');
+            }, 3000);
+        }
+    });
+</script>        
 {% endblock content %}

@@ -21,6 +21,7 @@ class Order(models.Model):
     installment_type = models.CharField(max_length=100, default=None)
     payment_method = models.CharField(max_length=30, choices=[
         ('Every Month', 'Every Month'),
+        ('Cash', 'Cash'),
     ])
     installment_plan = models.CharField(max_length=30)
     

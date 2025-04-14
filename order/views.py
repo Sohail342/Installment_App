@@ -142,22 +142,26 @@ def checkout(request, user_id):
                 }
             )
 
+            # Get payment type from cart item
+            cart_item = cart.items.first()
+            payment_type = cart_item.payment_type if cart_item else 'installment'
+            
             # Create Order
             order = Order.objects.create(
                 user=user,
                 customer=customer,
                 cart=cart,
-                total_bill=total_amount,                  # After 40% included in origin price
-                downpayment_plus_form_fee = total,        # this amount includes form fee + down payment
-                downpayment = down_payment,
-                monthly_installment = monthly_installment,
-                installment_type=installment_type,
+                total_bill=total_amount if payment_type == 'installment' else product.price,  # For cash payment, use product price without fees
+                downpayment_plus_form_fee = total if payment_type == 'installment' else product.price,  # For cash, full amount
+                downpayment = down_payment if payment_type == 'installment' else product.price,  # For cash, full amount
+                monthly_installment = monthly_installment if payment_type == 'installment' else 0,  # No installments for cash
+                installment_type=installment_type if payment_type == 'installment' else 'none',
                 shipping_address=shipping_address,
-                payment_method=payment_method,
-                installment_plan=current_installment_plan.replace('_', ' '),  # Replace _ from installment plan (e.g, 3_months = 3 months)
+                payment_method='Cash' if payment_type == 'cash' else payment_method,
+                installment_plan=current_installment_plan.replace('_', ' ') if payment_type == 'installment' else 'Full Payment',
                 created_at=timezone.now(),
                 updated_at=timezone.now(),
-                is_paid=True,  # Set as paid since down payment is paid at checkout
+                is_paid=True,  # Set as paid for both cash and down payment
             )
 
             # Add guarantors to the order
@@ -179,13 +183,21 @@ def checkout(request, user_id):
 
             for item in cart_items:
                 product = item.product
+                
+                # For cash payment, use product price as the total price
+                # For installment, use the calculated total amount
+                if item.payment_type == 'cash':
+                    item_total_price = product.price
+                else:
+                    item_total_price = total_amount
+                
                 order_item = OrderItem.objects.create(
                     order=order,
                     customer=customer,
                     product=product,
                     quantity=item.quantity,
                     original_price=product.price,
-                    installment_total_price=total_amount,
+                    installment_total_price=item_total_price,
                 )
 
                 # Update product inventory
@@ -193,28 +205,30 @@ def checkout(request, user_id):
                     product.inventory -= item.quantity
                     product.save()
 
-                # Get the installment plan for this item
-                months = int(item.installment_plan.split('_')[0])  # Get month count from plan
+                # Only create installment payments for installment type orders
+                if item.payment_type == 'installment':
+                    # Get the installment plan for this item
+                    months = int(item.installment_plan.split('_')[0])  # Get month count from plan
 
-                if cartItem.installment_type == 'static':
-                    installment_details = product.get_installment_plan()
-                    monthly_payment = installment_details['installments'][item.installment_plan]
-                
-                elif cartItem.installment_type == 'dynamic':
-                    monthly_payment = request.session.get('monthly_payment')
+                    if cartItem.installment_type == 'static':
+                        installment_details = product.get_installment_plan()
+                        monthly_payment = installment_details['installments'][item.installment_plan]
+                    
+                    elif cartItem.installment_type == 'dynamic':
+                        monthly_payment = request.session.get('monthly_payment')
 
-                for month in range(1, months + 1):
-                    installment_payment = InstallmentPayment.objects.create(
-                        order_item=order_item,
-                        customer=customer,
-                        month_number=month,
-                        amount_due=monthly_payment,
-                        amount_paid=0.00,
-                        is_paid=False
-                    )
-                    # Set the due date (approximately 30 days per month)
-                    installment_payment.due_date = timezone.now() + timedelta(days=month * 30)
-                    installment_payment.save()
+                    for month in range(1, months + 1):
+                        installment_payment = InstallmentPayment.objects.create(
+                            order_item=order_item,
+                            customer=customer,
+                            month_number=month,
+                            amount_due=monthly_payment,
+                            amount_paid=0.00,
+                            is_paid=False
+                        )
+                        # Set the due date (approximately 30 days per month)
+                        installment_payment.due_date = timezone.now() + timedelta(days=month * 30)
+                        installment_payment.save()
 
             # Clear the cart
             cart.items.all().delete()
@@ -224,6 +238,19 @@ def checkout(request, user_id):
 
     else:
         form = CheckoutForm()
+    # Get payment type from cart item to pass to template
+    payment_type = 'installment'
+    product_price = 0
+    
+    if cart_items.exists():
+        cart_item = cart_items.first()
+        payment_type = cart_item.payment_type
+        product_price = cart_item.product.price
+    
+    # For cash payment, set total to product price
+    if payment_type == 'cash':
+        total = product_price
+    
     return render(request, 'order/application_form.html', {
         'form': form,
         'cart_is_empty': cart_is_empty,
@@ -231,7 +258,9 @@ def checkout(request, user_id):
         'down_payment_againts_hire': down_payment,
         'total': total,
         'monthly_installment': monthly_installment,
-        'total_installments':''.join(extracted_installments)
+        'total_installments':''.join(extracted_installments),
+        'payment_type': payment_type,  # Pass payment type to template
+        'product_price': product_price  # Pass product price to template
     })
 
 

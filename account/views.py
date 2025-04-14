@@ -26,10 +26,6 @@ def customer_detail_view(request, customer_id):
     })
 
 
-
-
-
-
 # def signup(request):
 #     if not request.user.is_authenticated:
 #         if request.method == 'POST':

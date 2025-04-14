@@ -6,63 +6,73 @@
 {% block content %}
 
 <!-- Card for the centered heading -->
-<div class="card text-center mt-4">
-    <div class="card-body">
-        <h2 class="card-title"><b>{{ customer.first_name }}'s Installment Reports</b></h2>
-    </div>
+<div class="bg-white rounded-lg shadow-md p-6 text-center mt-6 mx-auto max-w-4xl">
+    <h2 class="text-2xl font-bold text-gray-800">{{ customer.first_name }}'s Installment Reports</h2>
 </div>
 
 <!-- Button Group -->
-<div class="d-flex justify-content-center mb-2">
-    <button type="button" id="download" class="btn btn-success mx-2" data-toggle="tooltip" data-placement="top" title="Download your invoice as PDF">Download PDF</button>
-    <a href="{% url 'customer_reports:download_installments' customer.id %}" class="btn btn-success mx-2" data-toggle="tooltip" data-placement="top" title="Download your installments as CSV">Download CSV</a>
+<div class="flex justify-center space-x-4 mt-4 mb-4">
+    <button type="button" id="download" class="bg-success hover:bg-green-600 text-white font-medium py-2 px-4 rounded-md transition-colors duration-300 flex items-center" data-toggle="tooltip" data-placement="top" title="Download your invoice as PDF">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+        </svg>
+        Download PDF
+    </button>
+    <a href="{% url 'customer_reports:download_installments' customer.id %}" class="bg-success hover:bg-green-600 text-white font-medium py-2 px-4 rounded-md transition-colors duration-300 flex items-center" data-toggle="tooltip" data-placement="top" title="Download your installments as CSV">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+        </svg>
+        Download CSV
+    </a>
 </div>
 
 <div id="invoice" class="container mt-4">
-    <div class="card mb-4">
-        <div class="card-header">
-            <h5>{{ customer.first_name }} {{ customer.last_name }}</h5>
+    <div class="bg-white rounded-lg shadow-md mb-4 overflow-hidden">
+        <div class="bg-primary text-white px-4 py-3">
+            <h5 class="text-lg font-semibold">{{ customer.first_name }} {{ customer.last_name }}</h5>
         </div>
-        <div class="card-body">
-            <p><strong>Email:</strong> {{ customer.email }}</p>
-            <p><strong>Phone Number:</strong> {{ customer.phone_number }}</p>
-            <p><strong>Address:</strong> {{ customer.address }}</p>
-            <p><strong>CNIC:</strong> {{ customer.cnic }}</p>
+        <div class="p-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <p class="flex items-center"><span class="font-semibold mr-2">Email:</span> {{ customer.email }}</p>
+                <p class="flex items-center"><span class="font-semibold mr-2">Phone Number:</span> {{ customer.phone_number }}</p>
+                <p class="flex items-center"><span class="font-semibold mr-2">Address:</span> {{ customer.address }}</p>
+                <p class="flex items-center"><span class="font-semibold mr-2">CNIC:</span> {{ customer.cnic }}</p>
+            </div>
         </div>
     </div>
 
     {% for order_item, data in grouped_installments.items %}
-    <div class="card mb-4">
-        <div class="card-header">
-            <h5>{{ order_item.product.name }} (INVOICE # {{ data.order_id }})</h5>
+    <div class="bg-white rounded-lg shadow-md mb-4 overflow-hidden">
+        <div class="bg-primary text-white px-4 py-3">
+            <h5 class="text-lg font-semibold">{{ order_item.product.name }} (INVOICE # {{ data.order_id }})</h5>
         </div>
-        <div class="card-body">
-            <table class="table table-striped table-bordered">
-                <thead class="thead-dark">
+        <div class="p-4 overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-100">
                     <tr>
-                        <th>Month Number</th>
-                        <th>Amount Due</th>
-                        <th>Amount Paid</th>
-                        <th>Status</th>
-                        <th>Due Date</th>
+                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Month Number</th>
+                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount Due</th>
+                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount Paid</th>
+                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Due Date</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody class="bg-white divide-y divide-gray-200">
                     {% for installment in data.installments %}
-                        <tr>
-                            <td>{{ installment.month_number }}</td>
-                            <td>{{ installment.amount_due | intcomma:False }}</td>
-                            <td>{{ installment.amount_paid | intcomma:False }}</td>
-                            <td>
+                        <tr class="hover:bg-gray-50 transition-colors duration-150">
+                            <td class="px-4 py-3 whitespace-nowrap">{{ installment.month_number }}</td>
+                            <td class="px-4 py-3 whitespace-nowrap">{{ installment.amount_due | intcomma:False }}</td>
+                            <td class="px-4 py-3 whitespace-nowrap">{{ installment.amount_paid | intcomma:False }}</td>
+                            <td class="px-4 py-3 whitespace-nowrap">
                                 {% if installment.is_paid %}
-                                <span class="text-success font-weight-bold" data-toggle="tooltip" data-placement="top" title="Payment Received">Paid</span>
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800" data-toggle="tooltip" data-placement="top" title="Payment Received">Paid</span>
                                 {% else %}
-                                <span class="text-danger font-weight-bold" data-toggle="tooltip" data-placement="top" title="Payment Pending">Unpaid</span>
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800" data-toggle="tooltip" data-placement="top" title="Payment Pending">Unpaid</span>
                                 {% endif %}
                             </td>
-                            <td>
+                            <td class="px-4 py-3 whitespace-nowrap">
                                 {% if installment.is_paid %}
-                                <span class="text-success font-weight-bold">Paid</span>
+                                <span class="text-green-600 font-medium">Paid</span>
                                 {% else %}
                                 {{ installment.due_date|date:"F j, Y" }}
                                 {% endif %}
@@ -70,7 +80,7 @@
                         </tr>
                     {% empty %}
                         <tr>
-                            <td colspan="5" class="text-center">No installments found for this order item.</td>
+                            <td colspan="5" class="px-4 py-3 text-center text-gray-500">No installments found for this order item.</td>
                         </tr>
                     {% endfor %}
                 </tbody>
@@ -81,8 +91,13 @@
 
 </div>
 
-<div class="d-flex justify-content-center mb-2">
-    <a href="{% url 'order:total_bill' %}" class="btn btn-secondary">Back to Installments</a>
+<div class="flex justify-center mb-6 mt-4">
+    <a href="{% url 'order:total_bill' %}" class="bg-secondary hover:bg-gray-600 text-white font-medium py-2 px-6 rounded-md transition-colors duration-300 flex items-center">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+        </svg>
+        Back to Installments
+    </a>
 </div>
 
 <!-- Initialize tooltips -->

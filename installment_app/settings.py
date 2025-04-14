@@ -14,12 +14,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-w#xs#_=jd^1wx6d_m+z#72dk3#ryk$n(djl=^8r2i)49*f8m5c'
+SECRET_KEY = '4l0!i$srn7q4%jd6q^=2@q%w9)kj*&bhy2=&#iql!d3fg@&d!='
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['127.0.0.1', '.vercel.app']
+ALLOWED_HOSTS = ['127.0.0.1', '.vercel.app', 'localhost']
 DATABASE_URL = os.getenv("DATABASE_URL", "postgres://default:AnXt9aroqZT5@ep-old-thunder-a4k90yuh-pooler.us-east-1.aws.neon.tech:5432/verceldb?sslmode=require")
 
 
@@ -47,7 +47,14 @@ INSTALLED_APPS = [
     'dashboard',
 
     'cloudinary',
+    'tailwind',
+    'theme',
 ]
+
+
+TAILWIND_APP_NAME = 'theme'
+NPM_BIN_PATH = 'npm.cmd'
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

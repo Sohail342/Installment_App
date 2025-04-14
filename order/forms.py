@@ -45,6 +45,7 @@ class CheckoutForm(forms.Form):
 
     payment_method = forms.ChoiceField(required=False, choices=[
         ('Every Month', 'Every Month'),
+        ('Cash', 'Cash'),
     ])
 
     def clean(self):

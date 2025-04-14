@@ -80,24 +80,40 @@ def product_detail_view(request, product_id):
     months = [month for month in range(1, 13)]
     installments = product.get_installment_plan()
 
-
-    #  dynamic Installments
+    # Handle dynamic Installments
     if request.method == "POST":
         user_down_payment = request.POST.get('user_down_payment')
         user_months = request.POST.get('user_months')
 
-        dynamic_installment = product.calculate_dynamic_installment_plan(user_down_payment, user_months)
-
-
-        # Store data in session
-        request.session['down_payment'] = dynamic_installment['down_payment']
-        request.session['installment_plan'] = dynamic_installment['installment_plan']
-        request.session['monthly_payment'] = dynamic_installment['monthly_payment']
-        request.session['total_amount'] = dynamic_installment['total_amount']
-        request.session['product'] = product.inventory
-        request.session['product_id'] = product.pk
-
-        return redirect(reverse('order:dynamic_installment_details'))
+        try:
+            dynamic_installment = product.calculate_dynamic_installment_plan(user_down_payment, user_months)
+            
+            # Store data in session
+            request.session['down_payment'] = dynamic_installment['down_payment']
+            request.session['installment_plan'] = dynamic_installment['installment_plan']
+            request.session['monthly_payment'] = dynamic_installment['monthly_payment']
+            request.session['total_amount'] = dynamic_installment['total_amount']
+            request.session['product'] = product.inventory
+            request.session['product_id'] = product.pk
+            
+            # Check if it's an AJAX request
+            if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+                return JsonResponse({
+                    'success': True,
+                    'down_payment': dynamic_installment['down_payment'],
+                    'installment_plan': dynamic_installment['installment_plan'],
+                    'monthly_payment': dynamic_installment['monthly_payment'],
+                    'total_amount': dynamic_installment['total_amount']
+                })
+            else:
+                # Traditional form submission - redirect to details page
+                return redirect(reverse('order:dynamic_installment_details'))
+        except ValueError as e:
+            if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+                return JsonResponse({'success': False, 'error': str(e)})
+            else:
+                messages.error(request, str(e))
+                return redirect(reverse('products:product_detail', args=[product_id]))
     
     return render(request, 'products/product_details.html', {
         'product': product, 
