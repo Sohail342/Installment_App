@@ -96,11 +96,11 @@ class User(AbstractBaseUser):
     
 
 class Customer(models.Model):
-    first_name = models.CharField(max_length=50)
-    last_name = models.CharField(max_length=50)
-    email = models.EmailField(max_length=50)
-    phone_number = models.CharField(max_length=15)
-    address = models.TextField()
+    first_name = models.CharField(max_length=50, blank=True, null=True)
+    last_name = models.CharField(max_length=50, blank=True, null=True)
+    email = models.EmailField(max_length=50, blank=True, null=True)
+    phone_number = models.CharField(max_length=15, blank=True, null=True)
+    address = models.TextField(blank=True, null=True)
     cnic = models.CharField(max_length=15, unique=True)
     
     def __str__(self):

@@ -206,28 +206,34 @@
         
         /* Mobile menu styles moved to mobile-navbar.css */
         
-        /* Touch-friendly improvements for mobile */
+        /* Enhanced touch-friendly improvements for mobile */
         @media (max-width: 767px) {
             .btn, .dropdown-item, a {
                 padding-top: 0.75rem;
                 padding-bottom: 0.75rem;
             }
             
-            /* Improve touch targets */
+            /* Improve touch targets for better accessibility */
             button, .btn, a.btn, input[type='button'], input[type='submit'] {
                 min-height: 44px;
                 min-width: 44px;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
             }
             
             /* Adjust font sizes for better readability */
             body {
                 font-size: 16px;
+                line-height: 1.5;
             }
             
             /* Improve spacing on mobile */
             .container, .container-xl {
                 padding-left: 1rem;
                 padding-right: 1rem;
+                width: 100%;
+                max-width: 100%;
             }
             
             /* Fix dropdown positioning on mobile */
@@ -236,6 +242,21 @@
                 max-height: 50vh;
                 overflow-y: auto;
                 -webkit-overflow-scrolling: touch;
+                width: 90%;
+                left: 5%;
+                right: 5%;
+            }
+            
+            /* Improve table display on mobile */
+            table {
+                display: block;
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+            
+            /* Improve form elements on mobile */
+            input, select, textarea {
+                font-size: 16px; /* Prevent zoom on focus in iOS */
             }
         }
     </style>

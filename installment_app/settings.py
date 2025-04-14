@@ -24,7 +24,6 @@ DATABASE_URL = os.getenv("DATABASE_URL", "postgres://default:AnXt9aroqZT5@ep-old
 
 
 # Application definition
-
 INSTALLED_APPS = [
     'unfold', 
     'unfold.contrib.import_export',
