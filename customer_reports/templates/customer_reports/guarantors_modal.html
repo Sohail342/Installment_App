@@ -1,0 +1,19 @@
+<!-- Guarantor Modal Content Template -->
+<div class="space-y-4">
+    {% if guarantors %}
+        {% for guarantor in guarantors %}
+            <div class="border border-gray-200 rounded-lg p-4">
+                <h4 class="font-semibold text-lg mb-2">Guarantor {{ forloop.counter }}</h4>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <p><span class="font-medium">Name:</span> {{ guarantor.name }}</p>
+                    <p><span class="font-medium">CNIC:</span> {{ guarantor.cnic_no }}</p>
+                    <p><span class="font-medium">Phone:</span> {{ guarantor.phone_no|default:"N/A" }}</p>
+                    <p><span class="font-medium">Occupation:</span> {{ guarantor.occupation|default:"N/A" }}</p>
+                </div>
+                <p class="mt-2"><span class="font-medium">Address:</span> {{ guarantor.residential_address|default:"N/A" }}</p>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p class="text-center text-gray-500">No guarantors found for this order.</p>
+    {% endif %}
+</div>

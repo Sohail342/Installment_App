@@ -43,7 +43,8 @@
                     <form action="{% url 'order:checkout' user.id %}"
                         class="billing-form border border-primary rounded p-4 bg-light mx-auto my-1" method="POST">
                         {% csrf_token %}
-                        <h3 class="mb-4 billing-heading">Application Form</h3>
+
+                        <h3 class="mb-4 billing-heading">Haji Electronic</h3>
 
                         <!-- Display non-field errors here -->
                         {% if form.non_field_errors %}
@@ -155,7 +156,10 @@
                             </div>
                         </div>
 
+
                         <!-- Guaranteed 1 -->
+                        <!--Hide Guaranteed Form if Product is on Cash-->
+                        {% if not payment_type == "cash" %}
                         <div class="cart-detail cart-total p-3">
                             <h3 class="billing-heading mb-3">Guaranteed No. 1</h3>
                             <div class="row mb-3">
@@ -196,7 +200,7 @@
                             <div class="row mb-3">
                                 <div class="col-md-12">
                                     <div class="form-group mb-2">
-                                        <label for="guaranteed_residential_address">Residential Address</label>
+                                        <label for="guaranteed_residential_address">Residential Address*</label>
                                         <input type="text" name="guaranteed_residential_address"
                                             class="form-control line-input" required>
                                         {% if form.guaranteed_residential_address.errors %}
@@ -274,6 +278,7 @@
                                 </div>
                             </div>
                         </div>
+                        
 
                         <!-- Guaranteed 2 -->
                         <div class="cart-detail cart-total p-0">
@@ -393,6 +398,7 @@
                                 </div>
                             </div>
                         </div>
+                        {% endif %}
 
                 </div>
 

@@ -82,8 +82,26 @@ def checkout(request, user_id):
     # Calculate total
     total = form_fee + down_payment
 
+    # Get payment type from cart item
+    payment_type = 'installment'
+    product_price = 0
+    
+    if cart_items.exists():
+        cart_item = cart_items.first()
+        payment_type = cart_item.payment_type
+        product_price = cart_item.product.price
+    
+    # For cash payment, set total to product price
+    if payment_type == 'cash':
+        total = product_price
+
     if request.method == 'POST':
         form = CheckoutForm(request.POST)
+        # For cash payments, make guarantor fields optional
+        if payment_type == 'cash':
+            for field_name in ['guaranteed_cnic_no', 'guaranteed_name', 'guaranteed_phone_no']:
+                form.fields[field_name].required = False
+                
         if form.is_valid():
             # Extract form data
             firstname = form.cleaned_data['firstname']
@@ -95,21 +113,23 @@ def checkout(request, user_id):
             cnic = form.cleaned_data['cnic_no']
 
 
-            # gurantor1
-            guarantor1, created1 = Guarantor.objects.get_or_create(
-            cnic_no=form.cleaned_data['guaranteed_cnic_no'],
-            defaults={
-                'name': form.cleaned_data['guaranteed_name'],
-                'father_name': form.cleaned_data['guaranteed_father_name'],
-                'residential_address': form.cleaned_data['guaranteed_residential_address'],
-                'occupation': form.cleaned_data['guaranteed_occupation'],
-                'designation': form.cleaned_data['guaranteed_designation'],
-                'monthly_income': form.cleaned_data['guaranteed_monthly_income'],
-                'office_address': form.cleaned_data['guaranteed_office_address'],
-                'office_phone': form.cleaned_data['guaranteed_office_phone'],
-                'phone_no': form.cleaned_data['guaranteed_phone_no'],
-            }
-        )
+            # gurantor1 - only create for installment payments
+            guarantor1 = None
+            if payment_type != 'cash' and form.cleaned_data.get('guaranteed_cnic_no'):
+                guarantor1, created1 = Guarantor.objects.get_or_create(
+                cnic_no=form.cleaned_data['guaranteed_cnic_no'],
+                defaults={
+                    'name': form.cleaned_data['guaranteed_name'],
+                    'father_name': form.cleaned_data['guaranteed_father_name'],
+                    'residential_address': form.cleaned_data['guaranteed_residential_address'],
+                    'occupation': form.cleaned_data['guaranteed_occupation'],
+                    'designation': form.cleaned_data['guaranteed_designation'],
+                    'monthly_income': form.cleaned_data['guaranteed_monthly_income'],
+                    'office_address': form.cleaned_data['guaranteed_office_address'],
+                    'office_phone': form.cleaned_data['guaranteed_office_phone'],
+                    'phone_no': form.cleaned_data['guaranteed_phone_no'],
+                }
+            )
 
             # Create a second guarantor only if the fields are filled
             guarantor2 = None
@@ -164,10 +184,12 @@ def checkout(request, user_id):
                 is_paid=True,  # Set as paid for both cash and down payment
             )
 
-            # Add guarantors to the order
-            order.guarantors.add(guarantor1)
-            if guarantor2:
-                order.guarantors.add(guarantor2)
+            # Add guarantors to the order (only for installment payments)
+            if payment_type != 'cash':
+                if guarantor1:
+                    order.guarantors.add(guarantor1)
+                if guarantor2:
+                    order.guarantors.add(guarantor2)
 
             # Create Down Payment
             DownPayment.objects.create(
@@ -238,18 +260,7 @@ def checkout(request, user_id):
 
     else:
         form = CheckoutForm()
-    # Get payment type from cart item to pass to template
-    payment_type = 'installment'
-    product_price = 0
     
-    if cart_items.exists():
-        cart_item = cart_items.first()
-        payment_type = cart_item.payment_type
-        product_price = cart_item.product.price
-    
-    # For cash payment, set total to product price
-    if payment_type == 'cash':
-        total = product_price
     
     return render(request, 'order/application_form.html', {
         'form': form,
@@ -259,8 +270,8 @@ def checkout(request, user_id):
         'total': total,
         'monthly_installment': monthly_installment,
         'total_installments':''.join(extracted_installments),
-        'payment_type': payment_type,  # Pass payment type to template
-        'product_price': product_price  # Pass product price to template
+        'payment_type': payment_type, 
+        'product_price': product_price  
     })
 
 

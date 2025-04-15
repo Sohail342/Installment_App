@@ -56,42 +56,7 @@ def add_to_cart(request, product_id):
 
     messages.success(request, "Product added to cart.")
     
-    return redirect('cart:view')
+    return redirect('order:checkout', request.user.id)
  
 
-
-@login_required(login_url='account:signin')
-def cart_page(request):
-    cart, created = Cart.objects.get_or_create(user=request.user)
-    cart_items = cart.items.all()
-    total = cart.total_price()
-    
-    # Check if the cart is empty
-    cart_is_empty = cart_items.count() == 0
-    return render(request, 'cart/cart.html', {'cart_items': cart_items, 'total': total, 'cart_is_empty':cart_is_empty})
-
-
-
-@login_required(login_url='account:signin')
-def clear_cart(request, product_id):
-    cart = get_object_or_404(Cart, user=request.user)
-    
-    # Get the CartItem to remove
-    cart_item = get_object_or_404(CartItem, product=product_id, cart=cart)
-    
-    # Remove the item from the cart
-    cart_item.delete()
-    return redirect('cart:view') 
-
-
-def clear_all_cart(request):
-    cart = get_object_or_404(Cart, user=request.user)
-    
-    # Get the CartItem to remove
-    cart_items = CartItem.objects.filter(cart=cart)
-    
-    # Remove the items from the cart
-    cart_items.delete()
-    return redirect('cart:view')
-    
     

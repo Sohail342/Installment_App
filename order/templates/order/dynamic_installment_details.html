@@ -42,7 +42,7 @@
             </a>
             {% if product_inventory > 0 %}
                 <a href={% url 'cart:add_to_cart' product_id %} class="bg-primary hover:bg-primary-dark text-white font-medium py-2 px-4 rounded-md transition-colors duration-300 flex items-center" data-toggle="modal" data-target="#addToBasketModal">
-                    <i class="fa fa-shopping-cart mr-2"></i> Add to basket
+                    <i class="fa fa-shopping-cart mr-2"></i> Buy with Installment
                 </a>
             {% else %}
                 <span class="text-red-600 font-medium py-2 px-4">Out of stock</span>

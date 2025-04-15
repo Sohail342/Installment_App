@@ -1,0 +1,37 @@
+<!-- Update Installment Modal Content Template -->
+<div class="space-y-4">
+    <form id="update-installment-form" method="post" data-installment-id="{{ installment.id }}">
+        {% csrf_token %}
+        <div class="mb-4">
+            <p class="text-sm text-gray-600 mb-4">Product: {{ installment.order_item.product.name }}</p>
+            <p class="text-sm text-gray-600 mb-4">Month: {{ installment.month_number }}</p>
+            
+            <div class="mb-4">
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="amount_paid">
+                    Amount Paid
+                </label>
+                <input type="number" name="amount_paid" id="amount_paid" value="{{ installment.amount_paid }}" 
+                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+            </div>
+            
+            <div class="mb-4">
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="is_paid">
+                    Payment Status
+                </label>
+                <select name="is_paid" id="is_paid" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                    <option value="True" {% if installment.is_paid %}selected{% endif %}>Paid</option>
+                    <option value="False" {% if not installment.is_paid %}selected{% endif %}>Unpaid</option>
+                </select>
+            </div>
+        </div>
+        
+        <div class="flex justify-end">
+            <button type="button" id="cancel-update" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-medium py-2 px-4 rounded-md transition-colors duration-300 mr-2">
+                Cancel
+            </button>
+            <button type="submit" class="bg-primary hover:bg-primary-dark text-white font-medium py-2 px-4 rounded-md transition-colors duration-300">
+                Update
+            </button>
+        </div>
+    </form>
+</div>
