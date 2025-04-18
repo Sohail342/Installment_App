@@ -1,7 +1,10 @@
-{% include 'base.html' %}
-{% load static %}
+{% extends 'base.html' %}
 {% load humanize %}
-<title>{% block title %}{{ order.customer }} Summary {% endblock title %}</title>
+{% load static %}
+
+{% block title %}
+Invoice
+{% endblock %}
 
 {% block content %}
 <div class="mt-3">
@@ -123,4 +126,4 @@
         </div>
     </div>
 </div>
-{% endblock content %}
+{% endblock %}
