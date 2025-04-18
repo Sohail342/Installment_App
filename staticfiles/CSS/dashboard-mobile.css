@@ -61,7 +61,7 @@
         gap: 0.75rem !important;
     }
     
-    /* Add mobile navigation menu for dashboard */
+    /* Add mobile navigation menu for dashboard - Enhanced for better UX */
     .mobile-dashboard-nav {
         display: flex !important;
         background-color: var(--color-primary);
@@ -71,6 +71,14 @@
         overflow-x: auto;
         -webkit-overflow-scrolling: touch;
         white-space: nowrap;
+        scrollbar-width: none; /* Hide scrollbar for Firefox */
+        -ms-overflow-style: none; /* Hide scrollbar for IE and Edge */
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    
+    /* Hide scrollbar for Chrome, Safari and Opera */
+    .mobile-dashboard-nav::-webkit-scrollbar {
+        display: none;
     }
     
     .mobile-dashboard-nav a {
