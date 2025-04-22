@@ -1,0 +1,305 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ category.name }} Products{% endblock title %}
+
+{% block content %}
+<div class="flex w-full min-h-screen bg-gray-100">
+    <!-- Sidebar - Hidden on mobile, visible on larger screens -->
+    <aside id="sidebar" 
+           class="static h-full z-40 w-64 bg-white border-r border-gray-200 shadow-md hidden md:block">
+        
+        <!-- Sidebar Header -->
+        <div class="flex items-center justify-between p-4 border-b border-gray-200 bg-gradient-to-r from-indigo-50 to-purple-50">
+            <h2 class="text-lg font-bold text-indigo-700 flex items-center">
+                <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM11 5a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V5zM11 13a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path>
+                </svg>
+                Dashboard
+            </h2>
+            <button id="closeSidebar" class="p-1 text-gray-500 rounded-md hover:bg-gray-100 lg:hidden">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        </div>
+        
+        <!-- Navigation -->
+        <div class="flex flex-col flex-grow">
+            <nav class="p-4 space-y-1">
+                <a href="{% url 'dashboard:dashboard' %}" class="flex items-center px-4 py-3 text-gray-700 rounded-lg hover:bg-indigo-50 hover:text-indigo-700 transition-colors duration-200 group">
+                    <span class="flex items-center justify-center w-8 h-8 mr-3 text-indigo-600 bg-indigo-100 rounded-lg">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path>
+                        </svg>
+                    </span>
+                    <span class="font-medium">Overview</span>
+                </a>
+                
+                <a href="{% url 'dashboard:inventory' %}" class="flex items-center px-4 py-3 text-indigo-700 bg-indigo-50 rounded-lg group">
+                    <span class="flex items-center justify-center w-8 h-8 mr-3 text-indigo-600 bg-indigo-100 rounded-lg">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M4 3a2 2 0 100 4h12a2 2 0 100-4H4z"></path>
+                            <path fill-rule="evenodd" d="M3 8h14v7a2 2 0 01-2 2H5a2 2 0 01-2-2V8zm5 3a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1z" clip-rule="evenodd"></path>
+                        </svg>
+                    </span>
+                    <span class="font-medium">Inventory Management</span>
+                </a>
+                
+                <a href="{% url 'customer_reports:customer_list' %}" class="flex items-center px-4 py-3 text-gray-700 rounded-lg hover:bg-indigo-50 hover:text-indigo-700 transition-colors duration-200 group">
+                    <span class="flex items-center justify-center w-8 h-8 mr-3 text-indigo-600 bg-indigo-100 rounded-lg">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"></path>
+                        </svg>
+                    </span>
+                    <span class="font-medium">Customers</span>
+                </a>
+                
+                <a href="{% url 'admin:index' %}" class="flex items-center px-4 py-3 text-gray-700 rounded-lg hover:bg-indigo-50 hover:text-indigo-700 transition-colors duration-200 group">
+                    <span class="flex items-center justify-center w-8 h-8 mr-3 text-indigo-600 bg-indigo-100 rounded-lg">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd"></path>
+                        </svg>
+                    </span>
+                    <span class="font-medium">Admin Panel</span>
+                </a>
+                
+                <a href="{% url 'products:category_list' %}" class="flex items-center px-4 py-3 text-gray-700 rounded-lg hover:bg-indigo-50 hover:text-indigo-700 transition-colors duration-200 group">
+                    <span class="flex items-center justify-center w-8 h-8 mr-3 text-indigo-600 bg-indigo-100 rounded-lg">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M4 3a2 2 0 100 4h12a2 2 0 100-4H4z"></path>
+                            <path fill-rule="evenodd" d="M3 8h14v7a2 2 0 01-2 2H5a2 2 0 01-2-2V8zm5 3a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1z" clip-rule="evenodd"></path>
+                        </svg>
+                    </span>
+                    <span class="font-medium">Products</span>
+                </a>
+                
+                <a href="{% url 'order:total_bill' %}" class="flex items-center px-4 py-3 text-gray-700 rounded-lg hover:bg-indigo-50 hover:text-indigo-700 transition-colors duration-200 group">
+                    <span class="flex items-center justify-center w-8 h-8 mr-3 text-indigo-600 bg-indigo-100 rounded-lg">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M4 4a2 2 0 00-2 2v1h16V6a2 2 0 00-2-2H4z"></path>
+                            <path fill-rule="evenodd" d="M18 9H2v5a2 2 0 002 2h12a2 2 0 002-2V9zM4 13a1 1 0 011-1h1a1 1 0 110 2H5a1 1 0 01-1-1zm5-1a1 1 0 100 2h1a1 1 0 100-2H9z" clip-rule="evenodd"></path>
+                        </svg>
+                    </span>
+                    <span class="font-medium">Installment Bills</span>
+                </a>
+            </nav>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <div class="flex flex-col flex-1 w-full">
+        <!-- Top Navigation -->
+        <header class="relative top-0 z-30 bg-gradient-to-r from-indigo-50 to-purple-50 border-b border-gray-200 shadow-sm">
+            <div class="flex items-center justify-between px-4 py-3">
+                <div class="flex items-center">
+                    <button id="toggleSidebar" class="p-1 mr-3 text-gray-600 rounded-md hover:bg-gray-100 lg:hidden">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                    </button>
+                    <h1 class="text-xl font-bold text-indigo-700">{{ category.name }} Products</h1>
+                </div>
+                <div class="flex items-center space-x-3">
+                    <div class="relative">
+                        <button class="p-1 text-gray-600 bg-gray-100 rounded-full hover:bg-gray-200">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="w-10 h-10 overflow-hidden bg-gray-200 rounded-full">
+                        <img src="{% static 'images/default-avatar.png' %}" alt="User Avatar" onerror="this.src='https://ui-avatars.com/api/?name=User&background=6366F1&color=fff'">
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Page Content -->
+        <main class="flex-1 bg-gray-50 p-4 md:p-6">
+            <div class="max-w-7xl mx-auto">
+                <!-- Page Header -->
+                <div class="mb-6">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <h2 class="text-2xl font-bold text-gray-800">{{ category.name }} Products</h2>
+                            <p class="text-gray-600">Manage products in this category</p>
+                        </div>
+                        <a href="{% url 'dashboard:add_product' category.slug %}" class="bg-indigo-500 hover:bg-indigo-600 text-white text-sm font-medium px-4 py-2 rounded-md transition-colors duration-300 flex items-center">
+                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                            </svg>
+                            Add Product
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Product Stats Cards -->
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+                    <div class="bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-all duration-300">
+                        <div class="p-4 border-l-4 border-indigo-500">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-sm font-medium text-gray-500 uppercase tracking-wider">Total Products</p>
+                                    <h3 class="text-2xl font-bold text-gray-800 mt-1">{{ products.count }}</h3>
+                                </div>
+                                <div class="bg-indigo-100 text-indigo-600 rounded-full p-3">
+                                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                                        <path d="M4 3a2 2 0 100 4h12a2 2 0 100-4H4z"></path>
+                                        <path fill-rule="evenodd" d="M3 8h14v7a2 2 0 01-2 2H5a2 2 0 01-2-2V8zm5 3a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1z" clip-rule="evenodd"></path>
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-all duration-300">
+                        <div class="p-4 border-l-4 border-green-500">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-sm font-medium text-gray-500 uppercase tracking-wider">In Stock</p>
+                                    <h3 class="text-2xl font-bold text-gray-800 mt-1">{{ in_stock_count }}</h3>
+                                </div>
+                                <div class="bg-green-100 text-green-600 rounded-full p-3">
+                                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M10 2a4 4 0 00-4 4v1H5a1 1 0 00-.994.89l-1 9A1 1 0 004 18h12a1 1 0 00.994-1.11l-1-9A1 1 0 0015 7h-1V6a4 4 0 00-4-4zm2 5V6a2 2 0 10-4 0v1h4zm-6 3a1 1 0 112 0 1 1 0 01-2 0zm7-1a1 1 0 100 2 1 1 0 000-2z" clip-rule="evenodd"></path>
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-all duration-300">
+                        <div class="p-4 border-l-4 border-red-500">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-sm font-medium text-gray-500 uppercase tracking-wider">Out of Stock</p>
+                                    <h3 class="text-2xl font-bold text-gray-800 mt-1">{{ out_of_stock_count }}</h3>
+                                </div>
+                                <div class="bg-red-100 text-red-600 rounded-full p-3">
+                                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M5 2a2 2 0 00-2 2v14l3.5-2 3.5 2 3.5-2 3.5 2V4a2 2 0 00-2-2H5zm4.707 3.707a1 1 0 00-1.414-1.414l-3 3a1 1 0 000 1.414l3 3a1 1 0 001.414-1.414L8.414 9H10a3 3 0 013 3v1a1 1 0 102 0v-1a5 5 0 00-5-5H8.414l1.293-1.293z" clip-rule="evenodd"></path>
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Search and Filter -->
+                <div class="bg-white rounded-lg shadow-sm overflow-hidden mb-6">
+                    <div class="p-4">
+                        <form method="get" action="{% url 'dashboard:category_products' category.slug %}" class="w-full">
+                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                                <!-- Search Input -->
+                                <div class="w-full">
+                                    <label for="search" class="block text-sm font-medium text-gray-700 mb-1">Search Products</label>
+                                    <div class="flex">
+                                        <input type="text" id="search" name="search" class="flex-grow rounded-l-lg border border-gray-300 p-2 text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" placeholder="Search products..." value="{{ search_query }}">
+                                        <button class="bg-indigo-500 text-white px-3 py-2 rounded-r-lg hover:bg-indigo-600 transition-colors" type="submit">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                </div>
+                                
+                                <!-- Sort Options -->
+                                <div class="w-full">
+                                    <label for="sort" class="block text-sm font-medium text-gray-700 mb-1">Sort By</label>
+                                    <select name="sort" id="sort" class="w-full p-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" onchange="this.form.submit()">
+                                        <option value="name" {% if sort == 'name' %}selected{% endif %}>Name (A-Z)</option>
+                                        <option value="-name" {% if sort == '-name' %}selected{% endif %}>Name (Z-A)</option>
+                                        <option value="price" {% if sort == 'price' %}selected{% endif %}>Price (Low to High)</option>
+                                        <option value="-price" {% if sort == '-price' %}selected{% endif %}>Price (High to Low)</option>
+                                        <option value="inventory" {% if sort == 'inventory' %}selected{% endif %}>Inventory (Low to High)</option>
+                                        <option value="-inventory" {% if sort == '-inventory' %}selected{% endif %}>Inventory (High to Low)</option>
+                                    </select>
+                                </div>
+                                
+                                <!-- Filter Options -->
+                                <div class="w-full">
+                                    <label for="filter" class="block text-sm font-medium text-gray-700 mb-1">Filter By</label>
+                                    <select name="filter" id="filter" class="w-full p-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" onchange="this.form.submit()">
+                                        <option value="all" {% if filter == 'all' %}selected{% endif %}>All Products</option>
+                                        <option value="in_stock" {% if filter == 'in_stock' %}selected{% endif %}>In Stock</option>
+                                        <option value="out_of_stock" {% if filter == 'out_of_stock' %}selected{% endif %}>Out of Stock</option>
+                                        <option value="low_stock" {% if filter == 'low_stock' %}selected{% endif %}>Low Stock (< 5)</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                
+                <!-- Products Table -->
+                <div class="bg-white rounded-lg shadow-sm overflow-hidden mb-6">
+                    <div class="px-4 py-3 bg-gradient-to-r from-indigo-50 to-purple-50 border-b">
+                        <h4 class="font-semibold text-indigo-700">Product List</h4>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Product</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Price</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Inventory</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                    <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200">
+                                {% for product in products %}
+                                <tr class="hover:bg-gray-50 transition-colors">
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="flex items-center">
+                                            <div class="flex-shrink-0 h-10 w-10">
+                                                <img class="h-10 w-10 rounded-md object-cover" src="{{ product.photo.url }}" alt="{{ product.name }}">
+                                            </div>
+                                            <div class="ml-4">
+                                                <div class="text-sm font-medium text-gray-900">{{ product.name }}</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm text-gray-900">Rs. {{ product.price }}</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm text-gray-900">{{ product.inventory }}</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        {% if product.inventory > 0 %}
+                                        <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">In Stock</span>
+                                        {% else %}
+                                        <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">Out of Stock</span>
+                                        {% endif %}
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                        <div class="flex justify-end space-x-2">
+                                            <a href="{% url 'products:product_detail' product.id %}" class="text-blue-600 hover:text-blue-900">
+                                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                                                </svg>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="5" class="px-6 py-10 text-center">
+                                        <div class="flex flex-col items-center">
+                                            <svg class="w-12 h-12 text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414a1 1 0 00-.707-.293H4"></path>
+                                            </svg>
+                                            <p class="text-gray-500 text-lg font-medium">No products found</p>
+                                            <p class="text-gray-400 text-sm mt-1">Try adjusting your search or filter criteria</p>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                {% endblock content %}

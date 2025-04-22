@@ -1,0 +1,248 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Add Category{% endblock title %}
+
+{% block content %}
+<div class="flex w-full min-h-screen bg-gray-100">
+    <!-- Sidebar - Hidden on mobile, visible on larger screens -->
+    <aside id="sidebar" 
+           class="static h-full z-40 w-64 bg-white border-r border-gray-200 shadow-md hidden md:block">
+        
+        <!-- Sidebar Header -->
+        <div class="flex items-center justify-between p-4 border-b border-gray-200 bg-gradient-to-r from-indigo-50 to-purple-50">
+            <h2 class="text-lg font-bold text-indigo-700 flex items-center">
+                <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM11 5a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V5zM11 13a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path>
+                </svg>
+                Dashboard
+            </h2>
+            <button id="closeSidebar" class="p-1 text-gray-500 rounded-md hover:bg-gray-100 lg:hidden">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        </div>
+        
+        <!-- Navigation -->
+        <div class="flex flex-col flex-grow">
+            <nav class="p-4 space-y-1">
+                <a href="{% url 'dashboard:dashboard' %}" class="flex items-center px-4 py-3 text-gray-700 rounded-lg hover:bg-indigo-50 hover:text-indigo-700 transition-colors duration-200 group">
+                    <span class="flex items-center justify-center w-8 h-8 mr-3 text-indigo-600 bg-indigo-100 rounded-lg">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path>
+                        </svg>
+                    </span>
+                    <span class="font-medium">Overview</span>
+                </a>
+                
+                <a href="{% url 'dashboard:inventory' %}" class="flex items-center px-4 py-3 text-indigo-700 bg-indigo-50 rounded-lg group">
+                    <span class="flex items-center justify-center w-8 h-8 mr-3 text-indigo-600 bg-indigo-100 rounded-lg">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M4 3a2 2 0 100 4h12a2 2 0 100-4H4z"></path>
+                            <path fill-rule="evenodd" d="M3 8h14v7a2 2 0 01-2 2H5a2 2 0 01-2-2V8zm5 3a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1z" clip-rule="evenodd"></path>
+                        </svg>
+                    </span>
+                    <span class="font-medium">Inventory Management</span>
+                </a>
+                
+                <a href="{% url 'customer_reports:customer_list' %}" class="flex items-center px-4 py-3 text-gray-700 rounded-lg hover:bg-indigo-50 hover:text-indigo-700 transition-colors duration-200 group">
+                    <span class="flex items-center justify-center w-8 h-8 mr-3 text-indigo-600 bg-indigo-100 rounded-lg">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"></path>
+                        </svg>
+                    </span>
+                    <span class="font-medium">Customers</span>
+                </a>
+                
+                <a href="{% url 'admin:index' %}" class="flex items-center px-4 py-3 text-gray-700 rounded-lg hover:bg-indigo-50 hover:text-indigo-700 transition-colors duration-200 group">
+                    <span class="flex items-center justify-center w-8 h-8 mr-3 text-indigo-600 bg-indigo-100 rounded-lg">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd"></path>
+                        </svg>
+                    </span>
+                    <span class="font-medium">Admin Panel</span>
+                </a>
+                
+                <a href="{% url 'products:category_list' %}" class="flex items-center px-4 py-3 text-gray-700 rounded-lg hover:bg-indigo-50 hover:text-indigo-700 transition-colors duration-200 group">
+                    <span class="flex items-center justify-center w-8 h-8 mr-3 text-indigo-600 bg-indigo-100 rounded-lg">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M4 3a2 2 0 100 4h12a2 2 0 100-4H4z"></path>
+                            <path fill-rule="evenodd" d="M3 8h14v7a2 2 0 01-2 2H5a2 2 0 01-2-2V8zm5 3a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1z" clip-rule="evenodd"></path>
+                        </svg>
+                    </span>
+                    <span class="font-medium">Products</span>
+                </a>
+                
+                <a href="{% url 'order:total_bill' %}" class="flex items-center px-4 py-3 text-gray-700 rounded-lg hover:bg-indigo-50 hover:text-indigo-700 transition-colors duration-200 group">
+                    <span class="flex items-center justify-center w-8 h-8 mr-3 text-indigo-600 bg-indigo-100 rounded-lg">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M4 4a2 2 0 00-2 2v1h16V6a2 2 0 00-2-2H4z"></path>
+                            <path fill-rule="evenodd" d="M18 9H2v5a2 2 0 002 2h12a2 2 0 002-2V9zM4 13a1 1 0 011-1h1a1 1 0 110 2H5a1 1 0 01-1-1zm5-1a1 1 0 100 2h1a1 1 0 100-2H9z" clip-rule="evenodd"></path>
+                        </svg>
+                    </span>
+                    <span class="font-medium">Installment Bills</span>
+                </a>
+            </nav>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <div class="flex flex-col flex-1 w-full">
+        <!-- Top Navigation -->
+        <header class="relative top-0 z-30 bg-gradient-to-r from-indigo-50 to-purple-50 border-b border-gray-200 shadow-sm">
+            <div class="flex items-center justify-between px-4 py-3">
+                <div class="flex items-center">
+                    <button id="toggleSidebar" class="p-1 mr-3 text-gray-600 rounded-md hover:bg-gray-100 lg:hidden">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                    </button>
+                    <h1 class="text-xl font-bold text-indigo-700">Add New Category</h1>
+                </div>
+                <div class="flex items-center space-x-3">
+                    <div class="relative">
+                        <button class="p-1 text-gray-600 bg-gray-100 rounded-full hover:bg-gray-200">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="w-10 h-10 overflow-hidden bg-gray-200 rounded-full">
+                        <img src="{% static 'images/default-avatar.png' %}" alt="User Avatar" onerror="this.src='https://ui-avatars.com/api/?name=User&background=6366F1&color=fff'">
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Page Content -->
+        <main class="flex-1 bg-gray-50 p-4 md:p-6">
+            <div class="max-w-3xl mx-auto">
+                <!-- Page Header -->
+                <div class="mb-6">
+                    <h2 class="text-2xl font-bold text-gray-800">Add New Category</h2>
+                    <p class="text-gray-600">Create a new product category for your inventory</p>
+                </div>
+                
+                <!-- Category Form -->
+                <div class="bg-white rounded-lg shadow-sm overflow-hidden">
+                    <div class="px-4 py-3 bg-gradient-to-r from-indigo-50 to-purple-50 border-b">
+                        <h4 class="font-semibold text-indigo-700">Category Details</h4>
+                    </div>
+                    <div class="p-6">
+                        <form method="post" enctype="multipart/form-data" action="{% url 'dashboard:add_category' %}">
+                            {% csrf_token %}
+                            
+                            <!-- Form Errors -->
+                            {% if form.errors %}
+                            <div class="mb-6 p-4 bg-red-50 border-l-4 border-red-500 rounded-md">
+                                <div class="flex">
+                                    <div class="flex-shrink-0">
+                                        <svg class="h-5 w-5 text-red-400" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+                                        </svg>
+                                    </div>
+                                    <div class="ml-3">
+                                        <h3 class="text-sm font-medium text-red-800">There were errors with your submission</h3>
+                                        <div class="mt-2 text-sm text-red-700">
+                                            <ul class="list-disc pl-5 space-y-1">
+                                                {% for field in form %}
+                                                    {% for error in field.errors %}
+                                                    <li>{{ field.label }}: {{ error }}</li>
+                                                    {% endfor %}
+                                                {% endfor %}
+                                                {% for error in form.non_field_errors %}
+                                                <li>{{ error }}</li>
+                                                {% endfor %}
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endif %}
+                            
+                            <!-- Category Name -->
+                            <div class="mb-6">
+                                <label for="id_name" class="block text-sm font-medium text-gray-700 mb-1">Category Name</label>
+                                <input type="text" name="name" id="id_name" required class="w-full p-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" placeholder="Enter category name">
+                                <p class="mt-1 text-xs text-gray-500">A unique name for your product category</p>
+                            </div>
+                            
+                            <!-- Category Motto -->
+                            <div class="mb-6">
+                                <label for="id_category_moto" class="block text-sm font-medium text-gray-700 mb-1">Category Motto</label>
+                                <input type="text" name="category_moto" id="id_category_moto" required class="w-full p-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" placeholder="Enter category motto">
+                                <p class="mt-1 text-xs text-gray-500">A short phrase or slogan for this category</p>
+                            </div>
+                            
+                            <!-- Category Image -->
+                            <div class="mb-6">
+                                <label for="id_photo" class="block text-sm font-medium text-gray-700 mb-1">Category Image</label>
+                                <div class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md">
+                                    <div class="space-y-1 text-center">
+                                        <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true">
+                                            <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                        </svg>
+                                        <div class="flex text-sm text-gray-600">
+                                            <label for="id_photo" class="relative cursor-pointer bg-white rounded-md font-medium text-indigo-600 hover:text-indigo-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-indigo-500">
+                                                <span>Upload a file</span>
+                                                <input id="id_photo" name="photo" type="file" class="sr-only" required>
+                                            </label>
+                                            <p class="pl-1">or drag and drop</p>
+                                        </div>
+                                        <p class="text-xs text-gray-500">PNG, JPG, GIF up to 10MB</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Form Actions -->
+                            <div class="flex justify-end space-x-3">
+                                <a href="{% url 'dashboard:inventory' %}" class="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                    Cancel
+                                </a>
+                                <button type="submit" class="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                    Create Category
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Sidebar toggle functionality
+        const sidebar = document.getElementById('sidebar');
+        const toggleSidebar = document.getElementById('toggleSidebar');
+        const closeSidebar = document.getElementById('closeSidebar');
+        
+        if (toggleSidebar && sidebar) {
+            toggleSidebar.addEventListener('click', function() {
+                sidebar.classList.toggle('-translate-x-full');
+            });
+        }
+        
+        if (closeSidebar && sidebar) {
+            closeSidebar.addEventListener('click', function() {
+                sidebar.classList.add('-translate-x-full');
+            });
+        }
+        
+        // File input preview
+        const fileInput = document.getElementById('id_photo');
+        const fileLabel = document.querySelector('label[for="id_photo"]');
+        
+        if (fileInput) {
+            fileInput.addEventListener('change', function() {
+                if (fileInput.files.length > 0) {
+                    const fileName = fileInput.files[0].name;
+                    fileLabel.querySelector('span').textContent = 'File selected: ' + fileName;
+                }
+            });
+        }
+    });
+</script>
+{% endblock content %}

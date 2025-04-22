@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect, get_object_or_404
 from collections import defaultdict
 import json
 from django.db.models import Sum, Count
@@ -8,6 +8,8 @@ from account.models import Customer
 from django.db.models.functions import TruncMonth
 from django.utils import timezone
 from django.contrib.auth.decorators import login_required
+from django.http import HttpResponseRedirect
+from django.urls import reverse
 
 @login_required(login_url='account:signin')
 def dashboard(request):
@@ -23,6 +25,127 @@ def dashboard(request):
     }
     
     return render(request, 'dashboard/dashboard.html', context)
+
+@login_required(login_url='account:signin')
+def inventory(request):
+    categories = Category.objects.all().order_by('name')
+    total_products = Product.objects.count()
+    in_stock_count = Product.objects.filter(inventory__gt=0).count()
+    out_of_stock_count = Product.objects.filter(inventory=0).count()
+    
+    # Get data for inventory chart
+    category_names = []
+    product_counts = []
+    in_stock_counts = []
+    out_of_stock_counts = []
+    
+    for category in categories:
+        category_names.append(category.name)
+        category_products = Product.objects.filter(category=category)
+        product_counts.append(category_products.count())
+        in_stock_counts.append(category_products.filter(inventory__gt=0).count())
+        out_of_stock_counts.append(category_products.filter(inventory=0).count())
+    
+    context = {
+        'categories': categories,
+        'total_products': total_products,
+        'in_stock_count': in_stock_count,
+        'out_of_stock_count': out_of_stock_count,
+        'category_names': json.dumps(category_names),
+        'product_counts': json.dumps(product_counts),
+        'in_stock_counts': json.dumps(in_stock_counts),
+        'out_of_stock_counts': json.dumps(out_of_stock_counts)
+    }
+    
+    return render(request, 'dashboard/inventory.html', context)
+
+@login_required(login_url='account:signin')
+def category_products(request, category_slug):
+    category = get_object_or_404(Category, slug=category_slug)
+    
+    # Get filter and sort parameters
+    search_query = request.GET.get('search', '')
+    sort_param = request.GET.get('sort', 'name')
+    filter_param = request.GET.get('filter', 'all')
+    
+    # Base queryset
+    products = Product.objects.filter(category=category)
+    
+    # Apply search filter
+    if search_query:
+        products = products.filter(name__icontains=search_query)
+    
+    # Apply inventory filter
+    if filter_param == 'in_stock':
+        products = products.filter(inventory__gt=0)
+    elif filter_param == 'out_of_stock':
+        products = products.filter(inventory=0)
+    elif filter_param == 'low_stock':
+        products = products.filter(inventory__gt=0, inventory__lt=5)
+    
+    # Apply sorting
+    products = products.order_by(sort_param)
+    
+    # Count statistics
+    in_stock_count = products.filter(inventory__gt=0).count()
+    out_of_stock_count = products.filter(inventory=0).count()
+    
+    context = {
+        'category': category,
+        'products': products,
+        'in_stock_count': in_stock_count,
+        'out_of_stock_count': out_of_stock_count,
+        'search_query': search_query,
+        'sort': sort_param,
+        'filter': filter_param
+    }
+    
+    return render(request, 'dashboard/category_products.html', context)
+
+@login_required(login_url='account:signin')
+def add_category(request):
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        category_moto = request.POST.get('category_moto')
+        photo = request.FILES.get('photo')
+        
+        if name and category_moto and photo:
+            category = Category(name=name, category_moto=category_moto, photo=photo)
+            category.save()
+            return redirect('dashboard:inventory')
+    
+    return render(request, 'dashboard/add_category.html')
+
+@login_required(login_url='account:signin')
+def add_product(request, category_slug):
+    category = get_object_or_404(Category, slug=category_slug)
+    
+    if request.method == 'POST':
+        # Get form data
+        name = request.POST.get('name')
+        price = request.POST.get('price')
+        inventory = request.POST.get('inventory')
+        details = request.POST.get('details')
+        photo = request.FILES.get('photo')
+        
+        
+        if name and price and inventory and details and photo:
+            product = Product(
+                name=name,
+                price=price,
+                inventory=inventory,
+                details=details,
+                photo=photo,
+                category=category,
+            )
+            product.save()
+            return redirect('dashboard:category_products', category_slug=category.slug)
+    
+    context = {
+        'category': category
+    }
+    
+    return render(request, 'dashboard/add_product.html', context)
 
 def get_stats_figures():
     total_customers = Customer.objects.count()

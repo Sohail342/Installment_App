@@ -5,10 +5,10 @@ from cloudinary.models import CloudinaryField
 
 class Category(models.Model):
     name = models.CharField(max_length=50)
-    category_moto = models.CharField(max_length=20)
-    photo = CloudinaryField('products_category')
+    category_moto = models.CharField(max_length=200, blank=True, null=True)
+    photo = CloudinaryField('products_category', blank=True, null=True)
     date = models.DateTimeField(auto_now_add=True)
-    slug = models.SlugField(max_length=300, null=True, default=None)
+    slug = models.SlugField(max_length=300, null=True, blank=True, unique=True)
 
     def save(self, *args, **kwargs):
         if not self.slug:
@@ -24,13 +24,12 @@ class Category(models.Model):
 
 class Product(models.Model):
     name = models.CharField(max_length=100)
-    photo = CloudinaryField('products_images')
+    photo = CloudinaryField('products_images', blank=True, null=True)
     price = models.IntegerField()
-    details = models.TextField()
+    details = models.TextField(blank=True, null=True)   
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     date = models.DateTimeField(auto_now_add=True)
     inventory = models.IntegerField(default=1, validators=[MinValueValidator(0)])
-    delivery_fee = models.IntegerField(default=290)
     
     # Dynamic down payment percentages
     down_payment_3_months = models.FloatField(default=30.0) 
@@ -98,7 +97,7 @@ class Product(models.Model):
         }
     
     
-    def calculate_dynamic_installment_plan(self, user_down_payment, user_months):
+    def calculate_dynamic_installment_plan(self, user_down_payment, user_months, user_monthly_payment):
         """
         Calculate installment plan based on user input for down payment and months.
         """
@@ -117,11 +116,9 @@ class Product(models.Model):
         if user_down_payment < 0 or user_down_payment > new_price:
             raise ValueError("Invalid down payment amount.")
 
-        # Calculate the base monthly payment
-        monthly_payment = (new_price - user_down_payment) / user_months
         
-        # Round Off float monthly payment
-        monthly_payment = round(monthly_payment)
+        monthly_payment = int(user_monthly_payment)
+        
 
         # Calculate the total amount
         total_amount = int(user_down_payment + (monthly_payment * user_months))

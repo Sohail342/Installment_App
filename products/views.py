@@ -84,9 +84,10 @@ def product_detail_view(request, product_id):
     if request.method == "POST":
         user_down_payment = request.POST.get('user_down_payment')
         user_months = request.POST.get('user_months')
+        user_monthly_payment = request.POST.get('user_monthly_payment')
 
         try:
-            dynamic_installment = product.calculate_dynamic_installment_plan(user_down_payment, user_months)
+            dynamic_installment = product.calculate_dynamic_installment_plan(user_down_payment, user_months, user_monthly_payment)
             
             # Store data in session
             request.session['down_payment'] = dynamic_installment['down_payment']

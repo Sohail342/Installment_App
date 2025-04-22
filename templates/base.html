@@ -342,6 +342,11 @@
                                 <li><hr class="dropdown-divider my-1 border-gray-200"></li>
                                 {% endif %}
                                 <li>
+                                    <a class="dropdown-item block px-4 py-2 text-sm text-gray-700 hover:bg-violet-50 hover:text-violet-700" href="{% url 'dashboard:inventory' %}">
+                                        <i class="fas fa-boxes mr-2"></i>Inventory
+                                    </a>
+                                </li>
+                                <li>
                                     <a class="dropdown-item block px-4 py-2 text-sm text-gray-700 hover:bg-violet-50 hover:text-violet-700" href="{% url 'order:total_bill' %}">
                                         <i class="fas fa-file-invoice-dollar mr-2"></i>Installment Bills
                                     </a>
@@ -485,7 +490,6 @@
     <!-- App Scripts -->
     <script src="{% static 'JS/PDF.js' %}"></script>
     <script src="{% static 'JS/html2pdf.js' %}"></script>
-    <script src="{% static 'dashboard/js/app.js' %}"></script>
 </body>
 
 </html>
