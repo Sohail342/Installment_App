@@ -30,8 +30,6 @@ def dashboard(request):
 def inventory(request):
     categories = Category.objects.all().order_by('name')
     total_products = Product.objects.count()
-    in_stock_count = Product.objects.filter(inventory__gt=0).count()
-    out_of_stock_count = Product.objects.filter(inventory=0).count()
     
     # Get data for inventory chart
     category_names = []
@@ -43,21 +41,16 @@ def inventory(request):
         category_names.append(category.name)
         category_products = Product.objects.filter(category=category)
         product_counts.append(category_products.count())
-        in_stock_counts.append(category_products.filter(inventory__gt=0).count())
-        out_of_stock_counts.append(category_products.filter(inventory=0).count())
+        
     
     context = {
         'categories': categories,
-        'total_products': total_products,
-        'in_stock_count': in_stock_count,
-        'out_of_stock_count': out_of_stock_count,
         'category_names': json.dumps(category_names),
         'product_counts': json.dumps(product_counts),
-        'in_stock_counts': json.dumps(in_stock_counts),
-        'out_of_stock_counts': json.dumps(out_of_stock_counts)
     }
     
     return render(request, 'dashboard/inventory.html', context)
+
 
 @login_required(login_url='account:signin')
 def category_products(request, category_slug):

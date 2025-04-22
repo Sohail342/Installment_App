@@ -17,7 +17,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = '4l0!i$srn7q4%jd6q^=2@q%w9)kj*&bhy2=&#iql!d3fg@&d!='
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['127.0.0.1', '.vercel.app', 'localhost']
 DATABASE_URL = os.getenv("DATABASE_URL", "postgres://default:AnXt9aroqZT5@ep-old-thunder-a4k90yuh-pooler.us-east-1.aws.neon.tech:5432/verceldb?sslmode=require")
