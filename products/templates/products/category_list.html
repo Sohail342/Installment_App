@@ -3,118 +3,131 @@
 
 {% block title %}Categories | Installment App{% endblock title %}
 
-{% block content %} 
-
-<div class="bg-gradient-to-br from-gray-50 to-blue-50 min-h-screen py-8">
-    <div class="container mx-auto px-4">
-        <section class="main-section">
-            <!-- Improved Header with Decorative Elements -->
-            <div class="text-center mb-10">
-                <h1 class="text-3xl md:text-4xl font-bold text-gray-800 mb-3 relative inline-block">
+{% block content %}
+<div class="bg-gradient-to-br from-gray-50 via-blue-50 to-gray-50 min-h-screen py-12">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+        <section class="max-w-7xl mx-auto">
+            <!-- Header Section -->
+            <div class="text-center mb-12">
+                <h1 class="text-4xl md:text-5xl font-bold text-gray-900 mb-4 relative inline-block">
                     Our Categories
-                    <div class="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-24 h-1 bg-blue-500 rounded-full"></div>
+                    <div class="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-32 h-1.5 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full"></div>
                 </h1>
-                <p class="text-gray-600 mt-4 max-w-2xl mx-auto">Browse through our collection of premium products organized by categories</p>
+                <p class="text-gray-600 text-lg mt-6 max-w-2xl mx-auto leading-relaxed">
+                    Browse through our collection of premium products organized by categories
+                </p>
             </div>
 
-            <!-- Enhanced Search Form with Tailwind -->
-            <form class="mb-8" id="filter-form">
-                <div class="relative max-w-md mx-auto shadow-md rounded-lg overflow-hidden transition-all duration-300 hover:shadow-lg">
-                    <input type="text" id="filter-input" 
-                           class="w-full pl-12 pr-20 py-3 sm:py-3 border-0 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors text-base" 
-                           placeholder="Search categories...">
-                    <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                        <svg class="w-5 h-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
-                            <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"></path>
-                        </svg>
+            <!-- Search Form -->
+            <form class="mb-12" id="filter-form">
+                <div class="relative max-w-2xl mx-auto">
+                    <div class="relative group">
+                        <input type="text" id="filter-input" 
+                               class="w-full pl-14 pr-24 py-4 bg-white/80 backdrop-blur-sm border-2 border-gray-200 rounded-2xl focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-300 text-lg shadow-sm" 
+                               placeholder="Search categories...">
+                        <div class="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none">
+                            <svg class="w-6 h-6 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                            </svg>
+                        </div>
+                        <button type="button" id="search-button" 
+                                class="absolute right-2 top-1/2 transform -translate-y-1/2 px-6 py-2 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-xl hover:from-blue-600 hover:to-blue-700 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 shadow-md">
+                            Search
+                        </button>
                     </div>
-                    <button class="absolute inset-y-0 right-0 px-4 flex items-center bg-blue-500 text-white hover:bg-blue-600 transition-colors focus:outline-none min-w-[70px] justify-center" type="button" id="search-button">
-                        <span>Search</span>
-                    </button>
+                    <div id="filter-results" class="absolute w-full mt-2 bg-white rounded-xl shadow-xl border border-gray-100 overflow-hidden hidden z-50"></div>
                 </div>
             </form>
 
-            <!-- Category Grid with Compact Cards -->
-            <main class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mt-8">
+            <!-- Category Grid - Responsive columns -->
+            <main class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 justify-center">
                 {% for category in categories %}
-                <div class="bg-white rounded-xl shadow-md overflow-hidden transition-all duration-300 hover:scale-105 hover:shadow-lg border border-gray-100 group flex flex-col h-full">
-                    <div class="relative overflow-hidden">
-                        <a href="{% url 'products:products_list' category.slug %}" class="block">
-                            <img class="h-40 w-full object-cover transition-transform duration-500 group-hover:scale-110" 
+                <div class="group relative bg-white rounded-lg shadow-sm overflow-hidden transition-all duration-500 hover:shadow-lg hover:-translate-y-1 flex flex-col h-80 w-80 mx-auto">
+                    <div class="relative overflow-hidden h-24">
+                        <a href="{% url 'products:products_list' category.slug %}" class="block h-full">
+                            <img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" 
                                  src="{{ category.photo.url }}" 
                                  alt="{{ category.name }}">
-                            <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-start p-4">
-                                <span class="text-white font-medium px-3 py-1 bg-blue-500/80 rounded-full text-sm">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end justify-start p-1">
+                                <span class="text-white font-medium px-2 py-0.5 bg-blue-500/90 rounded-full text-xs backdrop-blur-sm">
                                     View Products
                                 </span>
                             </div>
                         </a>
                     </div>
-                    <div class="p-4 border-t border-gray-100 flex-grow flex flex-col justify-between">
+                    <div class="p-2 flex-grow flex flex-col justify-between bg-white/80 backdrop-blur-sm">
                         <div>
-                            <h2 class="text-lg font-semibold text-gray-800 mb-2 group-hover:text-blue-600 transition-colors">{{ category.name }}</h2>
-                            <p class="text-gray-600 text-sm mb-3">{{ category.category_moto }}</p>
+                            <h2 class="text-xs font-bold text-gray-900 mb-1 group-hover:text-blue-600 transition-colors truncate">
+                                {{ category.name }}
+                            </h2>
+                            <p class="text-xs text-gray-600 leading-relaxed line-clamp-2 h-8">{{ category.category_moto }}</p>
                         </div>
-                        <div class="flex justify-between items-center mt-auto">
+                        <div class="flex justify-between items-center mt-1">
                             <a href="{% url 'products:products_list' category.slug %}" 
-                               class="text-blue-600 hover:text-blue-800 text-sm font-medium flex items-center transition-colors">
-                                Browse Category
-                                <svg class="w-4 h-4 ml-1 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                               class="text-xs text-blue-600 hover:text-blue-800 font-medium flex items-center transition-all duration-300 group-hover:translate-x-1">
+                                Browse
+                                <svg class="w-3 h-3 ml-1 transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
                                 </svg>
                             </a>
-                            <button class="favorite-btn text-gray-400 hover:text-red-500 transition-colors" data-id="{{ category.id }}">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                            <button class="favorite-btn p-1 rounded-full hover:bg-gray-100 transition-colors" data-id="{{ category.id }}">
+                                <svg class="w-4 h-4 text-gray-400 hover:text-red-500 transition-colors duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
                                 </svg>
                             </button>
                         </div>
                     </div>
                 </div>
                 {% empty %}
-                <div class="col-span-full text-center py-16 bg-white rounded-xl shadow-sm border border-gray-100">
-                    <svg class="w-16 h-16 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                <div class="col-span-full text-center py-20 bg-white rounded-2xl shadow-sm border border-gray-100">
+                    <svg class="w-20 h-20 text-gray-300 mx-auto mb-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
                     </svg>
-                    <p class="text-gray-500 text-lg mb-4">No categories found.</p>
-                    <button class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors" onclick="window.location.reload()">Refresh Page</button>
+                    <p class="text-gray-500 text-xl mb-6">No categories found.</p>
+                    <button class="px-6 py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-xl hover:from-blue-600 hover:to-blue-700 transition-all duration-300 font-medium" onclick="window.location.reload()">
+                        Refresh Page
+                    </button>
                 </div>
                 {% endfor %}
             </main>
 
-            <!-- Pagination Controls -->
-            <nav aria-label="Page navigation" class="mt-12 mb-8">
-                <ul class="flex flex-wrap justify-center items-center gap-2 px-2">
+            <!-- Pagination -->
+            <nav aria-label="Page navigation" class="mt-16 mb-8">
+                <ul class="flex flex-wrap justify-center items-center gap-3 px-4">
                     {% if categories.has_previous %}
-                        <li>
-                            <a class="px-4 py-2 bg-white border border-gray-200 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors shadow-sm flex items-center" href="?page=1{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}">
-                                <i class="fas fa-angle-double-left mr-1"></i> First
-                            </a>
-                        </li>
-                        <li>
-                            <a class="px-4 py-2 bg-white border border-gray-200 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors shadow-sm flex items-center" href="?page={{ categories.previous_page_number }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}">
-                                <i class="fas fa-angle-left mr-1"></i> Previous
-                            </a>
-                        </li>
+                    <li>
+                        <a class="px-5 py-3 bg-white border border-gray-200 rounded-xl text-sm font-medium text-gray-700 hover:bg-gray-50 transition-all duration-300 hover:shadow-md flex items-center" 
+                           href="?page=1{% if request.GET.search %} search={{ request.GET.search }}{% endif %}">
+                            <i class="fas fa-angle-double-left mr-2"></i> First
+                        </a>
+                    </li>
+                    <li>
+                        <a class="px-5 py-3 bg-white border border-gray-200 rounded-xl text-sm font-medium text-gray-700 hover:bg-gray-50 transition-all duration-300 hover:shadow-md flex items-center" 
+                           href="?page={{ categories.previous_page_number }}{% if request.GET.search %} search={{ request.GET.search }}{% endif %}">
+                            <i class="fas fa-angle-left mr-2"></i> Previous
+                        </a>
+                    </li>
                     {% endif %}
 
                     <li>
-                        <span class="px-5 py-2 bg-blue-50 border border-blue-200 rounded-lg text-sm font-medium text-blue-700 shadow-sm">
+                        <span class="px-6 py-3 bg-blue-50 border border-blue-200 rounded-xl text-sm font-medium text-blue-700 shadow-sm">
                             Page {{ categories.number }} of {{ categories.paginator.num_pages }}
                         </span>
                     </li>
 
                     {% if categories.has_next %}
-                        <li>
-                            <a class="px-4 py-2 bg-white border border-gray-200 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors shadow-sm flex items-center" href="?page={{ categories.next_page_number }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}">
-                                Next <i class="fas fa-angle-right ml-1"></i>
-                            </a>
-                        </li>
-                        <li>
-                            <a class="px-4 py-2 bg-white border border-gray-200 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors shadow-sm flex items-center" href="?page={{ categories.paginator.num_pages }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}">
-                                Last <i class="fas fa-angle-double-right ml-1"></i>
-                            </a>
-                        </li>
+                    <li>
+                        <a class="px-5 py-3 bg-white border border-gray-200 rounded-xl text-sm font-medium text-gray-700 hover:bg-gray-50 transition-all duration-300 hover:shadow-md flex items-center" 
+                           href="?page={{ categories.next_page_number }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}">
+                            Next <i class="fas fa-angle-right ml-2"></i>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="px-5 py-3 bg-white border border-gray-200 rounded-xl text-sm font-medium text-gray-700 hover:bg-gray-50 transition-all duration-300 hover:shadow-md flex items-center" 
+                           href="?page={{ categories.paginator.num_pages }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}">
+                            Last <i class="fas fa-angle-double-right ml-2"></i>
+                        </a>
+                    </li>
                     {% endif %}
                 </ul>
             </nav>
@@ -124,98 +137,118 @@
 
 <script>
     $(document).ready(function() {
-        // Improved filter functionality
+        // Filter functionality with debounce
+        let searchTimeout;
         $("#filter-input").on("input", function() {
+            clearTimeout(searchTimeout);
             const query = $(this).val().trim();
-    
-            if (query.length > 0) {
-                // Show loading indicator
-                $('#filter-results').html('<div class="p-4 text-center"><div class="inline-block animate-spin rounded-full h-5 w-5 border-b-2 border-blue-500"></div> Searching...</div>');
-                $('#filter-results').removeClass('hidden').addClass('show');
-                
-                $.ajax({
-                    url: "{% url 'products:filter_categories' %}",
-                    data: { 'filter': query },
-                    success: function(data) {
-                        $('#filter-results').empty();  // Clear previous results
-    
-                        if (data.length > 0) {
-                            // Show dropdown if there are results
-                            $('#filter-results').removeClass('hidden').addClass('show');
-    
-                            data.forEach(function(category) {
-                                $('#filter-results').append(
-                                    `<a class="block px-4 py-4 sm:py-3 hover:bg-blue-50 transition-colors border-b border-gray-100 last:border-0 text-gray-700 hover:text-blue-700" href="${category.url}">
-                                        <div class="font-medium text-base">${category.name || category.slug}</div>
-                                        <div class="text-xs text-gray-500">${category.slug}</div>
-                                    </a>`
-                                );
-                            });
-                        } else {
-                            $('#filter-results').append('<div class="p-4 text-center text-gray-500">No categories found. Try a different search term.</div>');
+            
+            searchTimeout = setTimeout(() => {
+                if (query.length > 0) {
+                    $('#filter-results').html(`
+                        <div class="p-4 text-center">
+                            <div class="inline-block animate-spin rounded-full h-6 w-6 border-2 border-blue-500 border-t-transparent"></div>
+                            <p class="text-gray-600 mt-2">Searching...</p>
+                        </div>
+                    `).removeClass('hidden');
+                    
+                    $.ajax({
+                        url: "{% url 'products:filter_categories' %}",
+                        data: { 'filter': query },
+                        success: function(data) {
+                            $('#filter-results').empty();
+                            
+                            if (data.length > 0) {
+                                $('#filter-results').removeClass('hidden');
+                                data.forEach(function(category) {
+                                    $('#filter-results').append(`
+                                        <a class="block px-6 py-4 hover:bg-blue-50 transition-all duration-300 border-b border-gray-100 last:border-0" href="${category.url}">
+                                            <div class="font-medium text-gray-900">${category.name || category.slug}</div>
+                                            <div class="text-sm text-gray-500 mt-1">${category.slug}</div>
+                                        </a>
+                                    `);
+                                });
+                            } else {
+                                $('#filter-results').append(`
+                                    <div class="p-6 text-center">
+                                        <p class="text-gray-500">No categories found</p>
+                                        <p class="text-sm text-gray-400 mt-1">Try a different search term</p>
+                                    </div>
+                                `);
+                            }
+                        },
+                        error: function() {
+                            $('#filter-results').html(`
+                                <div class="p-6 text-center">
+                                    <p class="text-red-500">Error retrieving results</p>
+                                    <button class="mt-2 text-blue-500 hover:text-blue-600" onclick="location.reload()">
+                                        Try again
+                                    </button>
+                                </div>
+                            `);
                         }
-                    },
-                    error: function() {
-                        $('#filter-results').empty();
-                        $('#filter-results').append('<div class="p-4 text-center text-red-500">Error retrieving results. Please try again.</div>');
-                    }
-                });
-            } else {
-                $('#filter-results').removeClass('show').addClass('hidden');  // Hide the dropdown if input is empty
+                    });
+                } else {
+                    $('#filter-results').addClass('hidden');
+                }
+            }, 300);
+        });
+
+        // Close dropdown on outside click
+        $(document).on('click', function(event) {
+            if (!$(event.target).closest("#filter-form").length) {
+                $('#filter-results').addClass('hidden');
             }
         });
-    
-        // Close the dropdown if clicked outside
-        $(document).click(function(event) {
-            if (!$(event.target).closest("#filter-form, #filter-results").length) {
-                $('#filter-results').removeClass('show').addClass('hidden');
-            }
-        });
-        
-        // Search button click handler
+
+        // Search button handler
         $("#search-button").click(function() {
             const query = $("#filter-input").val().trim();
             if (query.length > 0) {
                 $("#filter-input").trigger("input");
             }
         });
-        
-        // Favorite button functionality
+
+        // Favorite button handler
         $(".favorite-btn").click(function() {
             const btn = $(this);
+            const svg = btn.find('svg');
             
-            // Toggle heart icon
-            if (btn.find('svg').hasClass('text-gray-400')) {
-                btn.find('svg').removeClass('text-gray-400').addClass('text-red-500 fill-current');
-                // Show toast notification
-                showToast('Category added to favorites!');
-            } else {
-                btn.find('svg').removeClass('text-red-500 fill-current').addClass('text-gray-400');
-                showToast('Category removed from favorites');
-            }
+            svg.toggleClass('text-gray-400 text-red-500 fill-current');
             
-            // Here you would typically send an AJAX request to save the favorite status
-            // $.ajax({ url: '/save-favorite/', data: { category_id: $(this).data('id') } });
+            showToast(
+                svg.hasClass('text-red-500') 
+                    ? 'Category added to favorites!' 
+                    : 'Category removed from favorites'
+            );
         });
-        
-        // Toast notification function
+
+        // Enhanced toast notification
         function showToast(message) {
-            // Create toast element if it doesn't exist
             if ($('#toast-notification').length === 0) {
-                $('body').append('<div id="toast-notification" class="fixed top-4 right-4 bg-blue-600 text-white px-6 py-3 rounded-lg shadow-lg transform transition-all duration-500 translate-y-[-100px] opacity-0 z-50"></div>');
+                $('body').append(`
+                    <div id="toast-notification" class="fixed top-4 right-4 bg-gradient-to-r from-blue-500 to-blue-600 text-white px-8 py-4 rounded-xl shadow-xl transform transition-all duration-500 translate-y-[-100px] opacity-0 z-50 backdrop-blur-sm">
+                        <div class="flex items-center">
+                            <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                            </svg>
+                            <span></span>
+                        </div>
+                    </div>
+                `);
             }
             
-            // Set message and show toast
-            $('#toast-notification').text(message)
+            $('#toast-notification span').text(message);
+            $('#toast-notification')
                 .removeClass('translate-y-[-100px] opacity-0')
                 .addClass('translate-y-0 opacity-100');
-                
-            // Hide toast after 3 seconds
-            setTimeout(function() {
-                $('#toast-notification').removeClass('translate-y-0 opacity-100')
+            
+            setTimeout(() => {
+                $('#toast-notification')
+                    .removeClass('translate-y-0 opacity-100')
                     .addClass('translate-y-[-100px] opacity-0');
             }, 3000);
         }
     });
-</script>        
+</script>
 {% endblock content %}

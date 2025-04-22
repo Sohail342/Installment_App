@@ -19,8 +19,8 @@ def category_list_view(request):
         categories = Category.objects.all().order_by('name')
 
 
-    # Set up pagination
-    paginator = Paginator(categories, 20) 
+    # Set up pagination - using multiples of 3 for better grid alignment
+    paginator = Paginator(categories, 12) # Changed to 12 (multiple of 3) for better grid alignment
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
