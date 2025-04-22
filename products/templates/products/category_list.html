@@ -4,6 +4,7 @@
 {% block title %}Categories | Installment App{% endblock title %}
 
 {% block content %} 
+
 <div class="bg-gradient-to-br from-gray-50 to-blue-50 min-h-screen py-8">
     <div class="container mx-auto px-4">
         <section class="main-section">
@@ -16,7 +17,7 @@
                 <p class="text-gray-600 mt-4 max-w-2xl mx-auto">Browse through our collection of premium products organized by categories</p>
             </div>
 
-            <!-- Enhanced Search Form with Tailwind - Improved for Mobile -->
+            <!-- Enhanced Search Form with Tailwind -->
             <form class="mb-8" id="filter-form">
                 <div class="relative max-w-md mx-auto shadow-md rounded-lg overflow-hidden transition-all duration-300 hover:shadow-lg">
                     <input type="text" id="filter-input" 
@@ -33,50 +34,44 @@
                 </div>
             </form>
 
-            <!-- Styled Dropdown Results with Tailwind - Mobile Optimized -->
-            <div class="dropdown relative max-w-md mx-auto">
-                <div id="filter-results" class="dropdown-menu absolute z-10 w-full mt-1 bg-white rounded-lg shadow-lg max-h-[50vh] sm:max-h-60 overflow-y-auto border border-gray-200 hidden -webkit-overflow-scrolling: touch"></div>
-            </div>
-
-                       <!-- Improved Category Grid with Enhanced Cards -->
-                       <main class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
-                        {% for category in categories %}
-                        <div class="bg-white rounded-xl shadow-md overflow-hidden transform transition-all duration-300 hover:scale-102 hover:shadow-xl border border-gray-100 group h-full flex flex-col">
-                            <div class="relative overflow-hidden">
-                                <a href="{% url 'products:products_list' category.slug %}" class="block">
-                                    <img class="h-56 w-full object-cover transition-transform duration-500 group-hover:scale-110" 
-                                         src="{{ category.photo.url }}" 
-                                         alt="{{ category.name }}">
-                                    <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-start p-4">
-                                        <span class="text-white font-medium px-3 py-1 bg-blue-500/80 rounded-full text-sm">
-                                            View Products
-                                        </span>
-                                    </div>
-                                </a>
-                                
+            <!-- Category Grid with Compact Cards -->
+            <main class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mt-8">
+                {% for category in categories %}
+                <div class="bg-white rounded-xl shadow-md overflow-hidden transition-all duration-300 hover:scale-105 hover:shadow-lg border border-gray-100 group flex flex-col h-full">
+                    <div class="relative overflow-hidden">
+                        <a href="{% url 'products:products_list' category.slug %}" class="block">
+                            <img class="h-40 w-full object-cover transition-transform duration-500 group-hover:scale-110" 
+                                 src="{{ category.photo.url }}" 
+                                 alt="{{ category.name }}">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-start p-4">
+                                <span class="text-white font-medium px-3 py-1 bg-blue-500/80 rounded-full text-sm">
+                                    View Products
+                                </span>
                             </div>
-                            <div class="p-5 border-t border-gray-100 flex-grow flex flex-col justify-between">
-                                <div>
-                                    <h2 class="text-xl font-bold text-gray-800 mb-2 group-hover:text-blue-600 transition-colors">{{ category.name }}</h2>
-                                    <p class="text-gray-600 text-sm mb-4">{{ category.category_moto }}</p>
-                                </div>
-                                <div class="flex justify-between items-center mt-auto">
-                                    <a href="{% url 'products:products_list' category.slug %}" 
-                                       class="text-blue-600 hover:text-blue-800 text-sm font-medium flex items-center transition-colors">
-                                        Browse Category
-                                        <svg class="w-4 h-4 ml-1 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
-                                        </svg>
-                                    </a>
-                                    <button class="favorite-btn text-gray-400 hover:text-red-500 transition-colors" data-id="{{ category.id }}">
-                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
-                                        </svg>
-                                    </button>
-                                </div>
-                            </div>
+                        </a>
+                    </div>
+                    <div class="p-4 border-t border-gray-100 flex-grow flex flex-col justify-between">
+                        <div>
+                            <h2 class="text-lg font-semibold text-gray-800 mb-2 group-hover:text-blue-600 transition-colors">{{ category.name }}</h2>
+                            <p class="text-gray-600 text-sm mb-3">{{ category.category_moto }}</p>
                         </div>
-                        {% empty %}
+                        <div class="flex justify-between items-center mt-auto">
+                            <a href="{% url 'products:products_list' category.slug %}" 
+                               class="text-blue-600 hover:text-blue-800 text-sm font-medium flex items-center transition-colors">
+                                Browse Category
+                                <svg class="w-4 h-4 ml-1 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                                </svg>
+                            </a>
+                            <button class="favorite-btn text-gray-400 hover:text-red-500 transition-colors" data-id="{{ category.id }}">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
                 <div class="col-span-full text-center py-16 bg-white rounded-xl shadow-sm border border-gray-100">
                     <svg class="w-16 h-16 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
@@ -87,7 +82,7 @@
                 {% endfor %}
             </main>
 
-            <!-- Enhanced Pagination Controls with Tailwind - Mobile Responsive -->
+            <!-- Pagination Controls -->
             <nav aria-label="Page navigation" class="mt-12 mb-8">
                 <ul class="flex flex-wrap justify-center items-center gap-2 px-2">
                     {% if categories.has_previous %}
