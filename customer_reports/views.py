@@ -67,6 +67,43 @@ def customer_list(request):
     else:
         customers = Customer.objects.all().order_by('first_name')
     
+    # Calculate order summary data
+    total_balance = 0
+    total_due = 0
+    total_paid = 0
+    customer_data = {}
+    
+    for customer in customers:
+        # Get all orders for this customer
+        orders = Order.objects.filter(customer=customer)
+        customer_balance = 0
+        customer_due = 0
+        customer_paid = 0
+        
+        for order in orders:
+            # Get all installments for this order
+            order_items = OrderItem.objects.filter(order=order)
+            installments = InstallmentPayment.objects.filter(order_item__in=order_items)
+            
+            # Calculate balance, due and paid amounts
+            for installment in installments:
+                customer_balance += installment.balance
+                customer_due += installment.due_amount
+                customer_paid += installment.paid_amount
+        
+        # Store customer data
+        customer_data[customer.id] = {
+            'balance': customer_balance,
+            'due': customer_due,
+            'paid': customer_paid,
+            'orders_count': orders.count()
+        }
+        
+        # Add to totals
+        total_balance += customer_balance
+        total_due += customer_due
+        total_paid += customer_paid
+    
     # Pagination
     paginator = Paginator(customers, 10)  # Show 10 customers per page
     page_number = request.GET.get('page')
@@ -74,6 +111,10 @@ def customer_list(request):
     
     context = {
         'customers': customers_page,
+        'customer_data': customer_data,
+        'total_balance': total_balance,
+        'total_due': total_due,
+        'total_paid': total_paid
     }
     
     return render(request, 'customer_reports/customer_list.html', context)
@@ -158,12 +199,17 @@ def update_installment(request, installment_id):
     
     if request.method == 'POST':
         # Get form data
-        amount_paid = request.POST.get('amount_paid', 0)
-        is_paid = request.POST.get('is_paid') == 'True'
+        from decimal import Decimal
+        amount_paid = Decimal(request.POST.get('amount_paid', 0))
         
         # Update installment
         installment.amount_paid = amount_paid
-        installment.is_paid = is_paid
+        
+        # is_paid will be automatically set in the save method if amount_paid >= initial_amount_due
+        # Only force is_paid to True if explicitly marked as paid in the form
+        if request.POST.get('is_paid') == 'True':
+            installment.is_paid = True
+            
         installment.save()
         
         # Update order's installment status

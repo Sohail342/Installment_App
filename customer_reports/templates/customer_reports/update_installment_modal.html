@@ -7,13 +7,22 @@
             <p class="text-sm text-gray-600 mb-4">Month: {{ installment.month_number }}</p>
             
             <div class="mb-4">
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="amount_paid">
+                    Payment Amount (رقم ادا کی گئی)
+                </label>
+                <input type="number" name="amount_paid" id="amount_paid" value="{{ installment.amount_paid }}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" min="0" step="1">
+                <p class="text-sm text-gray-600 mt-1">Amount Due: {{ installment.amount_due }}</p>
+            </div>
+            
+            <div class="mb-4">
                 <label class="block text-gray-700 text-sm font-bold mb-2" for="is_paid">
-                    Payment Status ( کرو "Unpaid" ورنہ "Paid" اگر پیسے دیے ہیں تو)
+                    Mark as fully paid? (مکمل ادائیگی کے طور پر نشان زد کریں؟)
                 </label>
                 <select name="is_paid" id="is_paid" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-                    <option value="True" {% if installment.is_paid %}selected{% endif %}>Paid</option>
-                    <option value="False" {% if not installment.is_paid %}selected{% endif %}>Unpaid</option>
+                    <option value="True" {% if installment.is_paid %}selected{% endif %}>Yes (ہاں)</option>
+                    <option value="False" {% if not installment.is_paid %}selected{% endif %}>No (نہیں)</option>
                 </select>
+                <p class="text-sm text-gray-600 mt-1">Select 'Yes' to mark as fully paid regardless of amount</p>
             </div>
         </div>
         

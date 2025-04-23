@@ -98,7 +98,7 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
                         </svg>
                     </button>
-                    <h1 class="text-xl font-bold text-indigo-700">Add New Category</h1>
+                    
                 </div>
                 <div class="flex items-center space-x-3">
                     <div class="relative">
@@ -120,15 +120,12 @@
             <div class="max-w-3xl mx-auto">
                 <!-- Page Header -->
                 <div class="mb-6">
-                    <h2 class="text-2xl font-bold text-gray-800">Add New Category</h2>
+                    <h2 class="text-2xl font-bold text-gray-800">Add New Folder</h2>
                     <p class="text-gray-600">Create a new product category for your inventory</p>
                 </div>
                 
                 <!-- Category Form -->
                 <div class="bg-white rounded-lg shadow-sm overflow-hidden">
-                    <div class="px-4 py-3 bg-gradient-to-r from-indigo-50 to-purple-50 border-b">
-                        <h4 class="font-semibold text-indigo-700">Category Details</h4>
-                    </div>
                     <div class="p-6">
                         <form method="post" enctype="multipart/form-data" action="{% url 'dashboard:add_category' %}">
                             {% csrf_token %}
@@ -163,21 +160,14 @@
                             
                             <!-- Category Name -->
                             <div class="mb-6">
-                                <label for="id_name" class="block text-sm font-medium text-gray-700 mb-1">Category Name</label>
+                                <label for="id_name" class="block text-sm font-medium text-gray-700 mb-1">Folder Name</label>
                                 <input type="text" name="name" id="id_name" required class="w-full p-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" placeholder="Enter category name">
-                                <p class="mt-1 text-xs text-gray-500">A unique name for your product category</p>
-                            </div>
-                            
-                            <!-- Category Motto -->
-                            <div class="mb-6">
-                                <label for="id_category_moto" class="block text-sm font-medium text-gray-700 mb-1">Category Motto</label>
-                                <input type="text" name="category_moto" id="id_category_moto" required class="w-full p-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" placeholder="Enter category motto">
-                                <p class="mt-1 text-xs text-gray-500">A short phrase or slogan for this category</p>
+                                <p class="mt-1 text-xs text-gray-500">A unique name for your product folder</p>
                             </div>
                             
                             <!-- Category Image -->
                             <div class="mb-6">
-                                <label for="id_photo" class="block text-sm font-medium text-gray-700 mb-1">Category Image</label>
+                                <label for="id_photo" class="block text-sm font-medium text-gray-700 mb-1">Folder Image</label>
                                 <div class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md">
                                     <div class="space-y-1 text-center">
                                         <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true">
@@ -201,7 +191,7 @@
                                     Cancel
                                 </a>
                                 <button type="submit" class="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                                    Create Category
+                                    Create Folder
                                 </button>
                             </div>
                         </form>

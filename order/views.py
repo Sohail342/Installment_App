@@ -113,23 +113,25 @@ def checkout(request, user_id):
             cnic = form.cleaned_data['cnic_no']
 
 
-            # gurantor1 - only create for installment payments
+            # guarantor1 - only create for installment payments and if CNIC is provided (now optional)
             guarantor1 = None
             if payment_type != 'cash' and form.cleaned_data.get('guaranteed_cnic_no'):
-                guarantor1, created1 = Guarantor.objects.get_or_create(
-                cnic_no=form.cleaned_data['guaranteed_cnic_no'],
-                defaults={
-                    'name': form.cleaned_data['guaranteed_name'],
-                    'father_name': form.cleaned_data['guaranteed_father_name'],
-                    'residential_address': form.cleaned_data['guaranteed_residential_address'],
-                    'occupation': form.cleaned_data['guaranteed_occupation'],
-                    'designation': form.cleaned_data['guaranteed_designation'],
-                    'monthly_income': form.cleaned_data['guaranteed_monthly_income'],
-                    'office_address': form.cleaned_data['guaranteed_office_address'],
-                    'office_phone': form.cleaned_data['guaranteed_office_phone'],
-                    'phone_no': form.cleaned_data['guaranteed_phone_no'],
-                }
-            )
+                # Only create guarantor if both CNIC and name are provided
+                if form.cleaned_data.get('guaranteed_name'):
+                    guarantor1, created1 = Guarantor.objects.get_or_create(
+                    cnic_no=form.cleaned_data['guaranteed_cnic_no'],
+                    defaults={
+                        'name': form.cleaned_data['guaranteed_name'],
+                        'father_name': form.cleaned_data['guaranteed_father_name'],
+                        'residential_address': form.cleaned_data['guaranteed_residential_address'],
+                        'occupation': form.cleaned_data['guaranteed_occupation'],
+                        'designation': form.cleaned_data['guaranteed_designation'],
+                        'monthly_income': form.cleaned_data['guaranteed_monthly_income'],
+                        'office_address': form.cleaned_data['guaranteed_office_address'],
+                        'office_phone': form.cleaned_data['guaranteed_office_phone'],
+                        'phone_no': form.cleaned_data['guaranteed_phone_no'],
+                    }
+                )
 
             # Create a second guarantor only if the fields are filled
             guarantor2 = None

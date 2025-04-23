@@ -20,8 +20,8 @@ class CheckoutForm(forms.Form):
     country = forms.CharField(max_length=100, required=False)
 
     # Guaranteed 1 Fields
-    guaranteed_cnic_no = forms.CharField(max_length=15, required=True)
-    guaranteed_name = forms.CharField(max_length=100, required=True)
+    guaranteed_cnic_no = forms.CharField(max_length=15, required=False)
+    guaranteed_name = forms.CharField(max_length=100, required=False)
     guaranteed_father_name = forms.CharField(max_length=100, required=False)
     guaranteed_occupation = forms.CharField(max_length=100, required=False)
     guaranteed_residential_address = forms.CharField(max_length=255, required=False)
@@ -29,7 +29,7 @@ class CheckoutForm(forms.Form):
     guaranteed_monthly_income = forms.IntegerField(required=False)
     guaranteed_office_address = forms.CharField(max_length=250, required=False)
     guaranteed_office_phone = forms.CharField(max_length=100, required=False)
-    guaranteed_phone_no = forms.CharField(max_length=100, required=True)
+    guaranteed_phone_no = forms.CharField(max_length=100, required=False)
 
     # Guaranteed 2 Fields
     guaranteed2_cnic_no = forms.CharField(max_length=15, required=False)

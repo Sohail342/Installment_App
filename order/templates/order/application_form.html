@@ -52,6 +52,30 @@
                             {{ form.non_field_errors }}
                         </div>
                         {% endif %}
+                        
+                        <!-- CNIC Search Field -->
+                        <div class="mb-6">
+                            <div class="max-w-xl">
+                                <div class="space-y-2">
+                                    <label for="search_cnic" class="block text-sm font-medium text-gray-700">Search by CNIC (for existing customers)</label>
+                                    <div class="flex rounded-md shadow-sm border border-gray-300 overflow-hidden focus-within:ring-2 focus-within:ring-primary focus-within:border-primary transition-all duration-200">
+                                        <input type="text" id="search_cnic" 
+                                            class="flex-grow px-4 py-2 border-0 focus:outline-none focus:ring-0" 
+                                            placeholder="Enter CNIC (e.g., 12345-1234567-1)" 
+                                            oninput="formatCNIC(this)">
+                                        <button type="button" id="search_customer_btn" 
+                                            class="bg-primary hover:bg-primary-dark text-white font-medium px-4 py-2 transition-colors duration-300 flex items-center">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                                            </svg>
+                                            Search
+                                        </button>
+                                    </div>
+                                    <p class="text-sm text-gray-500 italic">If you're an existing customer, enter your CNIC to auto-fill your details</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="search_result_message" class="mb-3"></div>
 
                         <div class="row">
                             <div class="col-md-4">
@@ -165,9 +189,9 @@
                             <div class="row mb-3">
                                 <div class="col-md-4">
                                     <div class="form-group mb-2">
-                                        <label for="guaranteed_cnic_no">CNIC No*</label>
+                                        <label for="guaranteed_cnic_no">CNIC No</label>
                                         <input type="text" name="guaranteed_cnic_no" class="form-control line-input"
-                                            oninput="formatCNIC(this)" required>
+                                            oninput="formatCNIC(this)">
                                         {% if form.guaranteed_cnic_no.errors %}
                                         <div class="invalid-feedback">{{ form.guaranteed_cnic_no.errors.0 }}</div>
                                         {% endif %}
@@ -175,9 +199,8 @@
                                 </div>
                                 <div class="col-md-4">
                                     <div class="form-group mb-2">
-                                        <label for="guaranteed_name">Name*</label>
-                                        <input type="text" name="guaranteed_name" class="form-control line-input"
-                                            required>
+                                        <label for="guaranteed_name">Name</label>
+                                        <input type="text" name="guaranteed_name" class="form-control line-input">
                                         {% if form.guaranteed_name.errors %}
                                         <div class="invalid-feedback">{{ form.guaranteed_name.errors.0 }}</div>
                                         {% endif %}
@@ -200,9 +223,9 @@
                             <div class="row mb-3">
                                 <div class="col-md-12">
                                     <div class="form-group mb-2">
-                                        <label for="guaranteed_residential_address">Residential Address*</label>
+                                        <label for="guaranteed_residential_address">Residential Address</label>
                                         <input type="text" name="guaranteed_residential_address"
-                                            class="form-control line-input" required>
+                                            class="form-control line-input">
                                         {% if form.guaranteed_residential_address.errors %}
                                         <div class="invalid-feedback">{{ form.guaranteed_residential_address.errors.0 }}
                                         </div>
@@ -268,9 +291,8 @@
                                 </div>
                                 <div class="col-md-4">
                                     <div class="form-group mb-2">
-                                        <label for="guaranteed_phone_no">Phone No*</label>
-                                        <input type="text" name="guaranteed_phone_no" class="form-control line-input"
-                                            required>
+                                        <label for="guaranteed_phone_no">Phone No</label>
+                                        <input type="text" name="guaranteed_phone_no" class="form-control line-input">
                                         {% if form.guaranteed_phone_no.errors %}
                                         <div class="invalid-feedback">{{ form.guaranteed_phone_no.errors.0 }}</div>
                                         {% endif %}
@@ -510,5 +532,70 @@
         // Update the input value
         input.value = formatted;
     }
+    
+    // Customer search by CNIC functionality
+    document.addEventListener('DOMContentLoaded', function() {
+        const searchBtn = document.getElementById('search_customer_btn');
+        if (searchBtn) {
+            searchBtn.addEventListener('click', searchCustomerByCNIC);
+        }
+        
+        function searchCustomerByCNIC() {
+            const cnicInput = document.getElementById('search_cnic');
+            const cnic = cnicInput.value.trim();
+            const resultMessage = document.getElementById('search_result_message');
+            
+            if (!cnic) {
+                resultMessage.innerHTML = '<div class="alert alert-warning">Please enter a CNIC number</div>';
+                return;
+            }
+            
+            // Show loading message
+            resultMessage.innerHTML = '<div class="alert alert-info">Searching...</div>';
+            
+            // Make AJAX request to search for customer
+            fetch(`/account/api/customer-search/?cnic=${cnic}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.found) {
+                        // Customer found, populate form fields
+                        populateFormFields(data.customer);
+                        resultMessage.innerHTML = '<div class="alert alert-success">Customer found! Form has been filled with your information.</div>';
+                    } else {
+                        // Customer not found
+                        resultMessage.innerHTML = '<div class="alert alert-info">No existing customer found with this CNIC. Please fill in your details.</div>';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error searching for customer:', error);
+                    resultMessage.innerHTML = '<div class="alert alert-danger">Error searching for customer. Please try again.</div>';
+                });
+        }
+        
+        function populateFormFields(customer) {
+            // Populate customer information fields
+            document.querySelector('input[name="firstname"]').value = customer.first_name || '';
+            document.querySelector('input[name="lastname"]').value = customer.last_name || '';
+            document.querySelector('input[name="cnic_no"]').value = customer.cnic || '';
+            document.querySelector('input[name="phone"]').value = customer.phone_number || '';
+            document.querySelector('input[name="emailaddress"]').value = customer.email || '';
+            
+            // Handle address (split into street address and town/city if possible)
+            if (customer.address) {
+                const addressParts = customer.address.split(',');
+                if (addressParts.length > 1) {
+                    document.querySelector('input[name="streetaddress"]').value = addressParts[0].trim();
+                    document.querySelector('input[name="towncity"]').value = addressParts[1].trim();
+                } else {
+                    document.querySelector('input[name="streetaddress"]').value = customer.address;
+                }
+            }
+        }
+    });
 </script>
 {% endblock %}

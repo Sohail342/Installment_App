@@ -78,9 +78,9 @@
                 <table class="min-w-full divide-y divide-gray-200">
                     <thead class="bg-gray-50">
                         <tr>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Order ID</th>
                             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
                             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Balance</th>
                             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Down Payment</th>
                             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Payment Method</th>
                             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
@@ -92,13 +92,13 @@
                         {% for order in orders %}
                         <tr class="hover:bg-gray-50 transition-colors duration-150">
                             <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="text-sm font-medium text-gray-900">#{{ order.id }}</div>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
                                 <div class="text-sm text-gray-500">{{ order.created_at|date:"M d, Y" }}</div>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <div class="text-sm font-medium text-gray-900">Rs. {{ order.total_bill|intcomma }}</div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="text-sm font-medium text-gray-900">Rs. {{ order.total_balance|intcomma }}</div>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <div class="text-sm text-gray-500">Rs. {{ order.downpayment|intcomma }}</div>
@@ -226,7 +226,6 @@
     </div>
 </div>
 
-<!-- JavaScript for Tab Switching and Modal -->
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         // Tab switching functionality
@@ -325,13 +324,17 @@
         const closeInstallmentsBtnFooter = document.getElementById('close-installments-btn');
         const viewInstallmentsButtons = document.querySelectorAll('.view-installments');
         
+        // Define scrollPosition variable at a higher scope so it's accessible to all event handlers
+        let scrollPosition = 0;
+        
         viewInstallmentsButtons.forEach(button => {
-            button.addEventListener('click', function() {
+            button.addEventListener('click', function(e) {
+                e.preventDefault(); // Prevent default behavior
                 const orderId = this.getAttribute('data-order-id');
                 const installmentsContent = document.getElementById('installments-content');
                 
                 // Save current scroll position before opening modal
-                const scrollPosition = window.pageYOffset || document.documentElement.scrollTop;
+                scrollPosition = window.pageYOffset || document.documentElement.scrollTop;
                 
                 // Get installments for this order
                 installmentsContent.innerHTML = '<p class="text-center">Loading installments...</p>';
@@ -363,8 +366,6 @@
                                                 updateInstallmentModal.classList.add('hidden');
                                                 // Re-enable scrolling
                                                 document.body.classList.remove('overflow-hidden');
-                                                // Restore scroll position
-                                                window.scrollTo(0, scrollPosition);
                                             });
                                         }
                                         
@@ -444,8 +445,7 @@
                 installmentsModal.classList.remove('hidden');
                 // Prevent background scrolling
                 document.body.classList.add('overflow-hidden');
-                // Restore scroll position after modal is shown
-                window.scrollTo(0, scrollPosition);
+                // Don't restore scroll position here - this is what was causing the auto-scrolling issue
             });
         });
         
@@ -453,7 +453,7 @@
             installmentsModal.classList.add('hidden');
             // Re-enable scrolling
             document.body.classList.remove('overflow-hidden');
-            // Restore scroll position
+            // Restore scroll position when closing the modal
             window.scrollTo(0, scrollPosition);
         });
         
@@ -461,7 +461,7 @@
             installmentsModal.classList.add('hidden');
             // Re-enable scrolling
             document.body.classList.remove('overflow-hidden');
-            // Restore scroll position
+            // Restore scroll position when closing the modal
             window.scrollTo(0, scrollPosition);
         });
         
@@ -471,7 +471,7 @@
                 installmentsModal.classList.add('hidden');
                 // Re-enable scrolling
                 document.body.classList.remove('overflow-hidden');
-                // Restore scroll position
+                // Restore scroll position when closing the modal
                 window.scrollTo(0, scrollPosition);
             }
         });

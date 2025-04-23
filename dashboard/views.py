@@ -99,11 +99,10 @@ def category_products(request, category_slug):
 def add_category(request):
     if request.method == 'POST':
         name = request.POST.get('name')
-        category_moto = request.POST.get('category_moto')
         photo = request.FILES.get('photo')
         
-        if name and category_moto and photo:
-            category = Category(name=name, category_moto=category_moto, photo=photo)
+        if name and photo:
+            category = Category(name=name, photo=photo)
             category.save()
             return redirect('dashboard:inventory')
     
