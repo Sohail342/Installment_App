@@ -13,7 +13,7 @@ class UserAdmin(ModelAdmin):
 
 @admin.register(User)
 class UserAdmin(ModelAdmin):
-    list_display = ['id', 'name', 'email','is_admin']
+    list_display = ['name', 'email','is_admin']
     search_fields = ('email', 'email')
     list_filter = ['name', 'email']
 
@@ -22,6 +22,6 @@ class UserAdmin(ModelAdmin):
 class CustomerAdmin(ImportExportModelAdmin, ModelAdmin):
     export_form_class = ExportForm
     import_form_class = ImportForm
-    list_display = ['id', 'first_name', 'last_name', 'cnic',  'email','phone_number']
+    list_display = ['first_name', 'last_name', 'cnic',  'email','phone_number']
     search_fields = ('email', 'first_name', 'phone_number', 'cnic')
     list_filter = ['first_name', 'email', 'phone_number']
