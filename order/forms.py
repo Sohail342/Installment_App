@@ -7,7 +7,7 @@ class CheckoutForm(forms.Form):
     streetaddress = forms.CharField(max_length=255)
     apartment = forms.CharField(max_length=255, required=False)
     towncity = forms.CharField(max_length=100)
-    cnic_no = forms.CharField(max_length=15, required=True)
+    cnic_no = forms.CharField(max_length=15, required=False)
     phone = forms.CharField(max_length=20)
     emailaddress = forms.EmailField(required=False)
     father_name = forms.CharField(max_length=100, required=False)

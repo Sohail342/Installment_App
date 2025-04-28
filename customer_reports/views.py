@@ -64,6 +64,7 @@ def customer_list(request):
             Q(cnic__icontains=search_query) | 
             Q(phone_number__icontains=search_query)
         ).order_by('first_name')
+        
     else:
         customers = Customer.objects.all().order_by('first_name')
     

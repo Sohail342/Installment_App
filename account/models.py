@@ -99,9 +99,9 @@ class Customer(models.Model):
     first_name = models.CharField(max_length=50, blank=True, null=True)
     last_name = models.CharField(max_length=50, blank=True, null=True)
     email = models.EmailField(max_length=50, blank=True, null=True)
-    phone_number = models.CharField(max_length=15, blank=True, null=True)
+    phone_number = models.CharField(max_length=24, unique=True, default="notavailable")
     address = models.TextField(blank=True, null=True)
-    cnic = models.CharField(max_length=15, unique=True)
+    cnic = models.CharField(max_length=15, blank=True, null=True)
     
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
